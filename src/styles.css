@@ -5,38 +5,48 @@
 @theme {
   --color-primary: #51604d;
   --color-background: #fef9f2;
-  --color-gold-accent: #C9A227;
-  --color-deep-forest: #3E4D3A;
+  --color-gold-accent: #c9a227;
+  --color-deep-forest: #3e4d3a;
   --color-on-surface: #1d1c17;
   --color-on-surface-variant: #444841;
   --color-outline-variant: #c4c8bf;
   --color-surface-container: #f2ede6;
   --color-surface-variant: #e7e2db;
-  --color-brand-whatsapp: #25D366;
+  --color-brand-whatsapp: #25d366;
 
   --font-display: "EB Garamond", serif;
   --font-body: "Montserrat", sans-serif;
   --font-accent: "Literata", serif;
 }
 
-html, body {
+html,
+body {
   background-color: #e7e2db;
 }
 
 body {
   color: #1d1c17;
-  max-width: 390px;
-  margin: 0 auto;
   overflow-x: hidden;
   position: relative;
   background-color: #fef9f2;
-  box-shadow: 0 0 20px rgba(0,0,0,0.05);
-  font-family: 'Montserrat', sans-serif;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+  font-family: "Montserrat", sans-serif;
   min-height: 100vh;
 }
 
-.no-scrollbar::-webkit-scrollbar { display: none; }
-.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.mobile-shell {
+  max-width: 390px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 
 .slider-container {
   position: relative;
@@ -63,7 +73,7 @@ body {
   width: 50%;
   height: 100%;
   overflow: hidden;
-  border-right: 2px solid #C9A227;
+  border-right: 2px solid #c9a227;
   z-index: 5;
 }
 .slider-handle {
@@ -73,10 +83,10 @@ body {
   transform: translate(-50%, -50%);
   width: 36px;
   height: 36px;
-  background-color: #C9A227;
+  background-color: #c9a227;
   border-radius: 50%;
   border: 3px solid white;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
   z-index: 10;
   display: flex;
   align-items: center;
@@ -85,15 +95,25 @@ body {
   pointer-events: none;
 }
 
-.portfolio-item { transition: opacity 0.3s ease, transform 0.3s ease; }
-.portfolio-item.hidden { display: none; }
+.portfolio-item {
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+.portfolio-item.hidden {
+  display: none;
+}
 
-.active-scale:active { transform: scale(0.97); }
+.active-scale:active {
+  transform: scale(0.97);
+}
 
-.header-shadow { box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
+.header-shadow {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
 
 .material-symbols-outlined {
-  font-family: 'Material Symbols Outlined';
+  font-family: "Material Symbols Outlined";
   font-weight: normal;
   font-style: normal;
   line-height: 1;
@@ -103,6 +123,6 @@ body {
   white-space: nowrap;
   word-wrap: normal;
   direction: ltr;
-  -webkit-font-feature-settings: 'liga';
+  -webkit-font-feature-settings: "liga";
   -webkit-font-smoothing: antialiased;
 }
