@@ -15,7 +15,7 @@ import "crypto";
 import "async_hooks";
 import "stream";
 import "../_libs/isbot.mjs";
-const appCss = "/assets/styles-DQc5Y_SQ.css";
+const appCss = "/assets/styles-DNuJNYHR.css";
 function reportLovableError(error, context = {}) {
   if (typeof window === "undefined") return;
   window.__lovableEvents?.captureException?.(
@@ -129,7 +129,7 @@ function RootComponent() {
   const { queryClient } = Route$7.useRouteContext();
   return /* @__PURE__ */ jsxRuntimeExports.jsx(QueryClientProvider, { client: queryClient, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Outlet, {}) });
 }
-const $$splitComponentImporter$6 = () => import("./services-B8TBRtxF.mjs");
+const $$splitComponentImporter$6 = () => import("./services-CMeUIQR7.mjs");
 const Route$6 = createFileRoute("/services")({
   head: () => ({
     meta: [{
@@ -141,7 +141,7 @@ const Route$6 = createFileRoute("/services")({
   }),
   component: lazyRouteComponent($$splitComponentImporter$6, "component")
 });
-const $$splitComponentImporter$5 = () => import("./pricing-CCMKN4-u.mjs");
+const $$splitComponentImporter$5 = () => import("./pricing-DdJNm3Yz.mjs");
 const Route$5 = createFileRoute("/pricing")({
   head: () => ({
     meta: [{
@@ -153,7 +153,7 @@ const Route$5 = createFileRoute("/pricing")({
   }),
   component: lazyRouteComponent($$splitComponentImporter$5, "component")
 });
-const $$splitComponentImporter$4 = () => import("./portfolio-BFRXzqA6.mjs");
+const $$splitComponentImporter$4 = () => import("./portfolio-DyAW1M47.mjs");
 const Route$4 = createFileRoute("/portfolio")({
   head: () => ({
     meta: [{
@@ -235,7 +235,7 @@ const sections = [{
     answer: "Yes. Custom portraits, framed sketches and clay miniatures make unique corporate gifts. We offer bulk pricing and can include your company branding on packaging. WhatsApp us for a corporate quote."
   }]
 }];
-const $$splitComponentImporter$3 = () => import("./faq-t0PsYJWZ.mjs");
+const $$splitComponentImporter$3 = () => import("./faq-tQpAE33B.mjs");
 const faqJsonLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
@@ -272,7 +272,7 @@ const Route$3 = createFileRoute("/faq")({
   }),
   component: lazyRouteComponent($$splitComponentImporter$3, "component")
 });
-const $$splitComponentImporter$2 = () => import("./contact-EXT8M2ti.mjs");
+const $$splitComponentImporter$2 = () => import("./contact-CX7_JHA6.mjs");
 const Route$2 = createFileRoute("/contact")({
   head: () => ({
     meta: [{
@@ -284,7 +284,7 @@ const Route$2 = createFileRoute("/contact")({
   }),
   component: lazyRouteComponent($$splitComponentImporter$2, "component")
 });
-const $$splitComponentImporter$1 = () => import("./about-DKjCePwE.mjs");
+const $$splitComponentImporter$1 = () => import("./about-C-kGB1ih.mjs");
 const Route$1 = createFileRoute("/about")({
   head: () => ({
     meta: [{
@@ -296,7 +296,7 @@ const Route$1 = createFileRoute("/about")({
   }),
   component: lazyRouteComponent($$splitComponentImporter$1, "component")
 });
-const $$splitComponentImporter = () => import("./index-D1VKiCur.mjs");
+const $$splitComponentImporter = () => import("./index-XDkn1T4j.mjs");
 const Route = createFileRoute("/")({
   head: () => ({
     meta: [{

@@ -7,35 +7,44 @@ import { waLink } from "../lib/whatsapp";
 import { ArrowRight, Palette, Pencil, Frame, Sparkles, Gift, Building2 } from "lucide-react";
 
 const IMG = {
-  sketch: "https://picsum.photos/seed/artspire-sketch/600/400",
-  oil: "https://picsum.photos/seed/artspire-oil/600/400",
-  mirror: "https://picsum.photos/seed/artspire-mirror/600/400",
-  clay: "https://picsum.photos/seed/artspire-clay/600/400",
-  painting: "https://picsum.photos/seed/artspire-painting/600/400",
-  sliderA1: "https://picsum.photos/seed/artspire-after1/600/400",
-  sliderB1: "https://picsum.photos/seed/artspire-before1/600/400",
-  sliderA2: "https://picsum.photos/seed/artspire-after2/600/400",
-  sliderB2: "https://picsum.photos/seed/artspire-before2/600/400",
-  sliderA3: "https://picsum.photos/seed/artspire-after3/600/400",
-  sliderB3: "https://picsum.photos/seed/artspire-before3/600/400",
+  // Hero images
+  sketch: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=800&q=80",
+  portrait: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800&q=80",
+  mirror: "https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?w=800&q=80",
+  clay: "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=800&q=80",
+  // Before/After images
+  sliderA1: "https://images.unsplash.com/photo-1555685812-4b943f1cb0eb?w=800&q=80",
+  sliderB1: "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=800&q=80",
+  sliderA2: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800&q=80",
+  sliderB2: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80",
+  sliderA3: "https://images.unsplash.com/photo-1452860606245-08befc0ff44b?w=800&q=80",
+  sliderB3: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
+  // Services
+  painting: "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=800&q=80",
+  gift: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=800&q=80",
+  gift2: "https://images.unsplash.com/photo-1607344645866-009c320b63e0?w=800&q=80",
+  mirror2: "https://images.unsplash.com/photo-1549490349-8643362247b5?w=800&q=80",
+  clay2: "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80",
+  portrait2: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800&q=80",
+  sketch2: "https://images.unsplash.com/photo-1555685812-4b943f1cb0eb?w=800&q=80",
 };
 
 const services = [
   { title: "Pencil Sketches", price: "From ₹999", img: IMG.sketch, icon: Pencil, days: "5–7 days" },
-  { title: "Colour Portraits", price: "From ₹1,999", img: IMG.oil, icon: Palette, days: "7–10 days" },
+  { title: "Colour Portraits", price: "From ₹1,999", img: IMG.portrait, icon: Palette, days: "7–10 days" },
   { title: "Custom Paintings", price: "From ₹2,999", img: IMG.painting, icon: Frame, days: "10–14 days" },
   { title: "Mirror Art", price: "From ₹2,499", img: IMG.mirror, icon: Sparkles, days: "7–12 days" },
   { title: "Clay Art", price: "From ₹1,799", img: IMG.clay, icon: Gift, days: "7–10 days" },
-  { title: "Personalized Gifts", price: "From ₹799", img: IMG.sketch, icon: Gift, days: "5–10 days" },
+  { title: "Personalized Gifts", price: "From ₹799", img: IMG.gift, icon: Gift, days: "5–10 days" },
 ];
 
 const portfolioCategories = [
-  { key: "sketches", label: "Pencil Sketches", pattern: "art-cat-sketches", subtitle: "Timeless. Precise." },
-  { key: "portraits", label: "Colour Portraits", pattern: "art-cat-portraits", subtitle: "Vivid. Warm." },
+  { key: "pencil-sketches", label: "Pencil Sketches", pattern: "art-cat-sketches", subtitle: "Timeless. Precise." },
+  { key: "colour-portraits", label: "Colour Portraits", pattern: "art-cat-portraits", subtitle: "Vivid. Warm." },
   { key: "paintings", label: "Paintings", pattern: "art-cat-paintings", subtitle: "Bold. Textured." },
-  { key: "mirror", label: "Mirror Art", pattern: "art-cat-mirror", subtitle: "Functional. Beautiful." },
-  { key: "clay", label: "Clay Art", pattern: "art-cat-clay", subtitle: "Three-dimensional. Personal." },
-  { key: "gifts", label: "Personalized Gifts", pattern: "art-cat-gifts", subtitle: "Made for one person." },
+  { key: "mirror-art", label: "Mirror Art", pattern: "art-cat-mirror", subtitle: "Functional. Beautiful." },
+  { key: "clay-art", label: "Clay Art", pattern: "art-cat-clay", subtitle: "Three-dimensional. Personal." },
+  { key: "personalized-gifts", label: "Personalized Gifts", pattern: "art-cat-gifts", subtitle: "Made for one person." },
 ];
 
 const recentWork = [
@@ -106,7 +115,7 @@ function Index() {
         </div>
         <div className="flex-1 w-full max-w-lg mt-10 lg:mt-0">
           <div className="grid grid-cols-2 gap-2 rounded-2xl overflow-hidden shadow-lg">
-            {[IMG.sketch, IMG.oil, IMG.mirror, IMG.clay].map((src, i) => {
+            {[IMG.sketch, IMG.portrait, IMG.mirror, IMG.clay].map((src, i) => {
               const alts = [
                 "Handmade pencil sketch portrait by Artspire",
                 "Custom colour portrait painting by Artspire",
@@ -115,7 +124,7 @@ function Index() {
               ];
               return (
                 <div key={i} className="aspect-square bg-surface-variant overflow-hidden">
-                  <ImageWithFallback alt={alts[i]} className="w-full h-full object-cover img-zoom" src={src} loading="lazy" />
+                  <ImageWithFallback alt={alts[i]} className="w-full h-full object-cover img-zoom" src={src} loading={i === 0 ? "eager" : "lazy"} />
                 </div>
               );
             })}
@@ -237,7 +246,7 @@ function Index() {
             {portfolioCategories.map((cat) => (
               <Link
                 key={cat.key}
-                to="/portfolio"
+                to={`/portfolio?category=${cat.key}`}
                 className={`${cat.pattern} cat-card relative rounded-xl overflow-hidden aspect-[4/3] cursor-pointer group`}
               >
                 <div className="relative z-10 flex flex-col items-center justify-end h-full p-5 pb-6">
@@ -352,10 +361,10 @@ function Index() {
           </p>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-4">
             {[
-              { label: "For Parents", img: IMG.sketch },
-              { label: "For Couples", img: IMG.oil },
-              { label: "New Home", img: IMG.mirror },
-              { label: "Memorials", img: IMG.clay },
+              { label: "For Parents", img: IMG.sketch2 },
+              { label: "For Couples", img: IMG.portrait2 },
+              { label: "New Home", img: IMG.mirror2 },
+              { label: "Memorials", img: IMG.clay2 },
             ].map((g) => (
               <Link
                 key={g.label}

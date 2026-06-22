@@ -1,6 +1,6 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
 import { L as Link } from "../_libs/tanstack__react-router.mjs";
-import { L as Layout, w as waLink } from "./Layout-CwWMbCeQ.mjs";
+import { L as Layout, w as waLink } from "./Layout-BvY1gIZf.mjs";
 import { I as ImageWithFallback } from "./ImageWithFallback-PVHgcxD1.mjs";
 import { A as ArrowRight, P as Pencil, f as Palette, F as Frame, g as Sparkles, G as Gift, B as Building2 } from "../_libs/lucide-react.mjs";
 import "../_libs/tanstack__router-core.mjs";
@@ -78,17 +78,25 @@ function BeforeAfterSlider({
   ] });
 }
 const IMG = {
-  sketch: "https://picsum.photos/seed/artspire-sketch/600/400",
-  oil: "https://picsum.photos/seed/artspire-oil/600/400",
-  mirror: "https://picsum.photos/seed/artspire-mirror/600/400",
-  clay: "https://picsum.photos/seed/artspire-clay/600/400",
-  painting: "https://picsum.photos/seed/artspire-painting/600/400",
-  sliderA1: "https://picsum.photos/seed/artspire-after1/600/400",
-  sliderB1: "https://picsum.photos/seed/artspire-before1/600/400",
-  sliderA2: "https://picsum.photos/seed/artspire-after2/600/400",
-  sliderB2: "https://picsum.photos/seed/artspire-before2/600/400",
-  sliderA3: "https://picsum.photos/seed/artspire-after3/600/400",
-  sliderB3: "https://picsum.photos/seed/artspire-before3/600/400"
+  // Hero images
+  sketch: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=800&q=80",
+  portrait: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800&q=80",
+  mirror: "https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?w=800&q=80",
+  clay: "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=800&q=80",
+  // Before/After images
+  sliderA1: "https://images.unsplash.com/photo-1555685812-4b943f1cb0eb?w=800&q=80",
+  sliderB1: "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=800&q=80",
+  sliderA2: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800&q=80",
+  sliderB2: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80",
+  sliderA3: "https://images.unsplash.com/photo-1452860606245-08befc0ff44b?w=800&q=80",
+  sliderB3: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
+  // Services
+  painting: "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=800&q=80",
+  gift: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=800&q=80",
+  mirror2: "https://images.unsplash.com/photo-1549490349-8643362247b5?w=800&q=80",
+  clay2: "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80",
+  portrait2: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800&q=80",
+  sketch2: "https://images.unsplash.com/photo-1555685812-4b943f1cb0eb?w=800&q=80"
 };
 const services = [{
   title: "Pencil Sketches",
@@ -99,7 +107,7 @@ const services = [{
 }, {
   title: "Colour Portraits",
   price: "From ₹1,999",
-  img: IMG.oil,
+  img: IMG.portrait,
   icon: Palette,
   days: "7–10 days"
 }, {
@@ -123,17 +131,17 @@ const services = [{
 }, {
   title: "Personalized Gifts",
   price: "From ₹799",
-  img: IMG.sketch,
+  img: IMG.gift,
   icon: Gift,
   days: "5–10 days"
 }];
 const portfolioCategories = [{
-  key: "sketches",
+  key: "pencil-sketches",
   label: "Pencil Sketches",
   pattern: "art-cat-sketches",
   subtitle: "Timeless. Precise."
 }, {
-  key: "portraits",
+  key: "colour-portraits",
   label: "Colour Portraits",
   pattern: "art-cat-portraits",
   subtitle: "Vivid. Warm."
@@ -143,17 +151,17 @@ const portfolioCategories = [{
   pattern: "art-cat-paintings",
   subtitle: "Bold. Textured."
 }, {
-  key: "mirror",
+  key: "mirror-art",
   label: "Mirror Art",
   pattern: "art-cat-mirror",
   subtitle: "Functional. Beautiful."
 }, {
-  key: "clay",
+  key: "clay-art",
   label: "Clay Art",
   pattern: "art-cat-clay",
   subtitle: "Three-dimensional. Personal."
 }, {
-  key: "gifts",
+  key: "personalized-gifts",
   label: "Personalized Gifts",
   pattern: "art-cat-gifts",
   subtitle: "Made for one person."
@@ -234,9 +242,9 @@ function Index() {
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-body text-[12px] md:text-[13px] font-medium text-stone", children: "500+ Customers · 1000+ Artworks · 4.9★" })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 w-full max-w-lg mt-10 lg:mt-0", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-2 gap-2 rounded-2xl overflow-hidden shadow-lg", children: [IMG.sketch, IMG.oil, IMG.mirror, IMG.clay].map((src, i) => {
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 w-full max-w-lg mt-10 lg:mt-0", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-2 gap-2 rounded-2xl overflow-hidden shadow-lg", children: [IMG.sketch, IMG.portrait, IMG.mirror, IMG.clay].map((src, i) => {
         const alts = ["Handmade pencil sketch portrait by Artspire", "Custom colour portrait painting by Artspire", "Custom mirror art handcrafted by Artspire", "Clay art sculpture handcrafted by Artspire"];
-        return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "aspect-square bg-surface-variant overflow-hidden", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ImageWithFallback, { alt: alts[i], className: "w-full h-full object-cover img-zoom", src, loading: "lazy" }) }, i);
+        return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "aspect-square bg-surface-variant overflow-hidden", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ImageWithFallback, { alt: alts[i], className: "w-full h-full object-cover img-zoom", src, loading: i === 0 ? "eager" : "lazy" }) }, i);
       }) }) })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("section", { className: "bg-white py-5 w-full border-y border-border/40", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "container-main text-center font-body text-[11px] md:text-[12px] font-semibold uppercase tracking-widest text-forest leading-relaxed", children: [
@@ -311,7 +319,7 @@ function Index() {
     /* @__PURE__ */ jsxRuntimeExports.jsx("section", { className: "section-padding bg-cream-dark", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "container-main", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-[28px] md:text-[36px] text-center text-forest mb-4 leading-tight", children: "Explore by Category" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-body text-[14px] text-stone text-center mb-12 max-w-lg mx-auto", children: "Browse our handcrafted art collections." }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4", children: portfolioCategories.map((cat) => /* @__PURE__ */ jsxRuntimeExports.jsx(Link, { to: "/portfolio", className: `${cat.pattern} cat-card relative rounded-xl overflow-hidden aspect-[4/3] cursor-pointer group`, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative z-10 flex flex-col items-center justify-end h-full p-5 pb-6", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4", children: portfolioCategories.map((cat) => /* @__PURE__ */ jsxRuntimeExports.jsx(Link, { to: `/portfolio?category=${cat.key}`, className: `${cat.pattern} cat-card relative rounded-xl overflow-hidden aspect-[4/3] cursor-pointer group`, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative z-10 flex flex-col items-center justify-end h-full p-5 pb-6", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-display text-[18px] md:text-[22px] text-white font-medium drop-shadow-lg text-center", children: cat.label }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-body text-[13px] text-gold mt-1 font-medium", children: cat.subtitle })
       ] }) }, cat.key)) })
@@ -366,16 +374,16 @@ function Index() {
       /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-body text-[14px] text-stone text-center mb-10 max-w-lg mx-auto", children: "Handcrafted art for every special occasion." }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-4", children: [{
         label: "For Parents",
-        img: IMG.sketch
+        img: IMG.sketch2
       }, {
         label: "For Couples",
-        img: IMG.oil
+        img: IMG.portrait2
       }, {
         label: "New Home",
-        img: IMG.mirror
+        img: IMG.mirror2
       }, {
         label: "Memorials",
-        img: IMG.clay
+        img: IMG.clay2
       }].map((g) => /* @__PURE__ */ jsxRuntimeExports.jsxs(Link, { to: "/portfolio", className: "aspect-square relative rounded-xl overflow-hidden active-scale shadow-sm cursor-pointer group", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(ImageWithFallback, { alt: g.label, className: "w-full h-full object-cover img-zoom", src: g.img, loading: "lazy" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute inset-0 bg-black/30 flex items-center justify-center p-2 text-center group-hover:bg-black/40 transition-colors duration-300", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-display text-[18px] md:text-[22px] text-white font-medium drop-shadow-md", children: g.label }) })

@@ -1,8 +1,7 @@
-import { Link, useLocation } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { useEffect } from "react";
 
 const links = [
-  { to: "/", label: "Home" },
   { to: "/portfolio", label: "Portfolio" },
   { to: "/services", label: "Services" },
   { to: "/pricing", label: "Pricing" },
@@ -17,49 +16,40 @@ export function NavDrawer({ open, onClose }: { open: boolean; onClose: () => voi
     return () => { document.body.style.overflow = ""; };
   }, [open]);
 
-  const location = useLocation();
-
   return (
     <>
       <div
-        className={`fixed inset-0 bg-black/40 z-[60] backdrop-blur-sm transition-opacity duration-300 ${
+        className={`fixed inset-0 bg-black/60 z-[60] transition-opacity duration-300 ${
           open ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         onClick={onClose}
       />
       <nav
-        className={`fixed top-0 right-0 h-full w-[300px] bg-cream z-[70] transform transition-transform duration-300 ease-out shadow-2xl flex flex-col ${
+        className={`fixed top-0 right-0 h-full w-[280px] bg-background z-[70] transform transition-transform duration-300 shadow-xl flex flex-col ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
+        style={{ maxWidth: "280px" }}
       >
-        <div className="flex items-center justify-between p-6 border-b border-border/60">
-          <span className="font-display text-[20px] text-forest font-medium">Menu</span>
+        <div className="flex justify-end p-4">
           <button
             aria-label="Close Menu"
-            className="p-2 text-charcoal hover:text-forest transition-colors"
+            className="p-2 text-on-surface active-scale"
             onClick={onClose}
           >
-            <span className="material-symbols-outlined text-2xl">close</span>
+            <span className="material-symbols-outlined text-3xl">close</span>
           </button>
         </div>
-        <div className="flex flex-col p-6 gap-1">
-          {links.map((l) => {
-            const isActive = location.pathname === l.to;
-            return (
-              <Link
-                key={l.to}
-                to={l.to}
-                className={`font-body text-[15px] px-4 py-3 rounded-lg transition-colors duration-200 ${
-                  isActive
-                    ? "text-forest font-semibold bg-forest/5"
-                    : "text-charcoal hover:text-forest hover:bg-cream-dark/30"
-                }`}
-                onClick={onClose}
-              >
-                {l.label}
-              </Link>
-            );
-          })}
+        <div className="flex flex-col px-8 py-4 gap-8 font-display text-3xl text-on-surface mt-8">
+          {links.map((l) => (
+            <Link
+              key={l.to}
+              to={l.to}
+              className="active:text-gold-accent"
+              onClick={onClose}
+            >
+              {l.label}
+            </Link>
+          ))}
         </div>
       </nav>
     </>

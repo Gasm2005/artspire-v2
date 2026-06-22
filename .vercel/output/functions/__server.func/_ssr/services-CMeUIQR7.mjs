@@ -1,5 +1,5 @@
 import { j as jsxRuntimeExports, r as reactExports } from "../_libs/react.mjs";
-import { L as Layout, w as waLink } from "./Layout-CwWMbCeQ.mjs";
+import { L as Layout, w as waLink } from "./Layout-BvY1gIZf.mjs";
 import { A as ArrowRight } from "../_libs/lucide-react.mjs";
 import "../_libs/tanstack__react-router.mjs";
 import "../_libs/tanstack__router-core.mjs";

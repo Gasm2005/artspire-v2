@@ -1,5 +1,5 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { L as Layout, w as waLink } from "./Layout-CwWMbCeQ.mjs";
+import { L as Layout, w as waLink } from "./Layout-BvY1gIZf.mjs";
 import { M as MessageCircle, S as Send, b as MapPin, C as Clock, e as Star, I as Instagram, a as Mail } from "../_libs/lucide-react.mjs";
 import "../_libs/tanstack__react-router.mjs";
 import "../_libs/tanstack__router-core.mjs";

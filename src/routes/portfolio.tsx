@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Layout } from "../components/Layout";
 import { waLink } from "../lib/whatsapp";
 import { ArrowRight } from "lucide-react";
@@ -38,13 +38,48 @@ const workPrices = [
   "From ₹1,999", "From ₹999", "From ₹799", "From ₹2,499",
 ];
 
+// Map URL category slugs to filter keys
+const slugToKey: Record<string, string> = {
+  "pencil-sketches": "sketches",
+  "colour-portraits": "portraits",
+  "paintings": "paintings",
+  "mirror-art": "mirror",
+  "clay-art": "clay",
+  "personalized-gifts": "gifts",
+};
+
+const slugToLabel: Record<string, string> = {
+  "pencil-sketches": "Pencil Sketches",
+  "colour-portraits": "Colour Portraits",
+  "paintings": "Paintings",
+  "mirror-art": "Mirror Art",
+  "clay-art": "Clay Art",
+  "personalized-gifts": "Personalized Gifts",
+};
+
 export const Route = createFileRoute("/portfolio")({
   head: () => ({ meta: [{ title: "Portfolio | Artspire" }, { name: "description", content: "Handcrafted portraits, paintings, mirror art, clay sculptures and personalized gifts." }] }),
   component: PortfolioPage,
 });
 
 function PortfolioPage() {
+  // Read URL category param on mount
+  const [initialLoad, setInitialLoad] = useState(true);
   const [active, setActive] = useState<string>("all");
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const categoryParam = params.get("category");
+    if (categoryParam && slugToKey[categoryParam]) {
+      setActive(slugToKey[categoryParam]);
+      // Scroll to portfolio grid after layout settles
+      setTimeout(() => {
+        document.getElementById("portfolio-grid")?.scrollIntoView({ behavior: "smooth" });
+      }, 100);
+    }
+    setInitialLoad(false);
+  }, []);
+
   const visible = items.filter((i) => active === "all" || i.cat === active);
 
   return (
@@ -79,7 +114,7 @@ function PortfolioPage() {
 
       <section className="pb-12 md:pb-16">
         <div className="container-main">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+          <div id="portfolio-grid" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
             {visible.map((item) => (
               <div
                 key={item.id}
