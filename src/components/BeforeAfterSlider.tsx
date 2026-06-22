@@ -1,5 +1,9 @@
 import { useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 
+const FALLBACK_SVG = `data:image/svg+xml,${encodeURIComponent(
+  `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><rect width="400" height="300" fill="#e7e2db"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="serif" font-size="16" fill="#51604d">Artspire Artwork</text></svg>`
+)}`;
+
 export function BeforeAfterSlider({
   beforeSrc,
   afterSrc,
@@ -12,6 +16,8 @@ export function BeforeAfterSlider({
   const containerRef = useRef<HTMLDivElement>(null);
   const [pct, setPct] = useState(50);
   const draggingRef = useRef(false);
+  const [afterError, setAfterError] = useState(false);
+  const [beforeError, setBeforeError] = useState(false);
 
   const moveTo = (clientX: number) => {
     const c = containerRef.current;
@@ -44,9 +50,9 @@ export function BeforeAfterSlider({
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
       >
-        <img alt="Finished Artwork" className="slider-image" src={afterSrc} />
+        <img alt="Finished Artwork" className="slider-image" src={afterError ? FALLBACK_SVG : afterSrc} onError={() => setAfterError(true)} />
         <div className="slider-overlay" style={{ width: `${pct}%` }}>
-          <img alt="Original Photo" className="slider-image" src={beforeSrc} />
+          <img alt="Original Photo" className="slider-image" src={beforeError ? FALLBACK_SVG : beforeSrc} onError={() => setBeforeError(true)} />
         </div>
         <div
           className="slider-handle-container absolute top-0 bottom-0 z-[10] pointer-events-none -translate-x-1/2"

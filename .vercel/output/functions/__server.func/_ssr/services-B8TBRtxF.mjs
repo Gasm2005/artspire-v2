@@ -1,0 +1,171 @@
+import { j as jsxRuntimeExports, r as reactExports } from "../_libs/react.mjs";
+import { L as Layout, w as waLink } from "./Layout-CwWMbCeQ.mjs";
+import { A as ArrowRight } from "../_libs/lucide-react.mjs";
+import "../_libs/tanstack__react-router.mjs";
+import "../_libs/tanstack__router-core.mjs";
+import "../_libs/tanstack__history.mjs";
+import "../_libs/cookie-es.mjs";
+import "../_libs/seroval.mjs";
+import "../_libs/seroval-plugins.mjs";
+import "node:stream/web";
+import "node:stream";
+import "../_libs/react-dom.mjs";
+import "util";
+import "crypto";
+import "async_hooks";
+import "stream";
+import "../_libs/isbot.mjs";
+const services = [{
+  image: "https://picsum.photos/seed/sketch1/600/400",
+  label: "PENCIL SKETCHES",
+  headline: "Pencil Sketch Portraits",
+  tagline: "Timeless. Precise. Deeply personal.",
+  tags: ["Anniversary", "Memorial", "Parent Portraits"],
+  description: "A pencil sketch captures what a photograph cannot — the quiet emotion behind a face, the weight of a memory, the details only someone who truly looks would notice. Every line drawn by hand. Nothing printed. Nothing AI-generated.",
+  price: "From ₹999",
+  timeline: "5–7 days",
+  button: "Commission a Sketch",
+  message: "Hi Artspire! I'm interested in a custom pencil sketch portrait. Can you share sizes and pricing?"
+}, {
+  image: "https://picsum.photos/seed/portrait1/600/400",
+  label: "COLOUR PORTRAITS",
+  headline: "Custom Colour Portraits",
+  tagline: "Vivid. Warm. Painted just for you.",
+  tags: ["Couples", "Birthdays", "Home Decor"],
+  description: "Colour brings a face to life in a way black and white cannot. Watercolour and acrylic portraits painted by hand — layer by layer — until the person looking back from the canvas feels real enough to speak.",
+  price: "From ₹1,999",
+  timeline: "7–10 days",
+  button: "Commission a Portrait",
+  message: "Hi Artspire! I'd love a custom colour portrait. What styles and sizes do you offer?"
+}, {
+  image: "https://picsum.photos/seed/painting1/600/400",
+  label: "PAINTINGS",
+  headline: "Custom Paintings on Canvas",
+  tagline: "Bold. Textured. Made to last a lifetime.",
+  tags: ["Home Decor", "Corporate", "Large Commissions"],
+  description: "A painting on canvas carries a physical presence no photograph can replicate. Oil, acrylic, or watercolour — each medium chosen for what the subject deserves. Pieces that define a room and start conversations for decades.",
+  price: "From ₹2,999",
+  timeline: "10–14 days",
+  button: "Commission a Painting",
+  message: "Hi Artspire! I'm interested in a custom painting on canvas. Can we discuss size and medium options?"
+}, {
+  image: "https://picsum.photos/seed/mirror1/600/400",
+  label: "MIRROR ART",
+  headline: "Custom Mirror Art — Handmade Wall Art",
+  tagline: "Functional. Beautiful. Unlike anything else on your wall.",
+  tags: ["Weddings", "Anniversary", "New Home"],
+  description: "Hand-engraved and hand-painted mirror art catches light differently at every hour — a piece that is both art and object, both gift and heirloom. Cannot be mass-produced. Cannot be printed. Only made, by hand, for you.",
+  price: "From ₹2,499",
+  timeline: "7–12 days",
+  button: "Commission Mirror Art",
+  message: "Hi Artspire! I'd love to know more about your custom mirror art. What designs and sizes are available?"
+}, {
+  image: "https://picsum.photos/seed/clay1/600/400",
+  label: "CLAY ART",
+  headline: "Custom Clay Art Portraits",
+  tagline: "Three-dimensional. Personal. Impossible to forget.",
+  tags: ["Birthdays", "Couples", "Pets", "Baby Gifts"],
+  description: "Nothing surprises someone like seeing a person they love sculpted in three dimensions by a human hand. Clay miniatures capture the tilt of a head, the curve of a smile, the exact way a pet sits when it thinks no one is watching. Handcrafted. One of a kind. Yours.",
+  price: "From ₹1,799",
+  timeline: "7–10 days",
+  button: "Commission Clay Art",
+  message: "Hi Artspire! I'm interested in a custom clay art piece. Can you share examples and pricing?"
+}, {
+  image: "https://picsum.photos/seed/gifts1/600/400",
+  label: "PERSONALIZED GIFTS",
+  headline: "Personalized Art Gifts — Custom Handmade",
+  tagline: "Made for one person. Impossible to replicate.",
+  tags: ["Festivals", "Farewell", "Corporate", "Birthdays"],
+  description: "Some occasions deserve more than a single artwork. Personalised gift sets combine mediums and care into one package that feels complete the moment it is unwrapped. Not assembled. Not printed. Made — specifically for the person whose name is on it.",
+  price: "From ₹799",
+  timeline: "5–10 days",
+  button: "Explore Gift Options",
+  message: "Hi Artspire! I'm looking for a personalized handmade gift. Can you help me decide what would work best?"
+}];
+const promises = [{
+  icon: "🕐",
+  title: "Standard Delivery",
+  body: "5–14 days from confirmation. Timeline confirmed at order.",
+  highlight: false
+}, {
+  icon: "⚡",
+  title: "Express Option",
+  body: "Need it sooner? 3–7 day delivery available. Ask us on WhatsApp.",
+  highlight: true
+}, {
+  icon: "🚚",
+  title: "Pan India Shipping",
+  body: "Every pin code. Premium courier. Full tracking provided.",
+  highlight: false
+}, {
+  icon: "🔄",
+  title: "Free Revisions",
+  body: "Not happy with the proof? We redo it. No arguments.",
+  highlight: false
+}, {
+  icon: "📦",
+  title: "Premium Packaging",
+  body: "Rigid tube or flat mailer. No bends. Gift-ready on arrival.",
+  highlight: false
+}, {
+  icon: "🛡️",
+  title: "7-Day Guarantee",
+  body: "Damaged or wrong artwork? We remake it. Free. No questions.",
+  highlight: false
+}];
+function ServiceCard({
+  s
+}) {
+  const [expanded, setExpanded] = reactExports.useState(false);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("article", { className: "bg-white rounded-xl overflow-hidden border border-border/60 hover-lift shadow-sm flex flex-col h-full", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-[180px] md:h-[200px] overflow-hidden bg-surface-variant", children: /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: s.image, alt: s.headline, loading: "lazy", className: "w-full h-full object-cover img-zoom" }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-5 md:p-6 flex flex-col flex-grow", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-body text-[10px] font-bold uppercase tracking-[0.2em] text-gold mb-2", children: s.label }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-display text-[18px] md:text-[20px] text-forest font-bold leading-tight mb-2", children: s.headline }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-accent italic text-[13px] text-stone leading-snug mb-3", children: s.tagline }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-wrap gap-1.5 mb-3", children: s.tags.map((t) => /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "rounded-full border border-stone/30 text-stone text-[10px] font-body px-2.5 py-0.5", children: t }, t)) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `text-[13px] text-charcoal leading-relaxed mb-3 ${expanded ? "" : "line-clamp-2"}`, children: s.description }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("button", { type: "button", onClick: () => setExpanded((v) => !v), className: "text-left text-gold text-[12px] font-semibold mb-4 hover:text-gold-dark transition-colors", children: expanded ? "Read less ↑" : "Read more →" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between pt-3 border-t border-border/40 mt-auto", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-gold font-bold text-[14px]", children: s.price }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-stone text-[12px]", children: [
+          "⏱ ",
+          s.timeline
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("a", { href: waLink(s.message), target: "_blank", rel: "noreferrer", className: "flex items-center justify-center gap-2 w-full h-[44px] mt-4 rounded-lg bg-forest text-white text-[12px] font-bold uppercase tracking-wide hover:bg-forest-dark transition-colors active-scale btn-primary", children: [
+        s.button,
+        " ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowRight, { size: 14 })
+      ] })
+    ] })
+  ] });
+}
+function ServicesPage() {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Layout, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-cream-dark", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("section", { className: "section-padding text-center", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "container-main", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-body text-[11px] md:text-[12px] font-semibold text-gold mb-4 uppercase tracking-[0.25em]", children: "What I Create" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "font-display text-[32px] md:text-[42px] font-bold text-forest mb-4 leading-tight", children: "Handcrafted Art for Every Occasion" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-body text-[14px] md:text-[16px] text-stone max-w-xl mx-auto", children: "Every piece is made by hand. Every commission begins with your story." })
+    ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("section", { className: "pb-12 md:pb-16", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "container-main", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6", children: services.map((s) => /* @__PURE__ */ jsxRuntimeExports.jsx(ServiceCard, { s }, s.label)) }) }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("section", { className: "pb-12 md:pb-16", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "container-main", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-cream rounded-xl border-l-4 border-gold p-6 md:p-8", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-[24px] md:text-[28px] text-forest font-bold mb-2", children: "Our Promise to You" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-body text-[14px] text-stone mb-6", children: "Every order comes with complete clarity on timing, revisions and delivery." }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4", children: promises.map((p) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `bg-white rounded-xl p-4 md:p-5 border ${p.highlight ? "border-gold/40" : "border-border/40"}`, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-[20px] mb-2", children: p.icon }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-display text-[15px] md:text-[16px] text-forest font-semibold mb-1", children: p.title }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-body text-[12px] md:text-[13px] text-stone leading-relaxed", children: p.body })
+      ] }, p.title)) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-center mt-6 md:mt-8", children: /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: waLink("Hi Artspire! I have a question about delivery and revisions."), target: "_blank", rel: "noreferrer", className: "inline-flex items-center gap-2 h-[48px] px-8 bg-forest text-white text-[13px] font-bold uppercase tracking-wide rounded-xl hover:bg-forest-dark transition-colors active-scale btn-primary", children: "Ask on WhatsApp" }) })
+    ] }) }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("section", { className: "section-padding bg-forest text-center", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "container-main max-w-2xl", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-[26px] md:text-[32px] text-white font-bold mb-4 leading-tight", children: "Not Sure Which Art Is Right for Your Occasion?" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-body text-[14px] md:text-[16px] text-cream/70 mb-8 leading-relaxed", children: "Tell me who it is for, what the occasion is, and your budget. I will tell you exactly what will make them remember this gift for the rest of their life." }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: waLink("Hi Artspire! I'm not sure which artwork type would work best for my occasion. Can you help me decide?"), target: "_blank", rel: "noreferrer", className: "inline-flex items-center gap-2 h-[52px] px-8 bg-gold text-forest text-[13px] md:text-[14px] font-bold uppercase tracking-wide rounded-full btn-gold transition-colors active-scale", children: "Let's Talk — WhatsApp Me" })
+    ] }) })
+  ] }) });
+}
+export {
+  ServicesPage as component
+};
