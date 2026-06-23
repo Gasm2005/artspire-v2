@@ -1,5 +1,5 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { s as sections } from "./router-DcS5HrDk.mjs";
+import { s as sections } from "./router-BuXjcpZ8.mjs";
 import { L as Layout, w as waLink } from "./Layout-BvY1gIZf.mjs";
 import { M as MessageCircle, d as ChevronDown } from "../_libs/lucide-react.mjs";
 import "../_libs/tanstack__query-core.mjs";
@@ -18,6 +18,16 @@ import "crypto";
 import "async_hooks";
 import "stream";
 import "../_libs/isbot.mjs";
+import "./client-e7dr843k.mjs";
+import "../_libs/supabase__supabase-js.mjs";
+import "../_libs/supabase__postgrest-js.mjs";
+import "../_libs/supabase__realtime-js.mjs";
+import "../_libs/supabase__phoenix.mjs";
+import "../_libs/supabase__storage-js.mjs";
+import "../_libs/iceberg-js.mjs";
+import "../_libs/supabase__auth-js.mjs";
+import "tslib";
+import "../_libs/supabase__functions-js.mjs";
 function AccordionItem({
   item,
   isOpen,

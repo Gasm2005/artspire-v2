@@ -1115,6 +1115,11 @@ function encodePathParam(value, decoder) {
   const encoded = encodeURIComponent(value);
   return decoder?.(encoded) ?? encoded;
 }
+function notFound(options = {}) {
+  options.isNotFound = true;
+  if (options.throw) throw options;
+  return options;
+}
 function isNotFound(obj) {
   return obj?.isNotFound === true;
 }
@@ -2492,7 +2497,7 @@ var RouterCore = class {
     this.load = async (opts) => {
       const historyAction = opts?.action?.type;
       let redirect2;
-      let notFound;
+      let notFound2;
       let loadPromise;
       const previousLocation = this.stores.resolvedLocation.get() ?? this.stores.location.get();
       loadPromise = new Promise((resolve) => {
@@ -2561,8 +2566,8 @@ var RouterCore = class {
           } catch (err) {
             if (isRedirect(err)) {
               redirect2 = err;
-            } else if (isNotFound(err)) notFound = err;
-            const nextStatusCode = redirect2 ? redirect2.status : notFound ? 404 : this.stores.matches.get().some((d) => d.status === "error") ? 500 : 200;
+            } else if (isNotFound(err)) notFound2 = err;
+            const nextStatusCode = redirect2 ? redirect2.status : notFound2 ? 404 : this.stores.matches.get().some((d) => d.status === "error") ? 500 : 200;
             this.batch(() => {
               this.stores.statusCode.set(nextStatusCode);
               this.stores.redirect.set(redirect2);
@@ -4696,6 +4701,7 @@ export {
   makeSerovalPlugin as N,
   getStylesheetHref as O,
   isSsrResponse as P,
+  notFound as Q,
   RouterCore as R,
   isDangerousProtocol as a,
   BaseRoute as b,
