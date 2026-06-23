@@ -16,6 +16,10 @@ dist-ssr
 .nitro
 *.local
 
+# Vercel Build Output API — must be built fresh on Vercel
+# Never commit prebuilt artifacts or Vercel will skip the build
+.vercel/output
+
 # Environment variables
 .env
 
