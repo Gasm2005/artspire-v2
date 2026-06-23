@@ -11,7 +11,15 @@
 // 1. Rewrites bare "tslib" imports to relative "./tslib.mjs" in all affected files
 // 2. Copies the real tslib.es6.mjs into the output directory
 
-import { readFileSync, writeFileSync, copyFileSync, existsSync } from "fs";
+// Post-build script: Fix tslib bundling for Vercel serverless functions.
+
+import {
+  readFileSync,
+  writeFileSync,
+  copyFileSync,
+  existsSync,
+  cpSync,
+} from "fs";
 import { join } from "path";
 
 const OUTPUT_DIR = join(process.cwd(), ".vercel/output/functions/__server.func");
@@ -27,26 +35,44 @@ const FILES_TO_PATCH = [
 function main() {
   console.log("[post-build] Starting tslib fix...");
 
-  // Verify output directory exists
   if (!existsSync(OUTPUT_DIR)) {
     console.warn("[post-build] Output directory not found:", OUTPUT_DIR);
     process.exit(0);
   }
 
-  // Verify source tslib exists
   if (!existsSync(TSLIB_SRC)) {
     console.warn("[post-build] tslib source not found:", TSLIB_SRC);
     process.exit(0);
   }
 
-  // Copy the real tslib file into _libs/
+  // Copy tslib.mjs
   const tslibDest = join(LIBS_DIR, "tslib.mjs");
   copyFileSync(TSLIB_SRC, tslibDest);
-  console.log("[post-build] Copied tslib.es6.mjs → _libs/tslib.mjs");
+  console.log("[post-build] Copied tslib.es6.mjs -> _libs/tslib.mjs");
 
-  // Patch all files that import from "tslib"
+  // Copy tslib/modules directory
+  const TSLIB_MODULES_SRC = join(
+    process.cwd(),
+    "node_modules/tslib/modules"
+  );
+
+  const TSLIB_MODULES_DEST = join(
+    OUTPUT_DIR,
+    "node_modules/tslib/modules"
+  );
+
+  if (existsSync(TSLIB_MODULES_SRC)) {
+    cpSync(TSLIB_MODULES_SRC, TSLIB_MODULES_DEST, {
+      recursive: true,
+    });
+
+    console.log("[post-build] Copied tslib/modules");
+  }
+
+  // Patch imports
   for (const file of FILES_TO_PATCH) {
     const filePath = join(LIBS_DIR, file);
+
     if (!existsSync(filePath)) {
       console.warn("[post-build] File not found, skipping:", file);
       continue;
@@ -55,8 +81,6 @@ function main() {
     let code = readFileSync(filePath, "utf-8");
     const original = code;
 
-    // Rewrite bare specifier imports to relative paths
-    // Handles both:  import { x } from "tslib"  and  import "tslib"
     code = code.replace(/from "tslib"/g, 'from "./tslib.mjs"');
     code = code.replace(/import "tslib"/g, 'import "./tslib.mjs"');
 
