@@ -1,7 +1,7 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
 import { L as Layout, w as waLink } from "./Layout-BvY1gIZf.mjs";
-import { R as Route } from "./router-BuXjcpZ8.mjs";
-import { f as Palette, R as Ruler, h as IndianRupee, T as Tag, M as MessageCircle, d as ChevronDown } from "../_libs/lucide-react.mjs";
+import { R as Route$4 } from "./router-BMCUXijp.mjs";
+import { f as Palette, R as Ruler, k as IndianRupee, T as Tag, M as MessageCircle, d as ChevronDown } from "../_libs/lucide-react.mjs";
 import "../_libs/tanstack__react-router.mjs";
 import "../_libs/tanstack__router-core.mjs";
 import "../_libs/tanstack__history.mjs";
@@ -18,7 +18,7 @@ import "stream";
 import "../_libs/isbot.mjs";
 import "../_libs/tanstack__query-core.mjs";
 import "../_libs/tanstack__react-query.mjs";
-import "./client-e7dr843k.mjs";
+import "./client-Um71xJKt.mjs";
 import "../_libs/supabase__supabase-js.mjs";
 import "../_libs/supabase__postgrest-js.mjs";
 import "../_libs/supabase__realtime-js.mjs";
@@ -34,7 +34,7 @@ function ArtworkPage() {
     tags,
     related,
     faqs
-  } = Route.useLoaderData();
+  } = Route$4.useLoaderData();
   const [openFaq, setOpenFaq] = reactExports.useState(null);
   const storyHtml = parseStoryContent(artwork.story_content);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(Layout, { children: [

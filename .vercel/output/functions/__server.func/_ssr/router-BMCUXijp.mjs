@@ -3,7 +3,7 @@ import { Q as QueryClientProvider } from "../_libs/tanstack__react-query.mjs";
 import { c as createRouter, a as createRootRouteWithContext, u as useRouter, L as Link, O as Outlet, H as HeadContent, S as Scripts, b as createFileRoute, l as lazyRouteComponent } from "../_libs/tanstack__react-router.mjs";
 import { Q as notFound } from "../_libs/tanstack__router-core.mjs";
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { s as supabase } from "./client-e7dr843k.mjs";
+import { s as supabase } from "./client-Um71xJKt.mjs";
 import "../_libs/react-dom.mjs";
 import "util";
 import "crypto";
@@ -25,7 +25,7 @@ import "../_libs/iceberg-js.mjs";
 import "../_libs/supabase__auth-js.mjs";
 import "tslib";
 import "../_libs/supabase__functions-js.mjs";
-const appCss = "/assets/styles-Dt5Gsq6U.css";
+const appCss = "/assets/styles-Dv--b4L2.css";
 function reportLovableError(error, context = {}) {
   if (typeof window === "undefined") return;
   window.__lovableEvents?.captureException?.(
@@ -89,7 +89,7 @@ function ErrorComponent({ error, reset }) {
     ] })
   ] }) });
 }
-const Route$8 = createRootRouteWithContext()({
+const Route$e = createRootRouteWithContext()({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -136,11 +136,11 @@ function RootShell({ children }) {
   ] });
 }
 function RootComponent() {
-  const { queryClient } = Route$8.useRouteContext();
+  const { queryClient } = Route$e.useRouteContext();
   return /* @__PURE__ */ jsxRuntimeExports.jsx(QueryClientProvider, { client: queryClient, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Outlet, {}) });
 }
-const $$splitComponentImporter$7 = () => import("./services-CMeUIQR7.mjs");
-const Route$7 = createFileRoute("/services")({
+const $$splitComponentImporter$d = () => import("./services-CMeUIQR7.mjs");
+const Route$d = createFileRoute("/services")({
   head: () => ({
     meta: [{
       title: "Custom Handmade Art Services India | Pencil Sketches, Portraits & More | Artspire"
@@ -149,10 +149,10 @@ const Route$7 = createFileRoute("/services")({
       content: "Commission handmade pencil sketches, colour portraits, paintings, mirror art, clay art and personalized gifts from Artspire India. Every artwork made by hand. Starting from ₹799. WhatsApp to order."
     }]
   }),
-  component: lazyRouteComponent($$splitComponentImporter$7, "component")
+  component: lazyRouteComponent($$splitComponentImporter$d, "component")
 });
-const $$splitComponentImporter$6 = () => import("./pricing-DdJNm3Yz.mjs");
-const Route$6 = createFileRoute("/pricing")({
+const $$splitComponentImporter$c = () => import("./pricing-DdJNm3Yz.mjs");
+const Route$c = createFileRoute("/pricing")({
   head: () => ({
     meta: [{
       title: "Pricing | Artspire"
@@ -161,10 +161,10 @@ const Route$6 = createFileRoute("/pricing")({
       content: "Transparent, honest pricing for handcrafted commissions. No hidden charges."
     }]
   }),
-  component: lazyRouteComponent($$splitComponentImporter$6, "component")
+  component: lazyRouteComponent($$splitComponentImporter$c, "component")
 });
-const $$splitComponentImporter$5 = () => import("./portfolio-DyAW1M47.mjs");
-const Route$5 = createFileRoute("/portfolio")({
+const $$splitComponentImporter$b = () => import("./portfolio-DyAW1M47.mjs");
+const Route$b = createFileRoute("/portfolio")({
   head: () => ({
     meta: [{
       title: "Portfolio | Artspire"
@@ -173,7 +173,7 @@ const Route$5 = createFileRoute("/portfolio")({
       content: "Handcrafted portraits, paintings, mirror art, clay sculptures and personalized gifts."
     }]
   }),
-  component: lazyRouteComponent($$splitComponentImporter$5, "component")
+  component: lazyRouteComponent($$splitComponentImporter$b, "component")
 });
 const sections = [{
   title: "Ordering & Process",
@@ -245,7 +245,7 @@ const sections = [{
     answer: "Yes. Custom portraits, framed sketches and clay miniatures make unique corporate gifts. We offer bulk pricing and can include your company branding on packaging. WhatsApp us for a corporate quote."
   }]
 }];
-const $$splitComponentImporter$4 = () => import("./faq-sE9blug3.mjs");
+const $$splitComponentImporter$a = () => import("./faq-Cwd4zJlo.mjs");
 const faqJsonLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
@@ -258,7 +258,7 @@ const faqJsonLd = {
     }
   })))
 };
-const Route$4 = createFileRoute("/faq")({
+const Route$a = createFileRoute("/faq")({
   head: () => ({
     meta: [{
       title: "FAQ | Artspire"
@@ -280,10 +280,10 @@ const Route$4 = createFileRoute("/faq")({
       children: JSON.stringify(faqJsonLd)
     }]
   }),
-  component: lazyRouteComponent($$splitComponentImporter$4, "component")
+  component: lazyRouteComponent($$splitComponentImporter$a, "component")
 });
-const $$splitComponentImporter$3 = () => import("./contact-CX7_JHA6.mjs");
-const Route$3 = createFileRoute("/contact")({
+const $$splitComponentImporter$9 = () => import("./contact-CX7_JHA6.mjs");
+const Route$9 = createFileRoute("/contact")({
   head: () => ({
     meta: [{
       title: "Contact | Artspire"
@@ -292,10 +292,10 @@ const Route$3 = createFileRoute("/contact")({
       content: "Reach Himangi on WhatsApp within 2 hours to start your custom commission."
     }]
   }),
-  component: lazyRouteComponent($$splitComponentImporter$3, "component")
+  component: lazyRouteComponent($$splitComponentImporter$9, "component")
 });
-const $$splitComponentImporter$2 = () => import("./about-C-kGB1ih.mjs");
-const Route$2 = createFileRoute("/about")({
+const $$splitComponentImporter$8 = () => import("./about-C-kGB1ih.mjs");
+const Route$8 = createFileRoute("/about")({
   head: () => ({
     meta: [{
       title: "About | Artspire"
@@ -304,10 +304,14 @@ const Route$2 = createFileRoute("/about")({
       content: "Meet Himangi — the artist behind Artspire and the philosophy behind every handcrafted piece."
     }]
   }),
-  component: lazyRouteComponent($$splitComponentImporter$2, "component")
+  component: lazyRouteComponent($$splitComponentImporter$8, "component")
 });
-const $$splitComponentImporter$1 = () => import("./index-XDkn1T4j.mjs");
-const Route$1 = createFileRoute("/")({
+const $$splitComponentImporter$7 = () => import("./route-Ca8ZAsoN.mjs");
+const Route$7 = createFileRoute("/admin")({
+  component: lazyRouteComponent($$splitComponentImporter$7, "component")
+});
+const $$splitComponentImporter$6 = () => import("./index-XDkn1T4j.mjs");
+const Route$6 = createFileRoute("/")({
   head: () => ({
     meta: [{
       title: "Artspire | Artisanal Art Studio"
@@ -316,8 +320,33 @@ const Route$1 = createFileRoute("/")({
       content: "Custom handmade pencil sketches, paintings, mirror art and clay sculptures from your favorite photos."
     }]
   }),
-  component: lazyRouteComponent($$splitComponentImporter$1, "component")
+  component: lazyRouteComponent($$splitComponentImporter$6, "component")
 });
+const $$splitComponentImporter$5 = () => import("./index-aDY1t7sX.mjs");
+const Route$5 = createFileRoute("/admin/")({
+  component: lazyRouteComponent($$splitComponentImporter$5, "component")
+});
+async function getArtworks(opts) {
+  let query = supabase.from("artworks").select("*, categories(*)").is("deleted_at", null);
+  if (opts?.status) query = query.eq("status", opts.status);
+  if (opts?.featured) query = query.eq("featured", true);
+  if (opts?.homepage) query = query.eq("show_on_homepage", true);
+  if (opts?.categorySlug) {
+    query = query.eq("categories.slug", opts.categorySlug);
+  }
+  const orderCol = opts?.orderBy ?? "display_order";
+  query = query.order(orderCol, { ascending: opts?.ascending ?? true });
+  if (opts?.limit) query = query.limit(opts.limit);
+  if (opts?.offset) query = query.range(opts.offset, opts.offset + (opts.limit ?? 10) - 1);
+  const { data, error } = await query;
+  if (error) throw error;
+  return data ?? [];
+}
+async function getArtworkById(id) {
+  const { data, error } = await supabase.from("artworks").select("*, categories(*)").eq("id", id).is("deleted_at", null).single();
+  if (error) throw error;
+  return data;
+}
 async function getPublishedArtworkBySlug(slug) {
   const { data, error } = await supabase.from("artworks").select("*, categories(*)").eq("slug", slug).eq("status", "published").is("deleted_at", null).single();
   if (error) throw error;
@@ -336,6 +365,45 @@ async function getArtworkTags(artworkId) {
   const { data, error } = await supabase.from("artwork_tags").select("tags(*)").eq("artwork_id", artworkId);
   if (error) throw error;
   return (data ?? []).map((d) => d.tags);
+}
+async function getAllArtworkTags(artworkId) {
+  const { data, error } = await supabase.from("artwork_tags").select("tag_id").eq("artwork_id", artworkId);
+  if (error) throw error;
+  return (data ?? []).map((d) => d.tag_id);
+}
+function generateSlug(title) {
+  return title.toLowerCase().trim().replace(/[^\w\s-]/g, "").replace(/[\s_-]+/g, "-").replace(/^-+|-+$/g, "");
+}
+async function createArtwork(values) {
+  const { data, error } = await supabase.from("artworks").insert(values).select().single();
+  if (error) throw error;
+  return data;
+}
+async function updateArtwork(id, values) {
+  const { data, error } = await supabase.from("artworks").update(values).eq("id", id).select().single();
+  if (error) throw error;
+  return data;
+}
+async function softDeleteArtwork(id) {
+  const { error } = await supabase.from("artworks").update({ deleted_at: (/* @__PURE__ */ new Date()).toISOString(), status: "archived" }).eq("id", id);
+  if (error) throw error;
+}
+async function setArtworkTags(artworkId, tagIds) {
+  const { error: delError } = await supabase.from("artwork_tags").delete().eq("artwork_id", artworkId);
+  if (delError) throw delError;
+  if (tagIds.length === 0) return;
+  const inserts = tagIds.map((tagId) => ({ artwork_id: artworkId, tag_id: tagId }));
+  const { error: insError } = await supabase.from("artwork_tags").insert(inserts);
+  if (insError) throw insError;
+}
+async function publishArtwork(id) {
+  return updateArtwork(id, { status: "published", published_at: (/* @__PURE__ */ new Date()).toISOString() });
+}
+async function unpublishArtwork(id) {
+  return updateArtwork(id, { status: "draft", published_at: null });
+}
+async function archiveArtwork(id) {
+  return updateArtwork(id, { status: "archived", deleted_at: (/* @__PURE__ */ new Date()).toISOString() });
 }
 async function getFAQs(entityType, entityId) {
   let query = supabase.from("faqs").select("*").order("display_order", { ascending: true });
@@ -389,8 +457,8 @@ function getSiteUrl() {
   return "https://artspire.in";
 }
 const $$splitNotFoundComponentImporter = () => import("./artwork._slug-RG6xkl8s.mjs");
-const $$splitComponentImporter = () => import("./artwork._slug-DuviXlEO.mjs");
-const Route = createFileRoute("/artwork/$slug")({
+const $$splitComponentImporter$4 = () => import("./artwork._slug-IlLCVeoX.mjs");
+const Route$4 = createFileRoute("/artwork/$slug")({
   loader: async ({
     params
   }) => {
@@ -488,51 +556,117 @@ const Route = createFileRoute("/artwork/$slug")({
       }]
     };
   },
-  component: lazyRouteComponent($$splitComponentImporter, "component"),
+  component: lazyRouteComponent($$splitComponentImporter$4, "component"),
   notFoundComponent: lazyRouteComponent($$splitNotFoundComponentImporter, "notFoundComponent")
 });
-const ServicesRoute = Route$7.update({
+const $$splitComponentImporter$3 = () => import("./login-3rwKCG7-.mjs");
+const Route$3 = createFileRoute("/admin/login")({
+  component: lazyRouteComponent($$splitComponentImporter$3, "component")
+});
+const $$splitComponentImporter$2 = () => import("./index-C-jIYmWw.mjs");
+const Route$2 = createFileRoute("/admin/artworks/")({
+  component: lazyRouteComponent($$splitComponentImporter$2, "component")
+});
+const $$splitComponentImporter$1 = () => import("./new-ChUPA8jK.mjs");
+const Route$1 = createFileRoute("/admin/artworks/new")({
+  component: lazyRouteComponent($$splitComponentImporter$1, "component")
+});
+const $$splitComponentImporter = () => import("./edit._id-BxvMo-LV.mjs");
+const Route = createFileRoute("/admin/artworks/edit/$id")({
+  loader: async ({
+    params
+  }) => {
+    const artwork = await getArtworkById(params.id);
+    if (!artwork) throw notFound();
+    return {
+      artwork
+    };
+  },
+  component: lazyRouteComponent($$splitComponentImporter, "component")
+});
+const ServicesRoute = Route$d.update({
   id: "/services",
   path: "/services",
-  getParentRoute: () => Route$8
+  getParentRoute: () => Route$e
 });
-const PricingRoute = Route$6.update({
+const PricingRoute = Route$c.update({
   id: "/pricing",
   path: "/pricing",
-  getParentRoute: () => Route$8
+  getParentRoute: () => Route$e
 });
-const PortfolioRoute = Route$5.update({
+const PortfolioRoute = Route$b.update({
   id: "/portfolio",
   path: "/portfolio",
-  getParentRoute: () => Route$8
+  getParentRoute: () => Route$e
 });
-const FaqRoute = Route$4.update({
+const FaqRoute = Route$a.update({
   id: "/faq",
   path: "/faq",
-  getParentRoute: () => Route$8
+  getParentRoute: () => Route$e
 });
-const ContactRoute = Route$3.update({
+const ContactRoute = Route$9.update({
   id: "/contact",
   path: "/contact",
-  getParentRoute: () => Route$8
+  getParentRoute: () => Route$e
 });
-const AboutRoute = Route$2.update({
+const AboutRoute = Route$8.update({
   id: "/about",
   path: "/about",
-  getParentRoute: () => Route$8
+  getParentRoute: () => Route$e
 });
-const IndexRoute = Route$1.update({
+const AdminRouteRoute = Route$7.update({
+  id: "/admin",
+  path: "/admin",
+  getParentRoute: () => Route$e
+});
+const IndexRoute = Route$6.update({
   id: "/",
   path: "/",
-  getParentRoute: () => Route$8
+  getParentRoute: () => Route$e
 });
-const ArtworkSlugRoute = Route.update({
+const AdminIndexRoute = Route$5.update({
+  id: "/",
+  path: "/",
+  getParentRoute: () => AdminRouteRoute
+});
+const ArtworkSlugRoute = Route$4.update({
   id: "/artwork/$slug",
   path: "/artwork/$slug",
-  getParentRoute: () => Route$8
+  getParentRoute: () => Route$e
 });
+const AdminLoginRoute = Route$3.update({
+  id: "/login",
+  path: "/login",
+  getParentRoute: () => AdminRouteRoute
+});
+const AdminArtworksIndexRoute = Route$2.update({
+  id: "/artworks/",
+  path: "/artworks/",
+  getParentRoute: () => AdminRouteRoute
+});
+const AdminArtworksNewRoute = Route$1.update({
+  id: "/artworks/new",
+  path: "/artworks/new",
+  getParentRoute: () => AdminRouteRoute
+});
+const AdminArtworksEditIdRoute = Route.update({
+  id: "/artworks/edit/$id",
+  path: "/artworks/edit/$id",
+  getParentRoute: () => AdminRouteRoute
+});
+const AdminRouteRouteChildren = {
+  AdminLoginRoute,
+  AdminIndexRoute,
+  AdminArtworksNewRoute,
+  AdminArtworksIndexRoute,
+  AdminArtworksEditIdRoute
+};
+const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
+  AdminRouteRouteChildren
+);
 const rootRouteChildren = {
   IndexRoute,
+  AdminRouteRoute: AdminRouteRouteWithChildren,
   AboutRoute,
   ContactRoute,
   FaqRoute,
@@ -541,7 +675,7 @@ const rootRouteChildren = {
   ServicesRoute,
   ArtworkSlugRoute
 };
-const routeTree = Route$8._addFileChildren(rootRouteChildren)._addFileTypes();
+const routeTree = Route$e._addFileChildren(rootRouteChildren)._addFileTypes();
 const getRouter = () => {
   const queryClient = new QueryClient();
   const router2 = createRouter({
@@ -557,7 +691,18 @@ const router = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProper
   getRouter
 }, Symbol.toStringTag, { value: "Module" }));
 export {
-  Route as R,
+  Route$4 as R,
+  archiveArtwork as a,
+  softDeleteArtwork as b,
+  Route as c,
+  getAllArtworkTags as d,
+  generateSlug as e,
+  updateArtwork as f,
+  getArtworks as g,
+  createArtwork as h,
+  setArtworkTags as i,
+  publishArtwork as p,
   router as r,
-  sections as s
+  sections as s,
+  unpublishArtwork as u
 };
