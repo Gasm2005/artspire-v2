@@ -15,8 +15,14 @@ import { Route as PortfolioRouteImport } from './routes/portfolio'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as ArtworkSlugRouteImport } from './routes/artwork.$slug'
+import { Route as AdminLoginRouteImport } from './routes/admin/login'
+import { Route as AdminArtworksIndexRouteImport } from './routes/admin/artworks/index'
+import { Route as AdminArtworksNewRouteImport } from './routes/admin/artworks/new'
+import { Route as AdminArtworksEditIdRouteImport } from './routes/admin/artworks/edit.$id'
 
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
@@ -48,26 +54,62 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRouteRoute = AdminRouteRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const ArtworkSlugRoute = ArtworkSlugRouteImport.update({
   id: '/artwork/$slug',
   path: '/artwork/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminArtworksIndexRoute = AdminArtworksIndexRouteImport.update({
+  id: '/artworks/',
+  path: '/artworks/',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminArtworksNewRoute = AdminArtworksNewRouteImport.update({
+  id: '/artworks/new',
+  path: '/artworks/new',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminArtworksEditIdRoute = AdminArtworksEditIdRouteImport.update({
+  id: '/artworks/edit/$id',
+  path: '/artworks/edit/$id',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
   '/portfolio': typeof PortfolioRoute
   '/pricing': typeof PricingRoute
   '/services': typeof ServicesRoute
+  '/admin/login': typeof AdminLoginRoute
   '/artwork/$slug': typeof ArtworkSlugRoute
+  '/admin/': typeof AdminIndexRoute
+  '/admin/artworks/new': typeof AdminArtworksNewRoute
+  '/admin/artworks/': typeof AdminArtworksIndexRoute
+  '/admin/artworks/edit/$id': typeof AdminArtworksEditIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -77,30 +119,47 @@ export interface FileRoutesByTo {
   '/portfolio': typeof PortfolioRoute
   '/pricing': typeof PricingRoute
   '/services': typeof ServicesRoute
+  '/admin/login': typeof AdminLoginRoute
   '/artwork/$slug': typeof ArtworkSlugRoute
+  '/admin': typeof AdminIndexRoute
+  '/admin/artworks/new': typeof AdminArtworksNewRoute
+  '/admin/artworks': typeof AdminArtworksIndexRoute
+  '/admin/artworks/edit/$id': typeof AdminArtworksEditIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
   '/portfolio': typeof PortfolioRoute
   '/pricing': typeof PricingRoute
   '/services': typeof ServicesRoute
+  '/admin/login': typeof AdminLoginRoute
   '/artwork/$slug': typeof ArtworkSlugRoute
+  '/admin/': typeof AdminIndexRoute
+  '/admin/artworks/new': typeof AdminArtworksNewRoute
+  '/admin/artworks/': typeof AdminArtworksIndexRoute
+  '/admin/artworks/edit/$id': typeof AdminArtworksEditIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/about'
     | '/contact'
     | '/faq'
     | '/portfolio'
     | '/pricing'
     | '/services'
+    | '/admin/login'
     | '/artwork/$slug'
+    | '/admin/'
+    | '/admin/artworks/new'
+    | '/admin/artworks/'
+    | '/admin/artworks/edit/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -110,21 +169,33 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/pricing'
     | '/services'
+    | '/admin/login'
     | '/artwork/$slug'
+    | '/admin'
+    | '/admin/artworks/new'
+    | '/admin/artworks'
+    | '/admin/artworks/edit/$id'
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/about'
     | '/contact'
     | '/faq'
     | '/portfolio'
     | '/pricing'
     | '/services'
+    | '/admin/login'
     | '/artwork/$slug'
+    | '/admin/'
+    | '/admin/artworks/new'
+    | '/admin/artworks/'
+    | '/admin/artworks/edit/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRouteRoute: typeof AdminRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
   ContactRoute: typeof ContactRoute
   FaqRoute: typeof FaqRoute
@@ -178,12 +249,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/artwork/$slug': {
       id: '/artwork/$slug'
@@ -192,11 +277,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ArtworkSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/artworks/': {
+      id: '/admin/artworks/'
+      path: '/artworks'
+      fullPath: '/admin/artworks/'
+      preLoaderRoute: typeof AdminArtworksIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/artworks/new': {
+      id: '/admin/artworks/new'
+      path: '/artworks/new'
+      fullPath: '/admin/artworks/new'
+      preLoaderRoute: typeof AdminArtworksNewRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/artworks/edit/$id': {
+      id: '/admin/artworks/edit/$id'
+      path: '/artworks/edit/$id'
+      fullPath: '/admin/artworks/edit/$id'
+      preLoaderRoute: typeof AdminArtworksEditIdRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
   }
 }
 
+interface AdminRouteRouteChildren {
+  AdminLoginRoute: typeof AdminLoginRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+  AdminArtworksNewRoute: typeof AdminArtworksNewRoute
+  AdminArtworksIndexRoute: typeof AdminArtworksIndexRoute
+  AdminArtworksEditIdRoute: typeof AdminArtworksEditIdRoute
+}
+
+const AdminRouteRouteChildren: AdminRouteRouteChildren = {
+  AdminLoginRoute: AdminLoginRoute,
+  AdminIndexRoute: AdminIndexRoute,
+  AdminArtworksNewRoute: AdminArtworksNewRoute,
+  AdminArtworksIndexRoute: AdminArtworksIndexRoute,
+  AdminArtworksEditIdRoute: AdminArtworksEditIdRoute,
+}
+
+const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
+  AdminRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRouteRoute: AdminRouteRouteWithChildren,
   AboutRoute: AboutRoute,
   ContactRoute: ContactRoute,
   FaqRoute: FaqRoute,
