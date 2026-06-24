@@ -51,10 +51,17 @@ function patchFile(filePath) {
   let patched = code;
   let changed = false;
 
-  const relPath = relative(
+  let relPath = relative(
     dirname(filePath),
     join(LIBS_DIR, "tslib.mjs")
   ).replace(/\\/g, "/");
+
+  // Fix: relative() returns "tslib.mjs" when both files are in the same directory.
+  // Node.js interprets "tslib.mjs" as a bare package name, not a relative file.
+  // Must prepend "./" to make it a relative path.
+  if (!relPath.startsWith(".") && !relPath.startsWith("/")) {
+    relPath = "./" + relPath;
+  }
 
   for (const pattern of TSLIB_IMPORT_PATTERNS) {
     patched = patched.replace(pattern.regex, pattern.replacement(relPath));
