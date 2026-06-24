@@ -20,8 +20,25 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as ArtworkSlugRouteImport } from './routes/artwork.$slug'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
+import { Route as AdminWhatsappIndexRouteImport } from './routes/admin/whatsapp/index'
+import { Route as AdminWebsiteContentIndexRouteImport } from './routes/admin/website-content/index'
+import { Route as AdminVisualAssetsIndexRouteImport } from './routes/admin/visual-assets/index'
+import { Route as AdminSettingsIndexRouteImport } from './routes/admin/settings/index'
+import { Route as AdminSeoIndexRouteImport } from './routes/admin/seo/index'
+import { Route as AdminPagesIndexRouteImport } from './routes/admin/pages/index'
+import { Route as AdminMediaIndexRouteImport } from './routes/admin/media/index'
+import { Route as AdminLeadsIndexRouteImport } from './routes/admin/leads/index'
+import { Route as AdminFaqsIndexRouteImport } from './routes/admin/faqs/index'
+import { Route as AdminCategoriesIndexRouteImport } from './routes/admin/categories/index'
 import { Route as AdminArtworksIndexRouteImport } from './routes/admin/artworks/index'
+import { Route as AdminWebsiteContentHomepageRouteImport } from './routes/admin/website-content/homepage'
+import { Route as AdminWebsiteContentFooterRouteImport } from './routes/admin/website-content/footer'
+import { Route as AdminWebsiteContentContactRouteImport } from './routes/admin/website-content/contact'
+import { Route as AdminWebsiteContentAboutRouteImport } from './routes/admin/website-content/about'
+import { Route as AdminMediaIdRouteImport } from './routes/admin/media/$id'
 import { Route as AdminArtworksNewRouteImport } from './routes/admin/artworks/new'
+import { Route as AdminVisualAssetsEditIdRouteImport } from './routes/admin/visual-assets/edit.$id'
+import { Route as AdminCategoriesEditIdRouteImport } from './routes/admin/categories/edit.$id'
 import { Route as AdminArtworksEditIdRouteImport } from './routes/admin/artworks/edit.$id'
 
 const ServicesRoute = ServicesRouteImport.update({
@@ -79,14 +96,104 @@ const AdminLoginRoute = AdminLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => AdminRouteRoute,
 } as any)
+const AdminWhatsappIndexRoute = AdminWhatsappIndexRouteImport.update({
+  id: '/whatsapp/',
+  path: '/whatsapp/',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminWebsiteContentIndexRoute =
+  AdminWebsiteContentIndexRouteImport.update({
+    id: '/website-content/',
+    path: '/website-content/',
+    getParentRoute: () => AdminRouteRoute,
+  } as any)
+const AdminVisualAssetsIndexRoute = AdminVisualAssetsIndexRouteImport.update({
+  id: '/visual-assets/',
+  path: '/visual-assets/',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminSettingsIndexRoute = AdminSettingsIndexRouteImport.update({
+  id: '/settings/',
+  path: '/settings/',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminSeoIndexRoute = AdminSeoIndexRouteImport.update({
+  id: '/seo/',
+  path: '/seo/',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminPagesIndexRoute = AdminPagesIndexRouteImport.update({
+  id: '/pages/',
+  path: '/pages/',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminMediaIndexRoute = AdminMediaIndexRouteImport.update({
+  id: '/media/',
+  path: '/media/',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminLeadsIndexRoute = AdminLeadsIndexRouteImport.update({
+  id: '/leads/',
+  path: '/leads/',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminFaqsIndexRoute = AdminFaqsIndexRouteImport.update({
+  id: '/faqs/',
+  path: '/faqs/',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminCategoriesIndexRoute = AdminCategoriesIndexRouteImport.update({
+  id: '/categories/',
+  path: '/categories/',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
 const AdminArtworksIndexRoute = AdminArtworksIndexRouteImport.update({
   id: '/artworks/',
   path: '/artworks/',
   getParentRoute: () => AdminRouteRoute,
 } as any)
+const AdminWebsiteContentHomepageRoute =
+  AdminWebsiteContentHomepageRouteImport.update({
+    id: '/website-content/homepage',
+    path: '/website-content/homepage',
+    getParentRoute: () => AdminRouteRoute,
+  } as any)
+const AdminWebsiteContentFooterRoute =
+  AdminWebsiteContentFooterRouteImport.update({
+    id: '/website-content/footer',
+    path: '/website-content/footer',
+    getParentRoute: () => AdminRouteRoute,
+  } as any)
+const AdminWebsiteContentContactRoute =
+  AdminWebsiteContentContactRouteImport.update({
+    id: '/website-content/contact',
+    path: '/website-content/contact',
+    getParentRoute: () => AdminRouteRoute,
+  } as any)
+const AdminWebsiteContentAboutRoute =
+  AdminWebsiteContentAboutRouteImport.update({
+    id: '/website-content/about',
+    path: '/website-content/about',
+    getParentRoute: () => AdminRouteRoute,
+  } as any)
+const AdminMediaIdRoute = AdminMediaIdRouteImport.update({
+  id: '/media/$id',
+  path: '/media/$id',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
 const AdminArtworksNewRoute = AdminArtworksNewRouteImport.update({
   id: '/artworks/new',
   path: '/artworks/new',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminVisualAssetsEditIdRoute = AdminVisualAssetsEditIdRouteImport.update({
+  id: '/visual-assets/edit/$id',
+  path: '/visual-assets/edit/$id',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminCategoriesEditIdRoute = AdminCategoriesEditIdRouteImport.update({
+  id: '/categories/edit/$id',
+  path: '/categories/edit/$id',
   getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminArtworksEditIdRoute = AdminArtworksEditIdRouteImport.update({
@@ -108,8 +215,25 @@ export interface FileRoutesByFullPath {
   '/artwork/$slug': typeof ArtworkSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/artworks/new': typeof AdminArtworksNewRoute
+  '/admin/media/$id': typeof AdminMediaIdRoute
+  '/admin/website-content/about': typeof AdminWebsiteContentAboutRoute
+  '/admin/website-content/contact': typeof AdminWebsiteContentContactRoute
+  '/admin/website-content/footer': typeof AdminWebsiteContentFooterRoute
+  '/admin/website-content/homepage': typeof AdminWebsiteContentHomepageRoute
   '/admin/artworks/': typeof AdminArtworksIndexRoute
+  '/admin/categories/': typeof AdminCategoriesIndexRoute
+  '/admin/faqs/': typeof AdminFaqsIndexRoute
+  '/admin/leads/': typeof AdminLeadsIndexRoute
+  '/admin/media/': typeof AdminMediaIndexRoute
+  '/admin/pages/': typeof AdminPagesIndexRoute
+  '/admin/seo/': typeof AdminSeoIndexRoute
+  '/admin/settings/': typeof AdminSettingsIndexRoute
+  '/admin/visual-assets/': typeof AdminVisualAssetsIndexRoute
+  '/admin/website-content/': typeof AdminWebsiteContentIndexRoute
+  '/admin/whatsapp/': typeof AdminWhatsappIndexRoute
   '/admin/artworks/edit/$id': typeof AdminArtworksEditIdRoute
+  '/admin/categories/edit/$id': typeof AdminCategoriesEditIdRoute
+  '/admin/visual-assets/edit/$id': typeof AdminVisualAssetsEditIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -123,8 +247,25 @@ export interface FileRoutesByTo {
   '/artwork/$slug': typeof ArtworkSlugRoute
   '/admin': typeof AdminIndexRoute
   '/admin/artworks/new': typeof AdminArtworksNewRoute
+  '/admin/media/$id': typeof AdminMediaIdRoute
+  '/admin/website-content/about': typeof AdminWebsiteContentAboutRoute
+  '/admin/website-content/contact': typeof AdminWebsiteContentContactRoute
+  '/admin/website-content/footer': typeof AdminWebsiteContentFooterRoute
+  '/admin/website-content/homepage': typeof AdminWebsiteContentHomepageRoute
   '/admin/artworks': typeof AdminArtworksIndexRoute
+  '/admin/categories': typeof AdminCategoriesIndexRoute
+  '/admin/faqs': typeof AdminFaqsIndexRoute
+  '/admin/leads': typeof AdminLeadsIndexRoute
+  '/admin/media': typeof AdminMediaIndexRoute
+  '/admin/pages': typeof AdminPagesIndexRoute
+  '/admin/seo': typeof AdminSeoIndexRoute
+  '/admin/settings': typeof AdminSettingsIndexRoute
+  '/admin/visual-assets': typeof AdminVisualAssetsIndexRoute
+  '/admin/website-content': typeof AdminWebsiteContentIndexRoute
+  '/admin/whatsapp': typeof AdminWhatsappIndexRoute
   '/admin/artworks/edit/$id': typeof AdminArtworksEditIdRoute
+  '/admin/categories/edit/$id': typeof AdminCategoriesEditIdRoute
+  '/admin/visual-assets/edit/$id': typeof AdminVisualAssetsEditIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -140,8 +281,25 @@ export interface FileRoutesById {
   '/artwork/$slug': typeof ArtworkSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/artworks/new': typeof AdminArtworksNewRoute
+  '/admin/media/$id': typeof AdminMediaIdRoute
+  '/admin/website-content/about': typeof AdminWebsiteContentAboutRoute
+  '/admin/website-content/contact': typeof AdminWebsiteContentContactRoute
+  '/admin/website-content/footer': typeof AdminWebsiteContentFooterRoute
+  '/admin/website-content/homepage': typeof AdminWebsiteContentHomepageRoute
   '/admin/artworks/': typeof AdminArtworksIndexRoute
+  '/admin/categories/': typeof AdminCategoriesIndexRoute
+  '/admin/faqs/': typeof AdminFaqsIndexRoute
+  '/admin/leads/': typeof AdminLeadsIndexRoute
+  '/admin/media/': typeof AdminMediaIndexRoute
+  '/admin/pages/': typeof AdminPagesIndexRoute
+  '/admin/seo/': typeof AdminSeoIndexRoute
+  '/admin/settings/': typeof AdminSettingsIndexRoute
+  '/admin/visual-assets/': typeof AdminVisualAssetsIndexRoute
+  '/admin/website-content/': typeof AdminWebsiteContentIndexRoute
+  '/admin/whatsapp/': typeof AdminWhatsappIndexRoute
   '/admin/artworks/edit/$id': typeof AdminArtworksEditIdRoute
+  '/admin/categories/edit/$id': typeof AdminCategoriesEditIdRoute
+  '/admin/visual-assets/edit/$id': typeof AdminVisualAssetsEditIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -158,8 +316,25 @@ export interface FileRouteTypes {
     | '/artwork/$slug'
     | '/admin/'
     | '/admin/artworks/new'
+    | '/admin/media/$id'
+    | '/admin/website-content/about'
+    | '/admin/website-content/contact'
+    | '/admin/website-content/footer'
+    | '/admin/website-content/homepage'
     | '/admin/artworks/'
+    | '/admin/categories/'
+    | '/admin/faqs/'
+    | '/admin/leads/'
+    | '/admin/media/'
+    | '/admin/pages/'
+    | '/admin/seo/'
+    | '/admin/settings/'
+    | '/admin/visual-assets/'
+    | '/admin/website-content/'
+    | '/admin/whatsapp/'
     | '/admin/artworks/edit/$id'
+    | '/admin/categories/edit/$id'
+    | '/admin/visual-assets/edit/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -173,8 +348,25 @@ export interface FileRouteTypes {
     | '/artwork/$slug'
     | '/admin'
     | '/admin/artworks/new'
+    | '/admin/media/$id'
+    | '/admin/website-content/about'
+    | '/admin/website-content/contact'
+    | '/admin/website-content/footer'
+    | '/admin/website-content/homepage'
     | '/admin/artworks'
+    | '/admin/categories'
+    | '/admin/faqs'
+    | '/admin/leads'
+    | '/admin/media'
+    | '/admin/pages'
+    | '/admin/seo'
+    | '/admin/settings'
+    | '/admin/visual-assets'
+    | '/admin/website-content'
+    | '/admin/whatsapp'
     | '/admin/artworks/edit/$id'
+    | '/admin/categories/edit/$id'
+    | '/admin/visual-assets/edit/$id'
   id:
     | '__root__'
     | '/'
@@ -189,8 +381,25 @@ export interface FileRouteTypes {
     | '/artwork/$slug'
     | '/admin/'
     | '/admin/artworks/new'
+    | '/admin/media/$id'
+    | '/admin/website-content/about'
+    | '/admin/website-content/contact'
+    | '/admin/website-content/footer'
+    | '/admin/website-content/homepage'
     | '/admin/artworks/'
+    | '/admin/categories/'
+    | '/admin/faqs/'
+    | '/admin/leads/'
+    | '/admin/media/'
+    | '/admin/pages/'
+    | '/admin/seo/'
+    | '/admin/settings/'
+    | '/admin/visual-assets/'
+    | '/admin/website-content/'
+    | '/admin/whatsapp/'
     | '/admin/artworks/edit/$id'
+    | '/admin/categories/edit/$id'
+    | '/admin/visual-assets/edit/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -284,6 +493,76 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLoginRouteImport
       parentRoute: typeof AdminRouteRoute
     }
+    '/admin/whatsapp/': {
+      id: '/admin/whatsapp/'
+      path: '/whatsapp'
+      fullPath: '/admin/whatsapp/'
+      preLoaderRoute: typeof AdminWhatsappIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/website-content/': {
+      id: '/admin/website-content/'
+      path: '/website-content'
+      fullPath: '/admin/website-content/'
+      preLoaderRoute: typeof AdminWebsiteContentIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/visual-assets/': {
+      id: '/admin/visual-assets/'
+      path: '/visual-assets'
+      fullPath: '/admin/visual-assets/'
+      preLoaderRoute: typeof AdminVisualAssetsIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/settings/': {
+      id: '/admin/settings/'
+      path: '/settings'
+      fullPath: '/admin/settings/'
+      preLoaderRoute: typeof AdminSettingsIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/seo/': {
+      id: '/admin/seo/'
+      path: '/seo'
+      fullPath: '/admin/seo/'
+      preLoaderRoute: typeof AdminSeoIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/pages/': {
+      id: '/admin/pages/'
+      path: '/pages'
+      fullPath: '/admin/pages/'
+      preLoaderRoute: typeof AdminPagesIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/media/': {
+      id: '/admin/media/'
+      path: '/media'
+      fullPath: '/admin/media/'
+      preLoaderRoute: typeof AdminMediaIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/leads/': {
+      id: '/admin/leads/'
+      path: '/leads'
+      fullPath: '/admin/leads/'
+      preLoaderRoute: typeof AdminLeadsIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/faqs/': {
+      id: '/admin/faqs/'
+      path: '/faqs'
+      fullPath: '/admin/faqs/'
+      preLoaderRoute: typeof AdminFaqsIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/categories/': {
+      id: '/admin/categories/'
+      path: '/categories'
+      fullPath: '/admin/categories/'
+      preLoaderRoute: typeof AdminCategoriesIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
     '/admin/artworks/': {
       id: '/admin/artworks/'
       path: '/artworks'
@@ -291,11 +570,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminArtworksIndexRouteImport
       parentRoute: typeof AdminRouteRoute
     }
+    '/admin/website-content/homepage': {
+      id: '/admin/website-content/homepage'
+      path: '/website-content/homepage'
+      fullPath: '/admin/website-content/homepage'
+      preLoaderRoute: typeof AdminWebsiteContentHomepageRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/website-content/footer': {
+      id: '/admin/website-content/footer'
+      path: '/website-content/footer'
+      fullPath: '/admin/website-content/footer'
+      preLoaderRoute: typeof AdminWebsiteContentFooterRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/website-content/contact': {
+      id: '/admin/website-content/contact'
+      path: '/website-content/contact'
+      fullPath: '/admin/website-content/contact'
+      preLoaderRoute: typeof AdminWebsiteContentContactRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/website-content/about': {
+      id: '/admin/website-content/about'
+      path: '/website-content/about'
+      fullPath: '/admin/website-content/about'
+      preLoaderRoute: typeof AdminWebsiteContentAboutRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/media/$id': {
+      id: '/admin/media/$id'
+      path: '/media/$id'
+      fullPath: '/admin/media/$id'
+      preLoaderRoute: typeof AdminMediaIdRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
     '/admin/artworks/new': {
       id: '/admin/artworks/new'
       path: '/artworks/new'
       fullPath: '/admin/artworks/new'
       preLoaderRoute: typeof AdminArtworksNewRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/visual-assets/edit/$id': {
+      id: '/admin/visual-assets/edit/$id'
+      path: '/visual-assets/edit/$id'
+      fullPath: '/admin/visual-assets/edit/$id'
+      preLoaderRoute: typeof AdminVisualAssetsEditIdRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/categories/edit/$id': {
+      id: '/admin/categories/edit/$id'
+      path: '/categories/edit/$id'
+      fullPath: '/admin/categories/edit/$id'
+      preLoaderRoute: typeof AdminCategoriesEditIdRouteImport
       parentRoute: typeof AdminRouteRoute
     }
     '/admin/artworks/edit/$id': {
@@ -312,16 +640,50 @@ interface AdminRouteRouteChildren {
   AdminLoginRoute: typeof AdminLoginRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminArtworksNewRoute: typeof AdminArtworksNewRoute
+  AdminMediaIdRoute: typeof AdminMediaIdRoute
+  AdminWebsiteContentAboutRoute: typeof AdminWebsiteContentAboutRoute
+  AdminWebsiteContentContactRoute: typeof AdminWebsiteContentContactRoute
+  AdminWebsiteContentFooterRoute: typeof AdminWebsiteContentFooterRoute
+  AdminWebsiteContentHomepageRoute: typeof AdminWebsiteContentHomepageRoute
   AdminArtworksIndexRoute: typeof AdminArtworksIndexRoute
+  AdminCategoriesIndexRoute: typeof AdminCategoriesIndexRoute
+  AdminFaqsIndexRoute: typeof AdminFaqsIndexRoute
+  AdminLeadsIndexRoute: typeof AdminLeadsIndexRoute
+  AdminMediaIndexRoute: typeof AdminMediaIndexRoute
+  AdminPagesIndexRoute: typeof AdminPagesIndexRoute
+  AdminSeoIndexRoute: typeof AdminSeoIndexRoute
+  AdminSettingsIndexRoute: typeof AdminSettingsIndexRoute
+  AdminVisualAssetsIndexRoute: typeof AdminVisualAssetsIndexRoute
+  AdminWebsiteContentIndexRoute: typeof AdminWebsiteContentIndexRoute
+  AdminWhatsappIndexRoute: typeof AdminWhatsappIndexRoute
   AdminArtworksEditIdRoute: typeof AdminArtworksEditIdRoute
+  AdminCategoriesEditIdRoute: typeof AdminCategoriesEditIdRoute
+  AdminVisualAssetsEditIdRoute: typeof AdminVisualAssetsEditIdRoute
 }
 
 const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminLoginRoute: AdminLoginRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminArtworksNewRoute: AdminArtworksNewRoute,
+  AdminMediaIdRoute: AdminMediaIdRoute,
+  AdminWebsiteContentAboutRoute: AdminWebsiteContentAboutRoute,
+  AdminWebsiteContentContactRoute: AdminWebsiteContentContactRoute,
+  AdminWebsiteContentFooterRoute: AdminWebsiteContentFooterRoute,
+  AdminWebsiteContentHomepageRoute: AdminWebsiteContentHomepageRoute,
   AdminArtworksIndexRoute: AdminArtworksIndexRoute,
+  AdminCategoriesIndexRoute: AdminCategoriesIndexRoute,
+  AdminFaqsIndexRoute: AdminFaqsIndexRoute,
+  AdminLeadsIndexRoute: AdminLeadsIndexRoute,
+  AdminMediaIndexRoute: AdminMediaIndexRoute,
+  AdminPagesIndexRoute: AdminPagesIndexRoute,
+  AdminSeoIndexRoute: AdminSeoIndexRoute,
+  AdminSettingsIndexRoute: AdminSettingsIndexRoute,
+  AdminVisualAssetsIndexRoute: AdminVisualAssetsIndexRoute,
+  AdminWebsiteContentIndexRoute: AdminWebsiteContentIndexRoute,
+  AdminWhatsappIndexRoute: AdminWhatsappIndexRoute,
   AdminArtworksEditIdRoute: AdminArtworksEditIdRoute,
+  AdminCategoriesEditIdRoute: AdminCategoriesEditIdRoute,
+  AdminVisualAssetsEditIdRoute: AdminVisualAssetsEditIdRoute,
 }
 
 const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
