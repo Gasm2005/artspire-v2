@@ -1,6 +1,6 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { getCategories, type Category } from "@/lib";
+import { getCategories, type CategoryWithVisuals } from "@/lib";
 import { FolderOpen, Edit, Image, AlertTriangle } from "lucide-react";
 
 export const Route = createFileRoute("/admin/categories/")({
@@ -8,12 +8,12 @@ export const Route = createFileRoute("/admin/categories/")({
 });
 
 function CategoriesPage() {
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<CategoryWithVisuals[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getCategories()
-      .then(setCategories)
+      .then((data) => setCategories(data as CategoryWithVisuals[]))
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
@@ -45,7 +45,7 @@ function CategoriesPage() {
   );
 }
 
-function CategoryCard({ category }: { category: Category }) {
+function CategoryCard({ category }: { category: CategoryWithVisuals }) {
   const hasArtworkImage = !!category.card_artwork_image_id;
   const hasOverlay = !!category.card_overlay_id;
 

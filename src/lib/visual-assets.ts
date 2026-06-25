@@ -1,11 +1,40 @@
 import { supabase } from "@/integrations/supabase/client";
-import type { Database } from "@/integrations/supabase/types";
 
-export type VisualAsset = Database["public"]["Tables"]["visual_assets"]["Row"];
-export type VisualAssetInsert = Database["public"]["Tables"]["visual_assets"]["Insert"];
-export type VisualAssetUpdate = Database["public"]["Tables"]["visual_assets"]["Update"];
+export type VisualAsset = {
+  id: string;
+  name: string;
+  slug: string;
+  asset_type: "overlay" | "texture" | "pattern" | "gradient" | "icon" | "background" | "decorative";
+  storage_path: string;
+  public_url: string;
+  preview_url: string | null;
+  file_size: number | null;
+  width: number | null;
+  height: number | null;
+  mime_type: string | null;
+  description: string | null;
+  default_opacity: number | null;
+  category_suggestions: string[] | null;
+  is_predefined: boolean | null;
+  is_active: boolean | null;
+  usage_count: number | null;
+  created_at: string | null;
+  updated_at: string | null;
+};
+
+export type VisualAssetInsert = Omit<Partial<VisualAsset>, "id" | "created_at" | "updated_at">;
+export type VisualAssetUpdate = Partial<VisualAsset>;
 export type VisualAssetType = VisualAsset["asset_type"];
-export type VisualAssetUsageLog = Database["public"]["Tables"]["visual_asset_usage_log"]["Row"];
+
+export type VisualAssetUsageLog = {
+  id: string;
+  asset_id: string | null;
+  entity_type: string;
+  entity_id: string;
+  usage_type: string;
+  opacity: number | null;
+  created_at: string | null;
+};
 
 export type VisualAssetUsage = {
   entityType: string;

@@ -5,6 +5,25 @@ export type Category = Database["public"]["Tables"]["categories"]["Row"];
 export type CategoryInsert = Database["public"]["Tables"]["categories"]["Insert"];
 export type CategoryUpdate = Database["public"]["Tables"]["categories"]["Update"];
 
+// Extended Category type with Phase 1 CMS fields (until Supabase types are regenerated)
+export type CategoryWithVisuals = Category & {
+  short_summary?: string | null;
+  featured?: boolean | null;
+  card_artwork_image_id?: string | null;
+  card_overlay_id?: string | null;
+  card_overlay_opacity?: number | null;
+  card_gradient_style?: "bottom-dark" | "center-vignette" | "none" | null;
+  card_text_position?: "bottom-left" | "bottom-center" | "center" | null;
+  banner_artwork_image_id?: string | null;
+  banner_overlay_id?: string | null;
+  thumbnail_image_id?: string | null;
+  og_image_id?: string | null;
+  faq_section_id?: string | null;
+  created_by?: string | null;
+  updated_by?: string | null;
+};
+
+
 export async function getCategories() {
   const { data, error } = await supabase
     .from("categories")

@@ -39,21 +39,21 @@ const services = [
 ];
 
 const portfolioCategories = [
-  { key: "pencil-sketches", label: "Pencil Sketches", pattern: "art-cat-sketches", subtitle: "Timeless. Precise." },
-  { key: "colour-portraits", label: "Colour Portraits", pattern: "art-cat-portraits", subtitle: "Vivid. Warm." },
-  { key: "paintings", label: "Paintings", pattern: "art-cat-paintings", subtitle: "Bold. Textured." },
-  { key: "mirror-art", label: "Mirror Art", pattern: "art-cat-mirror", subtitle: "Functional. Beautiful." },
-  { key: "clay-art", label: "Clay Art", pattern: "art-cat-clay", subtitle: "Three-dimensional. Personal." },
-  { key: "personalized-gifts", label: "Personalized Gifts", pattern: "art-cat-gifts", subtitle: "Made for one person." },
+  { key: "pencil-sketches", label: "Pencil Sketches", subtitle: "Timeless. Precise.", img: IMG.sketch },
+  { key: "colour-portraits", label: "Colour Portraits", subtitle: "Vivid. Warm.", img: IMG.portrait },
+  { key: "paintings", label: "Paintings", subtitle: "Bold. Textured.", img: IMG.painting },
+  { key: "mirror-art", label: "Mirror Art", subtitle: "Functional. Beautiful.", img: IMG.mirror },
+  { key: "clay-art", label: "Clay Art", subtitle: "Three-dimensional. Personal.", img: IMG.clay },
+  { key: "personalized-gifts", label: "Personalized Gifts", subtitle: "Made for one person.", img: IMG.gift },
 ];
 
 const recentWork = [
-  { id: 1, title: "Family Portrait", cat: "sketches", price: "From ₹999", pattern: "art-cat-sketches" },
-  { id: 2, title: "Sunset Canvas", cat: "paintings", price: "From ₹2,999", pattern: "art-cat-paintings" },
-  { id: 3, title: "Couple Sketch", cat: "portraits", price: "From ₹1,999", pattern: "art-cat-portraits" },
-  { id: 4, title: "Clay Sculpture", cat: "clay", price: "From ₹1,799", pattern: "art-cat-clay" },
-  { id: 5, title: "Mirror Mandala", cat: "mirror", price: "From ₹2,499", pattern: "art-cat-mirror" },
-  { id: 6, title: "Gift Set", cat: "gifts", price: "From ₹799", pattern: "art-cat-gifts" },
+  { id: 1, title: "Family Portrait", cat: "sketches", price: "From ₹999", img: IMG.sketch },
+  { id: 2, title: "Sunset Canvas", cat: "paintings", price: "From ₹2,999", img: IMG.painting },
+  { id: 3, title: "Couple Sketch", cat: "portraits", price: "From ₹1,999", img: IMG.portrait },
+  { id: 4, title: "Clay Sculpture", cat: "clay", price: "From ₹1,799", img: IMG.clay },
+  { id: 5, title: "Mirror Mandala", cat: "mirror", price: "From ₹2,499", img: IMG.mirror },
+  { id: 6, title: "Gift Set", cat: "gifts", price: "From ₹799", img: IMG.gift },
 ];
 
 const filters = [
@@ -247,8 +247,18 @@ function Index() {
               <Link
                 key={cat.key}
                 to={`/portfolio?category=${cat.key}`}
-                className={`${cat.pattern} cat-card relative rounded-xl overflow-hidden aspect-[4/3] cursor-pointer group`}
+                className="cat-card relative rounded-xl overflow-hidden aspect-[4/3] cursor-pointer group"
               >
+                {/* Layer 1: Artwork image (primary visual - 80%) */}
+                <img
+                  src={cat.img}
+                  alt={cat.label}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  loading="lazy"
+                />
+                {/* Layer 2: Gradient overlay for text readability (5%) */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent z-10" />
+                {/* Layer 3: Text content (5%) */}
                 <div className="relative z-10 flex flex-col items-center justify-end h-full p-5 pb-6">
                   <span className="font-display text-[18px] md:text-[22px] text-white font-medium drop-shadow-lg text-center">
                     {cat.label}
@@ -298,18 +308,25 @@ function Index() {
               return (
                 <div
                   key={w.id}
-                  className={`${w.pattern} work-card portfolio-item rounded-xl overflow-hidden shadow-sm cursor-pointer h-[280px] md:h-[320px] flex flex-col group relative`}
+                  className="work-card portfolio-item rounded-xl overflow-hidden shadow-sm cursor-pointer h-[280px] md:h-[320px] flex flex-col group relative"
                   style={{ display: visible ? undefined : "none" }}
                 >
+                  {/* Layer 1: Artwork image (primary visual - 80%) */}
+                  <img
+                    src={w.img}
+                    alt={w.title}
+                    className="absolute inset-0 w-full h-full object-cover"
+                    loading="lazy"
+                  />
                   {/* Category badge */}
                   <div className="absolute top-4 left-4 z-20">
                     <span className="inline-block px-3 py-1 bg-gold/90 text-white font-body text-[10px] font-bold uppercase tracking-wider rounded-full">
                       {w.cat}
                     </span>
                   </div>
-                  {/* Dark overlay for text */}
+                  {/* Layer 2: Gradient overlay for text readability (5%) */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent z-10" />
-                  {/* Content */}
+                  {/* Layer 3: Text content (5%) */}
                   <div className="absolute bottom-0 left-0 right-0 p-5 z-20">
                     <span className="font-display text-[16px] md:text-[18px] text-white font-medium">{w.title}</span>
                     <p className="font-body text-[13px] text-gold font-semibold mt-1">{w.price}</p>

@@ -1,11 +1,35 @@
 import { supabase } from "@/integrations/supabase/client";
-import type { Database } from "@/integrations/supabase/types";
 
-export type WebsiteContent = Database["public"]["Tables"]["website_content"]["Row"];
-export type WebsiteContentInsert = Database["public"]["Tables"]["website_content"]["Insert"];
-export type WebsiteContentUpdate = Database["public"]["Tables"]["website_content"]["Update"];
+export type WebsiteContent = {
+  id: string;
+  content_key: string;
+  page: string;
+  section: string;
+  field_name: string;
+  value_text: string | null;
+  value_html: string | null;
+  value_json: Record<string, unknown> | null;
+  value_media_id: string | null;
+  field_type: "text" | "textarea" | "html" | "image" | "multi_image" | "repeater" | "select" | "toggle";
+  description: string | null;
+  placeholder: string | null;
+  is_required: boolean | null;
+  is_active: boolean | null;
+  created_at: string | null;
+  updated_at: string | null;
+};
+
+export type WebsiteContentInsert = Omit<Partial<WebsiteContent>, "id" | "created_at" | "updated_at">;
+export type WebsiteContentUpdate = Partial<WebsiteContent>;
 export type ContentFieldType = WebsiteContent["field_type"];
-export type RepeaterItem = Database["public"]["Tables"]["website_content_repeater_items"]["Row"];
+
+export type RepeaterItem = {
+  id: string;
+  parent_key: string;
+  display_order: number | null;
+  item_data: Record<string, unknown>;
+  created_at: string | null;
+};
 
 // ─── READ ───────────────────────────────────────────────────
 

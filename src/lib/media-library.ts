@@ -1,11 +1,58 @@
 import { supabase } from "@/integrations/supabase/client";
-import type { Database } from "@/integrations/supabase/types";
 
-export type MediaItem = Database["public"]["Tables"]["media_library"]["Row"];
-export type MediaItemInsert = Database["public"]["Tables"]["media_library"]["Insert"];
-export type MediaItemUpdate = Database["public"]["Tables"]["media_library"]["Update"];
-export type MediaVariant = Database["public"]["Tables"]["media_variants"]["Row"];
-export type MediaUsageLog = Database["public"]["Tables"]["media_usage_log"]["Row"];
+export type MediaItem = {
+  id: string;
+  filename: string;
+  original_name: string;
+  storage_path: string;
+  public_url: string;
+  width: number | null;
+  height: number | null;
+  aspect_ratio: number | null;
+  file_size: number | null;
+  mime_type: string | null;
+  variants: Record<string, unknown> | null;
+  alt_text: string | null;
+  title: string | null;
+  description: string | null;
+  caption: string | null;
+  tags: string[] | null;
+  folder: string | null;
+  ai_generated_alt: string | null;
+  ai_generated_tags: string[] | null;
+  dominant_colors: Record<string, unknown> | null;
+  usage_count: number | null;
+  used_in: Record<string, unknown>[] | null;
+  uploaded_by: string | null;
+  created_at: string | null;
+  updated_at: string | null;
+  deleted_at: string | null;
+};
+
+export type MediaItemInsert = Omit<Partial<MediaItem>, "id" | "created_at" | "updated_at" | "deleted_at">;
+export type MediaItemUpdate = Partial<MediaItem>;
+
+export type MediaVariant = {
+  id: string;
+  media_id: string | null;
+  variant_name: string;
+  storage_path: string;
+  url: string;
+  width: number | null;
+  height: number | null;
+  file_size: number | null;
+  mime_type: string | null;
+  created_at: string | null;
+};
+
+export type MediaUsageLog = {
+  id: string;
+  media_id: string | null;
+  entity_type: string;
+  entity_id: string;
+  usage_type: string;
+  created_at: string | null;
+};
 
 export type MediaUsage = {
   entityType: string;

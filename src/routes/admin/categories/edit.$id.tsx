@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { getCategoryById, updateCategory, getCategories, type Category } from "@/lib";
+import { getCategoryById, updateCategory, getCategories, type CategoryWithVisuals } from "@/lib";
 import { getVisualAssets } from "@/lib/visual-assets";
 import { getMediaItems } from "@/lib/media-library";
 import type { VisualAsset } from "@/lib/visual-assets";
@@ -18,7 +18,7 @@ export const Route = createFileRoute("/admin/categories/edit/$id")({
 
 function CategoryEditPage() {
   const { category: initial } = Route.useLoaderData();
-  const [category, setCategory] = useState<Category>(initial);
+  const [category, setCategory] = useState<CategoryWithVisuals>(initial as CategoryWithVisuals);
   const [saving, setSaving] = useState(false);
   const [overlays, setOverlays] = useState<VisualAsset[]>([]);
   const [mediaItems, setMediaItems] = useState<MediaItem[]>([]);
@@ -73,14 +73,14 @@ function CategoryEditPage() {
         meta_title: form.metaTitle || null,
         meta_description: form.metaDescription || null,
         card_overlay_opacity: form.cardOverlayOpacity,
-        card_gradient_style: form.cardGradientStyle as Category["card_gradient_style"],
-        card_text_position: form.cardTextPosition as Category["card_text_position"],
+        card_gradient_style: form.cardGradientStyle as "bottom-dark" | "center-vignette" | "none",
+        card_text_position: form.cardTextPosition as "bottom-left" | "bottom-center" | "center",
         card_artwork_image_id: form.cardArtworkImageId || null,
         card_overlay_id: form.cardOverlayId || null,
         banner_artwork_image_id: form.bannerArtworkImageId || null,
         banner_overlay_id: form.bannerOverlayId || null,
-      });
-      setCategory(updated);
+      } as any);
+      setCategory(updated as CategoryWithVisuals);
     } catch (err) {
       console.error(err);
       alert("Failed to save category.");
