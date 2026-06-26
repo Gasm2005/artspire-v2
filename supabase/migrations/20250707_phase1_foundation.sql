@@ -176,9 +176,6 @@ ALTER TABLE categories ADD COLUMN IF NOT EXISTS banner_overlay_id uuid REFERENCE
 ALTER TABLE categories ADD COLUMN IF NOT EXISTS thumbnail_image_id uuid REFERENCES media_library(id);
 ALTER TABLE categories ADD COLUMN IF NOT EXISTS og_image_id uuid REFERENCES media_library(id);
 
--- categories: faq section reference (for category-specific FAQs)
-ALTER TABLE categories ADD COLUMN IF NOT EXISTS faq_section_id uuid REFERENCES faq_sections(id);
-
 -- seo_metadata extensions (after media_library exists)
 ALTER TABLE seo_metadata ADD COLUMN IF NOT EXISTS og_image_id uuid REFERENCES media_library(id);
 ALTER TABLE seo_metadata ADD COLUMN IF NOT EXISTS twitter_image_id uuid REFERENCES media_library(id);
@@ -243,6 +240,9 @@ CREATE TABLE IF NOT EXISTS faq_sections (
 
 -- Add faq section reference to faqs (now that faq_sections exists)
 ALTER TABLE faqs ADD COLUMN IF NOT EXISTS section_id uuid REFERENCES faq_sections(id);
+
+-- categories: faq section reference (for category-specific FAQs)
+ALTER TABLE categories ADD COLUMN IF NOT EXISTS faq_section_id uuid REFERENCES faq_sections(id);
 
 -- artwork_faqs: junction for artwork-specific FAQs
 CREATE TABLE IF NOT EXISTS artwork_faqs (

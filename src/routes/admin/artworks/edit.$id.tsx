@@ -1,10 +1,10 @@
 import { createFileRoute, useRouter, notFound } from "@tanstack/react-router";
-import { getArtworkById } from "@/lib";
+import { getArtworkWithImages } from "@/lib";
 import { ArtworkForm } from "@/components/ArtworkForm";
 
 export const Route = createFileRoute("/admin/artworks/edit/$id")({
   loader: async ({ params }) => {
-    const artwork = await getArtworkById(params.id);
+    const artwork = await getArtworkWithImages(params.id);
     if (!artwork) throw notFound();
     return { artwork };
   },

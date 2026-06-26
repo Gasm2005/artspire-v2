@@ -29,6 +29,12 @@ function createSupabaseClient() {
 
 let _supabase: ReturnType<typeof createSupabaseClient> | undefined;
 
+// Eagerly create the client on the browser so auth session is recovered from localStorage.
+// On the server (SSR), we leave it lazy because localStorage does not exist.
+if (typeof window !== 'undefined') {
+  _supabase = createSupabaseClient();
+}
+
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 export const supabase = new Proxy({} as ReturnType<typeof createSupabaseClient>, {
