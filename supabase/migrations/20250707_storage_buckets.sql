@@ -1,7 +1,6 @@
 -- ============================================================
--- Artspire V2 — Storage Bucket Setup
+-- Artspire V2 — Storage Bucket Setup (Production)
 -- Date: 2025-07-07
--- Run this via Supabase SQL Editor or psql
 -- ============================================================
 
 -- media-library bucket: CMS image uploads (10MB limit, images only)
@@ -16,39 +15,29 @@ ON CONFLICT (id) DO NOTHING;
 
 -- ============================================================
 -- STORAGE RLS POLICIES (idempotent: drop then create)
+-- Uses is_admin() which is SECURITY DEFINER and bypasses profiles RLS
 -- ============================================================
--- Note: Both buckets are public, so public read access is provided
--- via the public URL mechanism. No SELECT policy is needed.
--- Only INSERT and DELETE policies are required for admin operations.
 
 -- media-library bucket: admin upload
 DROP POLICY IF EXISTS "Admin upload media-library" ON storage.objects;
 CREATE POLICY "Admin upload media-library"
   ON storage.objects FOR INSERT
-  WITH CHECK (bucket_id = 'media-library' AND auth.uid() IN (
-    SELECT id FROM profiles WHERE role = 'admin'
-  ));
+  WITH CHECK (bucket_id = 'media-library' AND is_admin());
 
 -- media-library bucket: admin delete
 DROP POLICY IF EXISTS "Admin delete media-library" ON storage.objects;
 CREATE POLICY "Admin delete media-library"
   ON storage.objects FOR DELETE
-  USING (bucket_id = 'media-library' AND auth.uid() IN (
-    SELECT id FROM profiles WHERE role = 'admin'
-  ));
+  USING (bucket_id = 'media-library' AND is_admin());
 
 -- visual-assets bucket: admin upload
 DROP POLICY IF EXISTS "Admin upload visual-assets" ON storage.objects;
 CREATE POLICY "Admin upload visual-assets"
   ON storage.objects FOR INSERT
-  WITH CHECK (bucket_id = 'visual-assets' AND auth.uid() IN (
-    SELECT id FROM profiles WHERE role = 'admin'
-  ));
+  WITH CHECK (bucket_id = 'visual-assets' AND is_admin());
 
 -- visual-assets bucket: admin delete
 DROP POLICY IF EXISTS "Admin delete visual-assets" ON storage.objects;
 CREATE POLICY "Admin delete visual-assets"
   ON storage.objects FOR DELETE
-  USING (bucket_id = 'visual-assets' AND auth.uid() IN (
-    SELECT id FROM profiles WHERE role = 'admin'
-  ));
+  USING (bucket_id = 'visual-assets' AND is_admin());

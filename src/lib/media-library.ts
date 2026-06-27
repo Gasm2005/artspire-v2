@@ -218,7 +218,7 @@ export async function uploadMediaFile(
   // Upload to storage
   const { data: uploadData, error: uploadError } = await supabase.storage
     .from("media-library")
-    .upload(path, file, { upsert: true });
+    .upload(path, file, { upsert: false });
 
   if (uploadError) throw uploadError;
 
