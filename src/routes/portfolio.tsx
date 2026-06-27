@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Layout } from "../components/Layout";
 import { waLink } from "../lib/whatsapp";
 import { ArrowRight } from "lucide-react";
+import { getArtworks, type ArtworkWithCategory, type ArtworkStatus } from "@/lib/artworks";
 
 const filters = [
   { key: "all", label: "All" },
@@ -14,38 +15,6 @@ const filters = [
   { key: "gifts", label: "Personalized Gifts" },
 ] as const;
 
-const items = Array.from({ length: 12 }).map((_, i) => ({
-  id: i,
-  cat: filters[(i % (filters.length - 1)) + 1].key,
-}));
-
-const workImages = [
-  "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=800&q=80",   // Family Portrait - sketch
-  "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=800&q=80",   // Sunset Canvas - painting
-  "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800&q=80",   // Couple Sketch - portrait
-  "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=800&q=80",   // Clay Sculpture - clay
-  "https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?w=800&q=80",   // Mirror Mandala - mirror
-  "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=800&q=80",   // Gift Set - gift
-  "https://images.unsplash.com/photo-1555685812-4b943f1cb0eb?w=800&q=80",   // Pet Portrait - sketch
-  "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800&q=80",   // Watercolor Landscape - painting
-  "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80",   // Anniversary Gift - portrait
-  "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80",   // Memorial Portrait - clay
-  "https://images.unsplash.com/photo-1607344645866-009c320b63e0?w=800&q=80",   // Baby Portrait - gift
-  "https://images.unsplash.com/photo-1549490349-8643362247b5?w=800&q=80",   // Home Decor Piece - mirror
-];
-
-const workTitles = [
-  "Family Portrait", "Sunset Canvas", "Couple Sketch", "Clay Sculpture",
-  "Mirror Mandala", "Gift Set", "Pet Portrait", "Watercolor Landscape",
-  "Anniversary Gift", "Memorial Portrait", "Baby Portrait", "Home Decor Piece",
-];
-
-const workPrices = [
-  "From ₹999", "From ₹2,999", "From ₹1,999", "From ₹1,799",
-  "From ₹2,499", "From ₹799", "From ₹999", "From ₹2,999",
-  "From ₹1,999", "From ₹999", "From ₹799", "From ₹2,499",
-];
-
 // Map URL category slugs to filter keys
 const slugToKey: Record<string, string> = {
   "pencil-sketches": "sketches",
@@ -56,22 +25,17 @@ const slugToKey: Record<string, string> = {
   "personalized-gifts": "gifts",
 };
 
-const slugToLabel: Record<string, string> = {
-  "pencil-sketches": "Pencil Sketches",
-  "colour-portraits": "Colour Portraits",
-  "paintings": "Paintings",
-  "mirror-art": "Mirror Art",
-  "clay-art": "Clay Art",
-  "personalized-gifts": "Personalized Gifts",
-};
-
 export const Route = createFileRoute("/portfolio")({
   head: () => ({ meta: [{ title: "Portfolio | Artspire" }, { name: "description", content: "Handcrafted portraits, paintings, mirror art, clay sculptures and personalized gifts." }] }),
+  loader: async () => {
+    const artworks = await getArtworks({ status: "published" as ArtworkStatus, limit: 50 });
+    return { artworks };
+  },
   component: PortfolioPage,
 });
 
 function PortfolioPage() {
-  // Read URL category param on mount
+  const { artworks } = Route.useLoaderData() as { artworks: ArtworkWithCategory[] };
   const [initialLoad, setInitialLoad] = useState(true);
   const [active, setActive] = useState<string>("all");
 
@@ -80,7 +44,6 @@ function PortfolioPage() {
     const categoryParam = params.get("category");
     if (categoryParam && slugToKey[categoryParam]) {
       setActive(slugToKey[categoryParam]);
-      // Scroll to portfolio grid after layout settles
       setTimeout(() => {
         document.getElementById("portfolio-grid")?.scrollIntoView({ behavior: "smooth" });
       }, 100);
@@ -88,7 +51,10 @@ function PortfolioPage() {
     setInitialLoad(false);
   }, []);
 
-  const visible = items.filter((i) => active === "all" || i.cat === active);
+  const visible = artworks.filter((a) => {
+    if (active === "all") return true;
+    return a.categories?.slug === active || a.categories?.slug === Object.keys(slugToKey).find(k => slugToKey[k] === active);
+  });
 
   return (
     <Layout>
@@ -123,33 +89,33 @@ function PortfolioPage() {
       <section className="pb-12 md:pb-16">
         <div className="container-main">
           <div id="portfolio-grid" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-            {visible.map((item) => (
-              <div
-                key={item.id}
+            {visible.map((artwork) => (
+              <a
+                key={artwork.id}
+                href={`/artwork/${artwork.slug}`}
                 className="work-card portfolio-item relative rounded-xl overflow-hidden flex flex-col h-[300px] md:h-[340px] shadow-sm group cursor-pointer"
               >
-                {/* Layer 1: Artwork image (primary visual - 80%) */}
+                {/* Artwork image */}
                 <img
-                  src={workImages[item.id]}
-                  alt={workTitles[item.id]}
+                  src={artwork.image_url ?? "/placeholder-artwork.jpg"}
+                  alt={artwork.title}
                   className="absolute inset-0 w-full h-full object-cover"
                   loading="lazy"
                 />
-                {/* Category badge */}
-                <div className="absolute top-4 left-4 z-20">
-                  <span className="inline-block px-3 py-1 bg-gold/90 text-white font-body text-[10px] font-bold uppercase tracking-wider rounded-full">
-                    {item.cat}
-                  </span>
-                </div>
-                {/* Layer 2: Gradient overlay for text readability (5%) */}
+                {/* Gradient overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent z-10" />
-                {/* Layer 3: Text content (5%) */}
+                {/* Text */}
                 <div className="absolute bottom-0 left-0 right-0 p-5 z-20">
-                  <span className="font-display text-[16px] md:text-[18px] text-white font-medium">{workTitles[item.id]}</span>
-                  <p className="font-body text-[13px] text-gold font-semibold mt-1">{workPrices[item.id]}</p>
+                  <span className="font-display text-[16px] md:text-[18px] text-white font-medium">{artwork.title}</span>
                 </div>
-              </div>
+              </a>
             ))}
+
+            {visible.length === 0 && (
+              <div className="col-span-full text-center py-12">
+                <p className="font-body text-[14px] text-stone">No artworks found in this category.</p>
+              </div>
+            )}
           </div>
         </div>
       </section>

@@ -1,5 +1,5 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
-import { ArtworkForm } from "@/components/ArtworkForm";
+import { SimplifiedArtworkForm } from "@/components/admin/SimplifiedArtworkForm";
 
 export const Route = createFileRoute("/admin/artworks/new")({
   component: NewArtworkPage,
@@ -15,12 +15,12 @@ function NewArtworkPage() {
           New Artwork
         </h1>
         <p className="font-body text-[13px] text-stone mt-0.5">
-          Create a new artwork and publish it instantly
+          Create and publish a new artwork in seconds
         </p>
       </div>
 
       <div className="bg-white rounded-2xl border border-border p-5 md:p-8 shadow-sm">
-        <ArtworkForm
+        <SimplifiedArtworkForm
           onSuccess={() => {
             router.navigate({ to: "/admin/artworks" });
           }}
