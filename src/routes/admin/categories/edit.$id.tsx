@@ -47,7 +47,7 @@ function CategoryEditPage() {
       try {
         const [overlaysData, mediaData] = await Promise.all([
           getVisualAssets({ assetType: "overlay", isActive: true }),
-          getMediaItems({ folder: "artworks", limit: 50 }),
+          getMediaItems({ limit: 100 }),
         ]);
         setOverlays(overlaysData);
         setMediaItems(mediaData);

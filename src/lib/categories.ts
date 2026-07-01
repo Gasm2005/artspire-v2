@@ -27,12 +27,17 @@ export type CategoryWithVisuals = Category & {
 export async function getCategories() {
   const { data, error } = await supabase
     .from("categories")
-    .select("*")
+    .select("*, card_artwork:media_library!card_artwork_image_id(public_url)")
     .is("deleted_at", null)
     .order("display_order", { ascending: true });
 
   if (error) throw error;
-  return (data ?? []) as Category[];
+
+  // Flatten card_artwork.public_url → image_url for easy use in components
+  return (data ?? []).map((cat: any) => ({
+    ...cat,
+    image_url: cat.card_artwork?.public_url ?? cat.image_url ?? null,
+  })) as CategoryWithVisuals[];
 }
 
 export async function getCategoryBySlug(slug: string) {
