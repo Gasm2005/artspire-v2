@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import {
   createArtwork,
   updateArtwork,
+  ensureUniqueSlug,
   setArtworkTags,
   getAllArtworkTags,
   getCategories,
@@ -188,7 +189,9 @@ export function ArtworkForm({ artwork, onSuccess }: ArtworkFormProps) {
         await updateArtwork(artwork.id, payload);
         savedArtworkId = artwork.id;
       } else {
-        const created = await createArtwork(payload);
+        // Ensure slug is unique before insert — prevents DB constraint error
+        const uniqueSlug = await ensureUniqueSlug(form.title);
+        const created = await createArtwork({ ...payload, slug: uniqueSlug });
         savedArtworkId = created.id;
       }
 

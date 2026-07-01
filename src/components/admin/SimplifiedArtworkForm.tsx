@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "@tanstack/react-router";
 import { uploadMediaFile } from "@/lib/media-library";
-import { createArtwork, generateSlug, type ArtworkStatus } from "@/lib/artworks";
+import { createArtwork, generateSlug, ensureUniqueSlug, type ArtworkStatus } from "@/lib/artworks";
 import { getCategories, type Category } from "@/lib/categories";
 import { Image, X, Loader2, Rocket } from "lucide-react";
 
@@ -103,10 +103,14 @@ export function SimplifiedArtworkForm({ onSuccess }: SimplifiedArtworkFormProps)
         altText: form.title,
       });
 
-      // 2. Save artwork
+      // 2. Save artwork — ensure slug is unique before insert
+      const uniqueSlug = manualSlug
+        ? form.slug.trim()
+        : await ensureUniqueSlug(form.title);
+
       const artwork = await createArtwork({
         title: form.title.trim(),
-        slug: form.slug.trim(),
+        slug: uniqueSlug,
         status: "published" as ArtworkStatus,
         summary: form.short_description.trim(),
         short_description: form.short_description.trim(),
