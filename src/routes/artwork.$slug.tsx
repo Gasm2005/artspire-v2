@@ -2,6 +2,7 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { Layout } from "@/components/Layout";
 import { waLink } from "@/lib/whatsapp";
 import { getPublishedArtworkBySlug, getArtworkTags, getRelatedArtworks, type ArtworkWithCategory } from "@/lib";
+import { buildArtworkStructuredData, buildBreadcrumbStructuredData } from "@/lib/seo";
 import { MessageCircle, Ruler } from "lucide-react";
 
 interface LoaderData {
@@ -26,10 +27,49 @@ export const Route = createFileRoute("/artwork/$slug")({
   head: ({ loaderData }) => {
     if (!loaderData) return {};
     const { artwork } = loaderData;
+
+    const structuredData = buildArtworkStructuredData({
+      title: artwork.title,
+      summary: artwork.summary ?? "",
+      image_url: artwork.image_url ?? "",
+      price: artwork.price ?? 0,
+      created_at: artwork.created_at,
+      slug: artwork.slug,
+      status: artwork.status,
+      category: artwork.categories?.name,
+    });
+
+    const breadcrumbData = buildBreadcrumbStructuredData([
+      { name: "Home", item: "https://artspire.in/" },
+      ...(artwork.categories
+        ? [
+            {
+              name: artwork.categories.name,
+              item: `https://artspire.in/categories/${artwork.categories.slug}`,
+            },
+          ]
+        : []),
+      { name: artwork.title, item: `https://artspire.in/artwork/${artwork.slug}` },
+    ]);
+
     return {
       meta: [
         { title: `${artwork.title} | Artspire` },
         { name: "description", content: artwork.summary ?? `View ${artwork.title} by Artspire — handcrafted custom art.` },
+        { property: "og:title", content: `${artwork.title} | Artspire` },
+        { property: "og:description", content: artwork.summary ?? `View ${artwork.title} by Artspire — handcrafted custom art.` },
+        { property: "og:image", content: artwork.image_url ?? "https://artspire.in/og-image.jpg" },
+        { property: "og:type", content: "website" },
+      ],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify(structuredData),
+        },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify(breadcrumbData),
+        },
       ],
     };
   },

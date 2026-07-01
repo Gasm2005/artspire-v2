@@ -8,11 +8,14 @@ import {
   statSync,
 } from "fs";
 import { join, relative, dirname } from "path";
+import { createClient } from "@supabase/supabase-js";
 
 const OUTPUT_DIR = join(process.cwd(), ".vercel/output/functions/__server.func");
 const LIBS_DIR = join(OUTPUT_DIR, "_libs");
+const STATIC_DIR = join(process.cwd(), ".vercel/output/static");
 const TSLIB_SRC_DIR = join(process.cwd(), "node_modules/tslib");
 const TSLIB_DEST_DIR = join(OUTPUT_DIR, "node_modules/tslib");
+const SITE_URL = process.env.VITE_SITE_URL || "https://artspire.in";
 
 const TSLIB_IMPORT_PATTERNS = [
   { regex: /from "tslib"/g, replacement: (relPath) => `from "${relPath}"` },
@@ -123,8 +126,113 @@ function verifyRequiredFiles() {
   console.log("[post-build] Verified all required tslib files present in output");
 }
 
-function main() {
+function xmlEscape(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+}
+
+function urlEntry(loc, lastmod, changefreq, priority) {
+  return [
+    "  <url>",
+    `    <loc>${xmlEscape(loc)}</loc>`,
+    lastmod ? `    <lastmod>${lastmod.slice(0, 10)}</lastmod>` : "",
+    changefreq ? `    <changefreq>${changefreq}</changefreq>` : "",
+    priority ? `    <priority>${priority}</priority>` : "",
+    "  </url>",
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
+async function generateSitemap() {
+  console.log("[post-build] Generating sitemap.xml...");
+
+  const SUPABASE_URL = process.env.VITE_SUPABASE_URL;
+  const SUPABASE_ANON_KEY = process.env.VITE_SUPABASE_ANON_KEY;
+
+  const staticEntries = [
+    urlEntry(`${SITE_URL}/`, null, "weekly", "1.0"),
+    urlEntry(`${SITE_URL}/about`, null, "monthly", "0.6"),
+    urlEntry(`${SITE_URL}/portfolio`, null, "weekly", "0.8"),
+    urlEntry(`${SITE_URL}/services`, null, "monthly", "0.7"),
+    urlEntry(`${SITE_URL}/pricing`, null, "monthly", "0.7"),
+    urlEntry(`${SITE_URL}/faq`, null, "monthly", "0.5"),
+    urlEntry(`${SITE_URL}/contact`, null, "monthly", "0.5"),
+  ];
+
+  let dynamicEntries = [];
+
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    console.warn(
+      "[post-build] VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY not set — sitemap will only include static pages."
+    );
+  } else {
+    try {
+      const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+      const { data: artworks, error: artworksError } = await supabase
+        .from("artworks")
+        .select("slug, updated_at, published_at")
+        .eq("status", "published")
+        .is("deleted_at", null);
+
+      if (artworksError) throw artworksError;
+
+      const { data: categories, error: categoriesError } = await supabase
+        .from("categories")
+        .select("slug, updated_at")
+        .is("deleted_at", null);
+
+      if (categoriesError) throw categoriesError;
+
+      dynamicEntries = [
+        ...(artworks ?? []).map((a) =>
+          urlEntry(
+            `${SITE_URL}/artwork/${a.slug}`,
+            a.updated_at || a.published_at,
+            "monthly",
+            "0.8"
+          )
+        ),
+        ...(categories ?? []).map((c) =>
+          urlEntry(`${SITE_URL}/categories/${c.slug}`, c.updated_at, "weekly", "0.9")
+        ),
+      ];
+
+      console.log(
+        `[post-build] Sitemap: ${artworks?.length ?? 0} artworks, ${categories?.length ?? 0} categories`
+      );
+    } catch (err) {
+      console.error("[post-build] Failed to fetch dynamic sitemap entries:", err.message);
+      console.warn("[post-build] Continuing with static-only sitemap.");
+    }
+  }
+
+  const xml = [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    ...staticEntries,
+    ...dynamicEntries,
+    "</urlset>",
+    "",
+  ].join("\n");
+
+  if (!existsSync(STATIC_DIR)) {
+    mkdirSync(STATIC_DIR, { recursive: true });
+  }
+  writeFileSync(join(STATIC_DIR, "sitemap.xml"), xml);
+  console.log(
+    `[post-build] Wrote sitemap.xml with ${staticEntries.length + dynamicEntries.length} URLs`
+  );
+}
+async function main() {
   console.log("[post-build] Starting tslib fix...");
+
+  await generateSitemap();
 
   if (!existsSync(OUTPUT_DIR)) {
     console.warn("[post-build] Output directory not found:", OUTPUT_DIR);
