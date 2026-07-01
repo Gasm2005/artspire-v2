@@ -4,18 +4,9 @@ import { Layout } from "../components/Layout";
 import { waLink } from "../lib/whatsapp";
 import { ArrowRight } from "lucide-react";
 import { getArtworks, type ArtworkWithCategory, type ArtworkStatus } from "@/lib/artworks";
+import { getCategories, type CategoryWithVisuals } from "@/lib/categories";
 
-const filters = [
-  { key: "all", label: "All" },
-  { key: "sketches", label: "Pencil Sketches" },
-  { key: "portraits", label: "Colour Portraits" },
-  { key: "paintings", label: "Paintings" },
-  { key: "mirror", label: "Mirror Art" },
-  { key: "clay", label: "Clay Art" },
-  { key: "gifts", label: "Personalized Gifts" },
-] as const;
-
-// Map URL category slugs to filter keys
+// Map URL category slugs to filter keys (kept for backwards compat but no longer primary)
 const slugToKey: Record<string, string> = {
   "pencil-sketches": "sketches",
   "colour-portraits": "portraits",
@@ -28,22 +19,25 @@ const slugToKey: Record<string, string> = {
 export const Route = createFileRoute("/portfolio")({
   head: () => ({ meta: [{ title: "Portfolio | Artspire" }, { name: "description", content: "Handcrafted portraits, paintings, mirror art, clay sculptures and personalized gifts." }] }),
   loader: async () => {
-    const artworks = await getArtworks({ status: "published" as ArtworkStatus, limit: 50 });
-    return { artworks };
+    const [artworks, categories] = await Promise.all([
+      getArtworks({ status: "published" as ArtworkStatus, limit: 50 }),
+      getCategories().catch(() => []),
+    ]);
+    return { artworks, categories: categories as CategoryWithVisuals[] };
   },
   component: PortfolioPage,
 });
 
 function PortfolioPage() {
-  const { artworks } = Route.useLoaderData() as { artworks: ArtworkWithCategory[] };
+  const { artworks, categories } = Route.useLoaderData() as { artworks: ArtworkWithCategory[], categories: CategoryWithVisuals[] };
   const [initialLoad, setInitialLoad] = useState(true);
   const [active, setActive] = useState<string>("all");
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const categoryParam = params.get("category");
-    if (categoryParam && slugToKey[categoryParam]) {
-      setActive(slugToKey[categoryParam]);
+    if (categoryParam) {
+      setActive(categoryParam);
       setTimeout(() => {
         document.getElementById("portfolio-grid")?.scrollIntoView({ behavior: "smooth" });
       }, 100);
@@ -53,7 +47,7 @@ function PortfolioPage() {
 
   const visible = artworks.filter((a) => {
     if (active === "all") return true;
-    return a.categories?.slug === active || a.categories?.slug === Object.keys(slugToKey).find(k => slugToKey[k] === active);
+    return a.categories?.slug === active;
   });
 
   return (
@@ -69,17 +63,27 @@ function PortfolioPage() {
       <section className="pb-8">
         <div className="container-main">
           <div className="flex gap-2 overflow-x-auto no-scrollbar -mx-4 px-4 md:mx-0 md:px-0 md:justify-center md:flex-wrap">
-            {filters.map((f) => (
+            <button
+              onClick={() => setActive("all")}
+              className={`shrink-0 px-4 py-2.5 rounded-full font-body text-[12px] font-semibold border transition-all duration-200 ${
+                active === "all"
+                  ? "bg-forest text-white border-forest shadow-sm"
+                  : "bg-transparent text-stone border-border hover:border-forest/40 hover:text-forest"
+              }`}
+            >
+              All
+            </button>
+            {categories.map((cat) => (
               <button
-                key={f.key}
-                onClick={() => setActive(f.key)}
+                key={cat.slug}
+                onClick={() => setActive(cat.slug)}
                 className={`shrink-0 px-4 py-2.5 rounded-full font-body text-[12px] font-semibold border transition-all duration-200 ${
-                  active === f.key
+                  active === cat.slug
                     ? "bg-forest text-white border-forest shadow-sm"
                     : "bg-transparent text-stone border-border hover:border-forest/40 hover:text-forest"
                 }`}
               >
-                {f.label}
+                {cat.name}
               </button>
             ))}
           </div>

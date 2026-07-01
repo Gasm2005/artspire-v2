@@ -4,6 +4,7 @@ import { Layout } from "../components/Layout";
 import { BeforeAfterSlider } from "../components/BeforeAfterSlider";
 import { ImageWithFallback } from "../components/ImageWithFallback";
 import { waLink } from "../lib/whatsapp";
+import { getCategories, type CategoryWithVisuals } from "../lib/categories";
 import { ArrowRight, Palette, Pencil, Frame, Sparkles, Gift, Building2 } from "lucide-react";
 
 const IMG = {
@@ -67,6 +68,10 @@ const filters = [
 ];
 
 export const Route = createFileRoute("/")({
+  loader: async () => {
+    const categories = await getCategories().catch(() => []);
+    return { categories: categories as CategoryWithVisuals[] };
+  },
   head: () => ({
     meta: [
       { title: "Artspire | Artisanal Art Studio" },
@@ -77,6 +82,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const { categories } = Route.useLoaderData();
   const [activeFilter, setActiveFilter] = useState("all");
 
   return (
@@ -243,29 +249,32 @@ function Index() {
             Browse our handcrafted art collections.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
-            {portfolioCategories.map((cat) => (
+            {categories.map((cat) => (
               <Link
-                key={cat.key}
-                to={`/portfolio?category=${cat.key}`}
+                key={cat.id}
+                to="/portfolio"
+                search={{ category: cat.slug }}
                 className="cat-card relative rounded-xl overflow-hidden aspect-[4/3] cursor-pointer group"
               >
-                {/* Layer 1: Artwork image (primary visual - 80%) */}
+                {/* Layer 1: Artwork image */}
                 <img
-                  src={cat.img}
-                  alt={cat.label}
+                  src={cat.image_url ?? IMG.sketch}
+                  alt={cat.name}
                   className="absolute inset-0 w-full h-full object-cover"
                   loading="lazy"
                 />
-                {/* Layer 2: Gradient overlay for text readability (5%) */}
+                {/* Layer 2: Gradient overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent z-10" />
-                {/* Layer 3: Text content (5%) */}
+                {/* Layer 3: Text */}
                 <div className="relative z-10 flex flex-col items-center justify-end h-full p-5 pb-6">
                   <span className="font-display text-[18px] md:text-[22px] text-white font-medium drop-shadow-lg text-center">
-                    {cat.label}
+                    {cat.name}
                   </span>
-                  <span className="font-body text-[13px] text-gold mt-1 font-medium">
-                    {cat.subtitle}
-                  </span>
+                  {cat.short_summary && (
+                    <span className="font-body text-[13px] text-gold mt-1 font-medium">
+                      {cat.short_summary}
+                    </span>
+                  )}
                 </div>
               </Link>
             ))}
