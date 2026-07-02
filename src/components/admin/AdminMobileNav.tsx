@@ -1,4 +1,4 @@
-import { LayoutDashboard, Palette, FolderOpen, FileText } from "lucide-react";
+import { LayoutDashboard, Palette, FolderOpen, FileText, Search } from "lucide-react";
 import { useRouter } from "@tanstack/react-router";
 
 const mobileTabs = [
@@ -6,6 +6,7 @@ const mobileTabs = [
   { label: "Artworks", to: "/admin/artworks", icon: Palette },
   { label: "Categories", to: "/admin/categories", icon: FolderOpen },
   { label: "Pages", to: "/admin/website-content", icon: FileText },
+  { label: "SEO", to: "/admin/seo", icon: Search },
 ];
 
 export function AdminMobileNav() {

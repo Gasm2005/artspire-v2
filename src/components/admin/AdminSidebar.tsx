@@ -6,6 +6,7 @@ import {
   FileText,
   LogOut,
   Globe,
+  Search,
 } from "lucide-react";
 import { signOut } from "@/lib/admin";
 
@@ -14,6 +15,7 @@ const navItems = [
   { label: "Artworks", to: "/admin/artworks", icon: Palette },
   { label: "Categories", to: "/admin/categories", icon: FolderOpen },
   { label: "Pages", to: "/admin/website-content", icon: FileText },
+  { label: "SEO", to: "/admin/seo", icon: Search },
   { label: "View Site", to: "/", icon: Globe, external: true },
 ];
 
