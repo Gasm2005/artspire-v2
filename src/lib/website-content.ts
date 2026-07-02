@@ -301,3 +301,23 @@ export const FOOTER_SECTIONS = [
   { slug: "contact", name: "Contact Info" },
   { slug: "copyright", name: "Copyright" },
 ];
+
+// ─── SEO helper for route loaders ───────────────────────────
+export async function getPageSEO(pageKey: string): Promise<{ title: string | null; description: string | null; ogImage: string | null }> {
+  const keys = [
+    `seo.${pageKey}.title`,
+    `seo.${pageKey}.description`,
+    `seo.${pageKey}.og_image`,
+  ];
+  const { data } = await supabase
+    .from("website_content")
+    .select("content_key, value_text")
+    .in("content_key", keys);
+
+  const get = (key: string) => data?.find((d) => d.content_key === key)?.value_text ?? null;
+  return {
+    title: get(`seo.${pageKey}.title`),
+    description: get(`seo.${pageKey}.description`),
+    ogImage: get(`seo.${pageKey}.og_image`),
+  };
+}

@@ -3,6 +3,7 @@ import { useState, type FormEvent } from "react";
 import { MessageCircle, Instagram, MapPin, Clock, Star, Mail, Send } from "lucide-react";
 import { Layout } from "../components/Layout";
 import { waLink } from "../lib/whatsapp";
+import { getPageSEO } from "@/lib/website-content";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({ meta: [{ title: "Contact | Artspire" }, { name: "description", content: "Reach Himangi on WhatsApp within 2 hours to start your custom commission." }] }),

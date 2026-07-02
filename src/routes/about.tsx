@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Layout } from "../components/Layout";
 import { waLink } from "../lib/whatsapp";
 import { ImageWithFallback } from "../components/ImageWithFallback";
+import { getPageSEO } from "@/lib/website-content";
 
 const IMG = {
   sketch: "https://picsum.photos/seed/artspire-about1/600/400",

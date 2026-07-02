@@ -5,7 +5,7 @@ import { BeforeAfterSlider } from "../components/BeforeAfterSlider";
 import { ImageWithFallback } from "../components/ImageWithFallback";
 import { waLink } from "../lib/whatsapp";
 import { getCategories, type CategoryWithVisuals } from "../lib/categories";
-import { getWebsiteContent, type WebsiteContent } from "../lib/website-content";
+import { getWebsiteContent, getPageSEO, type WebsiteContent } from "../lib/website-content";
 import { ArrowRight, Palette, Pencil, Frame, Sparkles, Gift, Building2 } from "lucide-react";
 
 const IMG = {
@@ -70,18 +70,23 @@ const filters = [
 
 export const Route = createFileRoute("/")({
   loader: async () => {
-    const [categories, content] = await Promise.all([
+    const [categories, content, seo] = await Promise.all([
       getCategories().catch(() => []),
       getWebsiteContent({ page: "homepage", activeOnly: true }).catch(() => []),
+      getPageSEO("homepage").catch(() => ({ title: null, description: null, ogImage: null })),
     ]);
-    return { categories: categories as CategoryWithVisuals[], content: content as WebsiteContent[] };
+    return { categories: categories as CategoryWithVisuals[], content: content as WebsiteContent[], seo };
   },
-  head: () => ({
-    meta: [
-      { title: "Artspire | Artisanal Art Studio" },
-      { name: "description", content: "Custom handmade pencil sketches, paintings, mirror art and clay sculptures from your favorite photos." },
-    ],
-  }),
+  head: ({ loaderData }) => {
+    const seo = loaderData?.seo;
+    return {
+      meta: [
+        { title: seo?.title ?? "Artspire | Custom Handmade Art by Himangi Pandey" },
+        { name: "description", content: seo?.description ?? "Custom handmade pencil sketches, paintings, mirror art and clay sculptures from your photos. Delivered across India." },
+        ...(seo?.ogImage ? [{ property: "og:image", content: seo.ogImage }] : []),
+      ],
+    };
+  },
   component: Index,
 });
 

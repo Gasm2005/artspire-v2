@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ChevronDown, MessageCircle } from "lucide-react";
 import { Layout } from "../components/Layout";
 import { waLink } from "../lib/whatsapp";
+import { getPageSEO } from "@/lib/website-content";
 
 interface FaqItem {
   question: string;

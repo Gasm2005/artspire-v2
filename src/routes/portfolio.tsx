@@ -5,6 +5,7 @@ import { waLink } from "../lib/whatsapp";
 import { ArrowRight } from "lucide-react";
 import { getArtworks, type ArtworkWithCategory, type ArtworkStatus } from "@/lib/artworks";
 import { getCategories, type CategoryWithVisuals } from "@/lib/categories";
+import { getPageSEO } from "@/lib/website-content";
 
 // Map URL category slugs to filter keys (kept for backwards compat but no longer primary)
 const slugToKey: Record<string, string> = {
