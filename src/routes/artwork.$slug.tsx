@@ -1,9 +1,9 @@
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute, notFound, Link } from "@tanstack/react-router";
 import { Layout } from "@/components/Layout";
 import { waLink } from "@/lib/whatsapp";
 import { getPublishedArtworkBySlug, getArtworkTags, getRelatedArtworks, type ArtworkWithCategory } from "@/lib";
 import { buildArtworkStructuredData, buildBreadcrumbStructuredData } from "@/lib/seo";
-import { MessageCircle, Ruler } from "lucide-react";
+import { MessageCircle, Ruler, Tag, ArrowLeft } from "lucide-react";
 
 interface LoaderData {
   artwork: ArtworkWithCategory;
@@ -15,12 +15,10 @@ export const Route = createFileRoute("/artwork/$slug")({
   loader: async ({ params }): Promise<LoaderData> => {
     const artwork = await getPublishedArtworkBySlug(params.slug);
     if (!artwork) throw notFound();
-
     const [tags, related] = await Promise.all([
       getArtworkTags(artwork.id),
       getRelatedArtworks(artwork.id, artwork.category_id, 4),
     ]);
-
     return { artwork, tags, related };
   },
 
@@ -41,14 +39,7 @@ export const Route = createFileRoute("/artwork/$slug")({
 
     const breadcrumbData = buildBreadcrumbStructuredData([
       { name: "Home", item: "https://artspire.in/" },
-      ...(artwork.categories
-        ? [
-            {
-              name: artwork.categories.name,
-              item: `https://artspire.in/categories/${artwork.categories.slug}`,
-            },
-          ]
-        : []),
+      ...(artwork.categories ? [{ name: artwork.categories.name, item: `https://artspire.in/categories/${artwork.categories.slug}` }] : []),
       { name: artwork.title, item: `https://artspire.in/artwork/${artwork.slug}` },
     ]);
 
@@ -62,14 +53,8 @@ export const Route = createFileRoute("/artwork/$slug")({
         { property: "og:type", content: "website" },
       ],
       scripts: [
-        {
-          type: "application/ld+json",
-          children: JSON.stringify(structuredData),
-        },
-        {
-          type: "application/ld+json",
-          children: JSON.stringify(breadcrumbData),
-        },
+        { type: "application/ld+json", children: JSON.stringify(structuredData) },
+        { type: "application/ld+json", children: JSON.stringify(breadcrumbData) },
       ],
     };
   },
@@ -88,113 +73,164 @@ export const Route = createFileRoute("/artwork/$slug")({
 });
 
 function ArtworkPage() {
-  const { artwork, related } = Route.useLoaderData() as LoaderData;
+  const { artwork, tags, related } = Route.useLoaderData() as LoaderData;
+
+  const waMessage = waLink(`Hi Artspire! I love "${artwork.title}" and would like to commission something similar. Can you help?`);
 
   return (
     <Layout>
-      {/* Hero Image */}
-      <section className="relative w-full h-[50vh] md:h-[60vh] overflow-hidden">
-        {artwork.image_url ? (
-          <>
-            <img src={artwork.image_url} alt={artwork.title} className="w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-          </>
-        ) : (
-          <div className="w-full h-full bg-gradient-to-br from-forest to-deep-forest" />
-        )}
-        <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
-          <div className="container-main">
-            {artwork.categories?.name && (
-              <span className="inline-block px-3 py-1 bg-gold/90 text-white font-body text-[10px] font-bold uppercase tracking-wider rounded-full mb-3">
-                {artwork.categories.name}
-              </span>
-            )}
-            <h1 className="font-display text-[28px] md:text-[48px] text-white font-medium leading-tight">
-              {artwork.title}
-            </h1>
-          </div>
-        </div>
-      </section>
 
-      {/* Details */}
-      <section className="section-padding bg-cream">
-        <div className="container-main grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12">
-          {/* Left: Story */}
-          <div className="md:col-span-8">
-            <h2 className="font-display text-[22px] md:text-[28px] text-forest font-medium mb-4">
-              About this Piece
-            </h2>
-            <p className="font-body text-[14px] md:text-[16px] text-stone leading-relaxed mb-6">
-              {artwork.summary}
-            </p>
-            {artwork.story_content && (
-              <div className="font-body text-[14px] md:text-[16px] text-stone leading-relaxed prose prose-stone max-w-none">
-                {artwork.story_content}
+      {/* ── MAIN SECTION: Image Left + Story Right ── */}
+      <section className="bg-cream min-h-screen">
+        <div className="container-main py-8 md:py-14">
+
+          {/* Back link */}
+          <Link
+            to="/portfolio"
+            className="inline-flex items-center gap-1.5 font-body text-[12px] text-stone/60 hover:text-forest transition-colors mb-8"
+          >
+            <ArrowLeft size={14} />
+            Back to Portfolio
+          </Link>
+
+          <div className="flex flex-col lg:flex-row gap-8 lg:gap-14 items-start">
+
+            {/* ── LEFT: Image ── */}
+            <div className="w-full lg:w-1/2 lg:sticky lg:top-8">
+              {artwork.image_url ? (
+                <div className="rounded-2xl overflow-hidden shadow-lg border border-border/30">
+                  <img
+                    src={artwork.image_url}
+                    alt={artwork.title}
+                    className="w-full h-auto object-contain max-h-[85vh]"
+                    loading="eager"
+                  />
+                </div>
+              ) : (
+                <div className="w-full aspect-square rounded-2xl bg-gradient-to-br from-forest/10 to-gold/10" />
+              )}
+
+              {/* Tags below image */}
+              {tags.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-4">
+                  {tags.map((tag) => (
+                    <span key={tag.id} className="inline-flex items-center gap-1 px-3 py-1 bg-white border border-border rounded-full font-body text-[11px] text-stone">
+                      <Tag size={10} className="text-gold" />
+                      {tag.name}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* ── RIGHT: Story + Details + CTA ── */}
+            <div className="w-full lg:w-1/2 flex flex-col gap-6">
+
+              {/* Category badge */}
+              {artwork.categories?.name && (
+                <span className="inline-block self-start px-3 py-1 bg-gold/15 text-gold font-body text-[11px] font-bold uppercase tracking-wider rounded-full">
+                  {artwork.categories.name}
+                </span>
+              )}
+
+              {/* Title */}
+              <h1 className="font-display text-[28px] md:text-[40px] text-forest font-medium leading-tight">
+                {artwork.title}
+              </h1>
+
+              {/* Story */}
+              {(artwork.summary || artwork.story_content) && (
+                <div className="space-y-4">
+                  {artwork.summary && (
+                    <p className="font-body text-[15px] md:text-[17px] text-stone leading-relaxed">
+                      {artwork.summary}
+                    </p>
+                  )}
+                  {artwork.story_content && (
+                    <p className="font-body text-[14px] md:text-[15px] text-stone/80 leading-relaxed">
+                      {artwork.story_content}
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {/* Artwork Details */}
+              <div className="bg-white rounded-2xl border border-border p-5 shadow-sm space-y-3">
+                <h3 className="font-display text-[15px] text-forest font-medium">Artwork Details</h3>
+                <div className="grid grid-cols-2 gap-3">
+                  {artwork.categories?.name && (
+                    <div>
+                      <p className="font-body text-[10px] text-stone/50 uppercase tracking-wider mb-0.5">Category</p>
+                      <p className="font-body text-[13px] text-forest font-semibold">{artwork.categories.name}</p>
+                    </div>
+                  )}
+                  {artwork.dimensions && (
+                    <div>
+                      <p className="font-body text-[10px] text-stone/50 uppercase tracking-wider mb-0.5">Size</p>
+                      <p className="font-body text-[13px] text-forest font-semibold">{artwork.dimensions}</p>
+                    </div>
+                  )}
+                  {artwork.medium && (
+                    <div>
+                      <p className="font-body text-[10px] text-stone/50 uppercase tracking-wider mb-0.5">Medium</p>
+                      <p className="font-body text-[13px] text-forest font-semibold">{artwork.medium}</p>
+                    </div>
+                  )}
+                  {artwork.price && artwork.price > 0 && (
+                    <div>
+                      <p className="font-body text-[10px] text-stone/50 uppercase tracking-wider mb-0.5">Starting From</p>
+                      <p className="font-body text-[13px] text-gold font-bold">₹{artwork.price.toLocaleString("en-IN")}</p>
+                    </div>
+                  )}
+                </div>
               </div>
-            )}
-          </div>
 
-          {/* Right: Details */}
-          <div className="md:col-span-4">
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-border">
-              <h3 className="font-display text-[18px] text-forest font-medium mb-4">
-                Artwork Details
-              </h3>
-              <dl className="space-y-3">
-                {artwork.categories?.name && (
-                  <div className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded-full bg-forest/10 flex items-center justify-center shrink-0">
-                      <span className="font-body text-[10px] font-bold text-forest">C</span>
-                    </div>
-                    <div>
-                      <dt className="font-body text-[11px] text-stone/60 uppercase tracking-wider">Category</dt>
-                      <dd className="font-body text-[14px] text-forest font-medium">{artwork.categories.name}</dd>
-                    </div>
-                  </div>
-                )}
-                {artwork.dimensions && (
-                  <div className="flex items-center gap-3">
-                    <Ruler size={16} className="text-gold shrink-0" />
-                    <div>
-                      <dt className="font-body text-[11px] text-stone/60 uppercase tracking-wider">Size</dt>
-                      <dd className="font-body text-[14px] text-forest font-medium">{artwork.dimensions}</dd>
-                    </div>
-                  </div>
-                )}
-              </dl>
-
-              {/* Commission CTA */}
-              <div className="mt-6 pt-6 border-t border-border">
+              {/* CTA */}
+              <div className="space-y-3">
                 <a
-                  href={waLink(`Hi Artspire, I'm interested in "${artwork.title}". Can you tell me more?`)}
+                  href={waMessage}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center justify-center gap-2 w-full h-[48px] bg-gold text-forest font-body font-bold text-[13px] rounded-xl btn-gold transition-colors"
+                  className="flex items-center justify-center gap-2 w-full h-[54px] bg-forest text-white font-body font-bold text-[14px] rounded-xl hover:bg-forest/90 transition-colors shadow-md"
                 >
-                  <MessageCircle size={16} />
-                  Enquire on WhatsApp
+                  <MessageCircle size={18} />
+                  Commission Something Similar
+                </a>
+                <a
+                  href={waLink(`Hi Artspire! I want to know more about "${artwork.title}"`)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center justify-center gap-2 w-full h-[48px] bg-white border-2 border-forest text-forest font-body font-bold text-[13px] rounded-xl hover:bg-forest/5 transition-colors"
+                >
+                  Ask About This Piece
                 </a>
               </div>
+
+              {/* Trust note */}
+              <p className="font-body text-[12px] text-stone/50 text-center">
+                🎨 100% handmade · Delivered across India · WhatsApp reply within 2 hours
+              </p>
+
             </div>
           </div>
         </div>
       </section>
 
-      {/* Related Artworks */}
+      {/* ── RELATED ARTWORKS ── */}
       {related.length > 0 && (
-        <section className="section-padding bg-cream">
+        <section className="section-padding bg-white border-t border-border/40">
           <div className="container-main">
             <h2 className="font-display text-[22px] md:text-[28px] text-forest font-medium mb-8 text-center">
               You May Also Like
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
               {related.map((item) => (
                 <a
                   key={item.id}
                   href={`/artwork/${item.slug}`}
-                  className="group block rounded-xl overflow-hidden shadow-sm bg-white hover-lift"
+                  className="group block rounded-xl overflow-hidden shadow-sm bg-cream hover-lift border border-border/40"
                 >
-                  <div className="relative h-[220px] md:h-[260px] overflow-hidden">
+                  <div className="relative aspect-square overflow-hidden">
                     {item.image_url ? (
                       <img
                         src={item.image_url}
@@ -205,9 +241,12 @@ function ArtworkPage() {
                       <div className="w-full h-full bg-gradient-to-br from-forest/10 to-gold/10" />
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                    <div className="absolute bottom-0 left-0 right-0 p-4">
-                      <span className="font-display text-[15px] text-white font-medium">{item.title}</span>
-                    </div>
+                  </div>
+                  <div className="p-3">
+                    <p className="font-display text-[13px] text-forest font-medium leading-snug line-clamp-2">{item.title}</p>
+                    {item.categories?.name && (
+                      <p className="font-body text-[11px] text-stone/60 mt-0.5">{item.categories.name}</p>
+                    )}
                   </div>
                 </a>
               ))}
@@ -215,6 +254,7 @@ function ArtworkPage() {
           </div>
         </section>
       )}
+
     </Layout>
   );
 }
