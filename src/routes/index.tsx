@@ -5,6 +5,7 @@ import { BeforeAfterSlider } from "../components/BeforeAfterSlider";
 import { ImageWithFallback } from "../components/ImageWithFallback";
 import { waLink } from "../lib/whatsapp";
 import { getCategories, type CategoryWithVisuals } from "../lib/categories";
+import { getWebsiteContent, type WebsiteContent } from "../lib/website-content";
 import { ArrowRight, Palette, Pencil, Frame, Sparkles, Gift, Building2 } from "lucide-react";
 
 const IMG = {
@@ -69,8 +70,11 @@ const filters = [
 
 export const Route = createFileRoute("/")({
   loader: async () => {
-    const categories = await getCategories().catch(() => []);
-    return { categories: categories as CategoryWithVisuals[] };
+    const [categories, content] = await Promise.all([
+      getCategories().catch(() => []),
+      getWebsiteContent({ page: "homepage", activeOnly: true }).catch(() => []),
+    ]);
+    return { categories: categories as CategoryWithVisuals[], content: content as WebsiteContent[] };
   },
   head: () => ({
     meta: [
@@ -82,7 +86,12 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const { categories } = Route.useLoaderData();
+  const { categories, content } = Route.useLoaderData();
+
+  // Helper — get DB value or fallback to hardcoded default
+  const cv = (key: string, fallback: string) =>
+    content.find((c) => c.content_key === key)?.value_text ?? fallback;
+
   const [activeFilter, setActiveFilter] = useState("all");
 
   return (
@@ -91,13 +100,13 @@ function Index() {
       <section className="min-h-[100dvh] flex flex-col justify-center px-6 pt-16 pb-12 lg:flex-row lg:items-center lg:gap-16 lg:px-8 hero-texture">
         <div className="flex-[1.5] flex flex-col items-center text-center lg:items-start lg:text-left max-w-2xl">
           <p className="font-body text-[11px] md:text-[12px] font-semibold text-gold uppercase tracking-[0.25em] mb-5">
-            Handmade. Personalized. Yours.
+            {cv("homepage.hero.tagline", "Handmade. Personalized. Yours.")}
           </p>
           <h1 className="font-display text-[32px] sm:text-[36px] md:text-[48px] lg:text-[64px] leading-[1.05] text-forest mb-6 font-medium px-2 lg:px-0">
-            Custom Handmade Art for Your Most Treasured Memories
+            {cv("homepage.hero.heading", "Custom Handmade Art for Your Most Treasured Memories")}
           </h1>
           <p className="font-body text-[15px] md:text-[18px] leading-relaxed text-stone mb-10 max-w-lg">
-            Transform your memories into handcrafted pencil sketches, paintings, and clay masterpieces.
+            {cv("homepage.hero.subheading", "Transform your memories into handcrafted pencil sketches, paintings, and clay masterpieces.")}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto mb-8">
             <a
@@ -106,7 +115,7 @@ function Index() {
               rel="noreferrer"
               className="h-[52px] md:h-[56px] px-8 bg-forest text-white font-body font-semibold text-[13px] md:text-[14px] uppercase rounded-xl flex items-center justify-center gap-2 active-scale btn-primary"
             >
-              Commission Art <ArrowRight size={18} />
+              {cv("homepage.hero.cta_text", "Commission Art")} <ArrowRight size={18} />
             </a>
             <Link
               to="/portfolio"
@@ -121,19 +130,21 @@ function Index() {
         </div>
         <div className="flex-1 w-full max-w-lg mt-10 lg:mt-0">
           <div className="grid grid-cols-2 gap-2 rounded-2xl overflow-hidden shadow-lg">
-            {[IMG.sketch, IMG.portrait, IMG.mirror, IMG.clay].map((src, i) => {
-              const alts = [
-                "Handmade pencil sketch portrait by Artspire",
-                "Custom colour portrait painting by Artspire",
-                "Custom mirror art handcrafted by Artspire",
-                "Clay art sculpture handcrafted by Artspire",
-              ];
-              return (
-                <div key={i} className="aspect-square bg-surface-variant overflow-hidden">
-                  <ImageWithFallback alt={alts[i]} className="w-full h-full object-cover img-zoom" src={src} loading={i === 0 ? "eager" : "lazy"} />
-                </div>
-              );
-            })}
+            {[
+              { key: "homepage.hero.image_1", fallback: IMG.sketch, alt: "Handmade pencil sketch portrait by Artspire" },
+              { key: "homepage.hero.image_2", fallback: IMG.portrait, alt: "Custom colour portrait painting by Artspire" },
+              { key: "homepage.hero.image_3", fallback: IMG.mirror, alt: "Custom mirror art handcrafted by Artspire" },
+              { key: "homepage.hero.image_4", fallback: IMG.clay, alt: "Clay art sculpture handcrafted by Artspire" },
+            ].map((img, i) => (
+              <div key={i} className="aspect-square bg-surface-variant overflow-hidden">
+                <ImageWithFallback
+                  alt={img.alt}
+                  className="w-full h-full object-cover img-zoom"
+                  src={cv(img.key, img.fallback)}
+                  loading={i === 0 ? "eager" : "lazy"}
+                />
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -141,7 +152,7 @@ function Index() {
       {/* ===== TRUST STRIP ===== */}
       <section className="bg-white py-5 w-full border-y border-border/40">
         <div className="container-main text-center font-body text-[11px] md:text-[12px] font-semibold uppercase tracking-widest text-forest leading-relaxed">
-          11+ Years <span className="text-gold mx-1 text-[16px] leading-none align-middle">•</span> 1000+ Artworks <span className="text-gold mx-1 text-[16px] leading-none align-middle">•</span> One Artist <span className="text-gold mx-1 text-[16px] leading-none align-middle">•</span> Handcrafted
+          {cv("homepage.trust_strip.text", "11+ Years • 1000+ Artworks • One Artist • Handcrafted")}
         </div>
       </section>
 

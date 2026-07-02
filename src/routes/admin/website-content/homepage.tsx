@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useWebsiteContent } from "@/hooks/useWebsiteContent";
 import { HOMEPAGE_SECTIONS } from "@/lib/website-content";
-import { Home, ArrowLeft, Save, Image, Type, ToggleLeft } from "lucide-react";
-import { useState } from "react";
+import { Home, ArrowLeft, Save } from "lucide-react";
+import { useState, useEffect } from "react";
 import { updateWebsiteContent, upsertWebsiteContent } from "@/lib/website-content";
 import type { WebsiteContent } from "@/lib/website-content";
 
@@ -49,11 +49,14 @@ function HomepageContentPage() {
   };
 
   const heroFields = [
-    { key: "homepage.hero.heading", label: "Heading", type: "text" as const, placeholder: "Handcrafted Custom Artwork" },
-    { key: "homepage.hero.subheading", label: "Subheading", type: "textarea" as const, placeholder: "Pencil sketches, colour portraits, paintings, and more..." },
-    { key: "homepage.hero.cta_text", label: "CTA Button Text", type: "text" as const, placeholder: "Explore Artworks" },
-    { key: "homepage.hero.cta_link", label: "CTA Button Link", type: "text" as const, placeholder: "/portfolio" },
-    { key: "homepage.hero.tagline", label: "Tagline", type: "text" as const, placeholder: "Handmade. Personalized. Yours." },
+    { key: "homepage.hero.tagline", label: "Tagline (small text above heading)", type: "text" as const, placeholder: "Handmade. Personalized. Yours." },
+    { key: "homepage.hero.heading", label: "Main Heading (H1)", type: "text" as const, placeholder: "Custom Handmade Art for Your Most Treasured Memories" },
+    { key: "homepage.hero.subheading", label: "Subheading (below heading)", type: "textarea" as const, placeholder: "Transform your memories into handcrafted pencil sketches..." },
+    { key: "homepage.hero.cta_text", label: "Button Text", type: "text" as const, placeholder: "Commission Art" },
+    { key: "homepage.hero.image_1", label: "Hero Image 1 URL (top-left grid)", type: "text" as const, placeholder: "https://..." },
+    { key: "homepage.hero.image_2", label: "Hero Image 2 URL (top-right grid)", type: "text" as const, placeholder: "https://..." },
+    { key: "homepage.hero.image_3", label: "Hero Image 3 URL (bottom-left grid)", type: "text" as const, placeholder: "https://..." },
+    { key: "homepage.hero.image_4", label: "Hero Image 4 URL (bottom-right grid)", type: "text" as const, placeholder: "https://..." },
   ];
 
   const trustFields = [
@@ -179,10 +182,10 @@ function ContentField({
 }) {
   const [localValue, setLocalValue] = useState(value);
 
-  // Update local value when external value changes
-  useState(() => {
+  // Sync when DB value loads
+  useEffect(() => {
     setLocalValue(value);
-  });
+  }, [value]);
 
   const inputClass =
     "w-full px-4 py-2.5 rounded-xl border border-border bg-white font-body text-[14px] text-forest focus:outline-none focus:border-gold transition-colors";
