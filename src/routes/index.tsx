@@ -160,26 +160,37 @@ function Index() {
       <section className="section-padding bg-cream">
         <div className="container-main">
           <h2 className="font-display text-[28px] md:text-[36px] text-center text-forest mb-4 leading-tight">
-            What Would You Like to Create?
+            {cv("homepage.services.heading", "What Would You Like to Create?")}
           </h2>
           <p className="font-body text-[14px] text-stone text-center mb-12 max-w-lg mx-auto">
-            Choose from our signature handcrafted art services, each made with care and precision.
+            {cv("homepage.services.subheading", "Choose from our signature handcrafted art services, each made with care and precision.")}
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-            {services.map((s) => {
+            {services.map((s, i) => {
               const Icon = s.icon;
               return (
                 <div key={s.title} className="bg-white rounded-xl overflow-hidden border border-border/60 flex flex-col hover-lift shadow-sm cursor-pointer card-stretch">
                   <div className="h-[180px] md:h-[200px] overflow-hidden">
-                    <ImageWithFallback alt={s.title} className="w-full h-full object-cover img-zoom" src={s.img} loading="lazy" />
+                    <ImageWithFallback
+                      alt={cv(`homepage.services.${i}.title`, s.title)}
+                      className="w-full h-full object-cover img-zoom"
+                      src={cv(`homepage.services.${i}.image`, s.img)}
+                      loading="lazy"
+                    />
                   </div>
                   <div className="p-4 md:p-5 flex flex-col flex-grow">
                     <div className="flex items-center gap-2 mb-2">
                       <Icon size={16} className="text-gold" />
-                      <h3 className="font-display text-[16px] md:text-[19px] text-forest font-medium leading-tight">{s.title}</h3>
+                      <h3 className="font-display text-[16px] md:text-[19px] text-forest font-medium leading-tight">
+                        {cv(`homepage.services.${i}.title`, s.title)}
+                      </h3>
                     </div>
-                    <p className="font-body text-[13px] text-gold font-semibold mb-1">{s.price}</p>
-                    <p className="font-body text-[11px] text-stone mb-3">{s.days}</p>
+                    <p className="font-body text-[13px] text-gold font-semibold mb-1">
+                      {cv(`homepage.services.${i}.price`, s.price)}
+                    </p>
+                    <p className="font-body text-[11px] text-stone mb-3">
+                      {cv(`homepage.services.${i}.days`, s.days)}
+                    </p>
                     <Link
                       to="/portfolio"
                       className="font-body text-[12px] font-bold uppercase text-forest/70 flex items-center gap-1 hover:text-gold transition-colors mt-auto"
@@ -198,15 +209,15 @@ function Index() {
       <section className="section-padding bg-cream-dark">
         <div className="container-main">
           <h2 className="font-display text-[28px] md:text-[36px] text-center text-forest mb-4 leading-tight">
-            Your Photo. Our Masterpiece.
+            {cv("homepage.before_after.heading", "Your Photo. Our Masterpiece.")}
           </h2>
           <p className="font-body text-[14px] text-stone text-center mb-12 max-w-lg mx-auto">
-            See the transformation from photo to handcrafted art.
+            {cv("homepage.before_after.subheading", "See the transformation from photo to handcrafted art.")}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-            <BeforeAfterSlider beforeSrc={IMG.sliderB1} afterSrc={IMG.sliderA1} caption="Pencil Sketch · 5 days" />
-            <BeforeAfterSlider beforeSrc={IMG.sliderB2} afterSrc={IMG.sliderA2} caption="Color Portrait · 7 days" />
-            <BeforeAfterSlider beforeSrc={IMG.sliderB3} afterSrc={IMG.sliderA3} caption="Custom Painting · 10 days" />
+            <BeforeAfterSlider beforeSrc={cv("homepage.before_after.before_1", IMG.sliderB1)} afterSrc={cv("homepage.before_after.after_1", IMG.sliderA1)} caption={cv("homepage.before_after.caption_1", "Pencil Sketch · 5 days")} />
+            <BeforeAfterSlider beforeSrc={cv("homepage.before_after.before_2", IMG.sliderB2)} afterSrc={cv("homepage.before_after.after_2", IMG.sliderA2)} caption={cv("homepage.before_after.caption_2", "Color Portrait · 7 days")} />
+            <BeforeAfterSlider beforeSrc={cv("homepage.before_after.before_3", IMG.sliderB3)} afterSrc={cv("homepage.before_after.after_3", IMG.sliderA3)} caption={cv("homepage.before_after.caption_3", "Custom Painting · 10 days")} />
           </div>
           <div className="text-center mt-10 md:mt-12">
             <a
@@ -215,7 +226,7 @@ function Index() {
               rel="noreferrer"
               className="inline-flex h-[52px] bg-forest text-white font-body font-semibold text-[13px] md:text-[14px] uppercase rounded-xl active-scale btn-primary shadow-md items-center justify-center px-10"
             >
-              Commission Your Artwork
+              {cv("homepage.before_after.cta_text", "Commission Your Artwork")}
             </a>
           </div>
         </div>
@@ -225,24 +236,24 @@ function Index() {
       <section className="section-padding bg-white">
         <div className="container-main">
           <h2 className="font-display text-[28px] md:text-[36px] text-center text-forest mb-4 leading-tight">
-            Simple. Personal. Yours.
+            {cv("homepage.how_it_works.heading", "Simple. Personal. Yours.")}
           </h2>
           <p className="font-body text-[14px] text-stone text-center mb-14 max-w-lg mx-auto">
-            Four easy steps from idea to delivered artwork.
+            {cv("homepage.how_it_works.subheading", "Four easy steps from idea to delivered artwork.")}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             {[
-              { n: "01", t: "Share Your Idea", d: "Send us your favorite photo and tell us what makes it special to you." },
-              { n: "02", t: "We Discuss & Confirm", d: "We'll help you choose the best style and size, and share a final quote." },
-              { n: "03", t: "Watch It Come to Life", d: "Receive updates as our artist meticulously crafts your one-of-a-kind piece." },
-              { n: "04", t: "Delivered to Your Door", d: "Safely packaged and shipped right to you, ready to be displayed and cherished." },
+              { n: "01", tKey: "homepage.how_it_works.step_1_title", dKey: "homepage.how_it_works.step_1_desc", t: "Share Your Idea", d: "Send us your favorite photo and tell us what makes it special to you." },
+              { n: "02", tKey: "homepage.how_it_works.step_2_title", dKey: "homepage.how_it_works.step_2_desc", t: "We Discuss & Confirm", d: "We'll help you choose the best style and size, and share a final quote." },
+              { n: "03", tKey: "homepage.how_it_works.step_3_title", dKey: "homepage.how_it_works.step_3_desc", t: "Watch It Come to Life", d: "Receive updates as our artist meticulously crafts your one-of-a-kind piece." },
+              { n: "04", tKey: "homepage.how_it_works.step_4_title", dKey: "homepage.how_it_works.step_4_desc", t: "Delivered to Your Door", d: "Safely packaged and shipped right to you, ready to be displayed and cherished." },
             ].map((step, i) => (
               <div key={step.n} className="relative text-center px-4 py-8">
                 <span className="process-step-num">{step.n}</span>
                 {i < 3 && <div className="hidden lg:block process-divider" />}
                 <div className="relative z-10">
-                  <h3 className="font-display text-[18px] md:text-[20px] text-forest mb-3 font-medium mt-4">{step.t}</h3>
-                  <p className="font-body text-[14px] leading-relaxed text-stone">{step.d}</p>
+                  <h3 className="font-display text-[18px] md:text-[20px] text-forest mb-3 font-medium mt-4">{cv(step.tKey, step.t)}</h3>
+                  <p className="font-body text-[14px] leading-relaxed text-stone">{cv(step.dKey, step.d)}</p>
                 </div>
               </div>
             ))}
@@ -254,10 +265,10 @@ function Index() {
       <section className="section-padding bg-cream-dark">
         <div className="container-main">
           <h2 className="font-display text-[28px] md:text-[36px] text-center text-forest mb-4 leading-tight">
-            Explore by Category
+            {cv("homepage.categories.heading", "Explore by Category")}
           </h2>
           <p className="font-body text-[14px] text-stone text-center mb-12 max-w-lg mx-auto">
-            Browse our handcrafted art collections.
+            {cv("homepage.categories.subheading", "Browse our handcrafted art collections.")}
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
             {categories.map((cat) => (
@@ -267,24 +278,12 @@ function Index() {
                 search={{ category: cat.slug }}
                 className="cat-card relative rounded-xl overflow-hidden aspect-[4/3] cursor-pointer group"
               >
-                {/* Layer 1: Artwork image */}
-                <img
-                  src={cat.image_url ?? IMG.sketch}
-                  alt={cat.name}
-                  className="absolute inset-0 w-full h-full object-cover"
-                  loading="lazy"
-                />
-                {/* Layer 2: Gradient overlay */}
+                <img src={cat.image_url ?? IMG.sketch} alt={cat.name} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent z-10" />
-                {/* Layer 3: Text */}
                 <div className="relative z-10 flex flex-col items-center justify-end h-full p-5 pb-6">
-                  <span className="font-display text-[18px] md:text-[22px] text-white font-medium drop-shadow-lg text-center">
-                    {cat.name}
-                  </span>
+                  <span className="font-display text-[18px] md:text-[22px] text-white font-medium drop-shadow-lg text-center">{cat.name}</span>
                   {cat.short_summary && (
-                    <span className="font-body text-[13px] text-gold mt-1 font-medium">
-                      {cat.short_summary}
-                    </span>
+                    <span className="font-body text-[13px] text-gold mt-1 font-medium">{cat.short_summary}</span>
                   )}
                 </div>
               </Link>
@@ -297,56 +296,32 @@ function Index() {
       <section className="section-padding bg-cream">
         <div className="container-main">
           <h2 className="font-display text-[28px] md:text-[36px] text-center text-forest mb-4 leading-tight">
-            Recent Work
+            {cv("homepage.recent_work.heading", "Recent Work")}
           </h2>
           <p className="font-body text-[14px] text-stone text-center mb-10 max-w-lg mx-auto">
-            A selection of our latest handcrafted commissions.
+            {cv("homepage.recent_work.subheading", "A selection of our latest handcrafted commissions.")}
           </p>
-          {/* Filter pills */}
           <div className="flex overflow-x-auto no-scrollbar gap-2 mb-10 pb-2 justify-start md:justify-center">
             {filters.map((f) => {
               const active = activeFilter === f.key;
               return (
-                <button
-                  key={f.key}
-                  onClick={() => setActiveFilter(f.key)}
-                  className={`px-5 py-2.5 rounded-full font-body text-[12px] md:text-[13px] font-bold whitespace-nowrap active-scale transition-all duration-200 ${
-                    active
-                      ? "bg-forest text-white shadow-md"
-                      : "border border-border text-stone hover:border-forest/40 hover:text-forest"
-                  }`}
-                >
+                <button key={f.key} onClick={() => setActiveFilter(f.key)}
+                  className={`px-5 py-2.5 rounded-full font-body text-[12px] md:text-[13px] font-bold whitespace-nowrap active-scale transition-all duration-200 ${active ? "bg-forest text-white shadow-md" : "border border-border text-stone hover:border-forest/40 hover:text-forest"}`}>
                   {f.label}
                 </button>
               );
             })}
           </div>
-          {/* 6 work cards matching categories */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
             {recentWork.map((w) => {
               const visible = activeFilter === "all" || w.cat === activeFilter;
               return (
-                <div
-                  key={w.id}
-                  className="work-card portfolio-item rounded-xl overflow-hidden shadow-sm cursor-pointer h-[280px] md:h-[320px] flex flex-col group relative"
-                  style={{ display: visible ? undefined : "none" }}
-                >
-                  {/* Layer 1: Artwork image (primary visual - 80%) */}
-                  <img
-                    src={w.img}
-                    alt={w.title}
-                    className="absolute inset-0 w-full h-full object-cover"
-                    loading="lazy"
-                  />
-                  {/* Category badge */}
+                <div key={w.id} className="work-card portfolio-item rounded-xl overflow-hidden shadow-sm cursor-pointer h-[280px] md:h-[320px] flex flex-col group relative" style={{ display: visible ? undefined : "none" }}>
+                  <img src={w.img} alt={w.title} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
                   <div className="absolute top-4 left-4 z-20">
-                    <span className="inline-block px-3 py-1 bg-gold/90 text-white font-body text-[10px] font-bold uppercase tracking-wider rounded-full">
-                      {w.cat}
-                    </span>
+                    <span className="inline-block px-3 py-1 bg-gold/90 text-white font-body text-[10px] font-bold uppercase tracking-wider rounded-full">{w.cat}</span>
                   </div>
-                  {/* Layer 2: Gradient overlay for text readability (5%) */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent z-10" />
-                  {/* Layer 3: Text content (5%) */}
                   <div className="absolute bottom-0 left-0 right-0 p-5 z-20">
                     <span className="font-display text-[16px] md:text-[18px] text-white font-medium">{w.title}</span>
                     <p className="font-body text-[13px] text-gold font-semibold mt-1">{w.price}</p>
@@ -356,10 +331,7 @@ function Index() {
             })}
           </div>
           <div className="text-center mt-10">
-            <Link
-              to="/portfolio"
-              className="inline-flex h-[48px] px-8 border-2 border-forest text-forest font-body font-semibold text-[13px] uppercase rounded-xl items-center justify-center gap-2 active-scale btn-secondary"
-            >
+            <Link to="/portfolio" className="inline-flex h-[48px] px-8 border-2 border-forest text-forest font-body font-semibold text-[13px] uppercase rounded-xl items-center justify-center gap-2 active-scale btn-secondary">
               View All Work <ArrowRight size={16} />
             </Link>
           </div>
@@ -370,17 +342,17 @@ function Index() {
       <section className="section-padding bg-cream-dark">
         <div className="container-main">
           <h2 className="font-display text-[28px] md:text-[36px] text-center text-forest mb-12 leading-tight">
-            What Our Clients Say
+            {cv("homepage.testimonials.heading", "What Our Clients Say")}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
             {[
-              { q: "She saw details I never mentioned. It's like she captured his soul, not just his face.", a: "— Rajiv M." },
-              { q: "The clay sculpture made me cry. It's the most precious thing in our home now.", a: "— Sneha K." },
-              { q: "She redid the eyes because she wasn't happy with them. That dedication to perfection is rare.", a: "— Anjali & Vikram S." },
+              { qKey: "homepage.testimonials.1_quote", aKey: "homepage.testimonials.1_author", q: "She saw details I never mentioned. It's like she captured his soul, not just his face.", a: "— Rajiv M." },
+              { qKey: "homepage.testimonials.2_quote", aKey: "homepage.testimonials.2_author", q: "The clay sculpture made me cry. It's the most precious thing in our home now.", a: "— Sneha K." },
+              { qKey: "homepage.testimonials.3_quote", aKey: "homepage.testimonials.3_author", q: "She redid the eyes because she wasn't happy with them. That dedication is rare.", a: "— Anjali & Vikram S." },
             ].map((t, i) => (
               <div key={i} className="bg-white p-6 md:p-7 rounded-xl border-l-4 border-gold shadow-sm flex flex-col gap-3 hover-lift">
-                <p className="font-accent text-[17px] md:text-[19px] italic text-forest leading-relaxed">"{t.q}"</p>
-                <p className="font-body text-[13px] md:text-[14px] font-bold text-stone uppercase tracking-wider mt-auto">{t.a}</p>
+                <p className="font-accent text-[17px] md:text-[19px] italic text-forest leading-relaxed">"{cv(t.qKey, t.q)}"</p>
+                <p className="font-body text-[13px] md:text-[14px] font-bold text-stone uppercase tracking-wider mt-auto">{cv(t.aKey, t.a)}</p>
               </div>
             ))}
           </div>
@@ -391,26 +363,22 @@ function Index() {
       <section className="section-padding bg-white">
         <div className="container-main">
           <h2 className="font-display text-[28px] md:text-[36px] text-center text-forest mb-4 leading-tight">
-            Find the Perfect Gift
+            {cv("homepage.gifts.heading", "Find the Perfect Gift")}
           </h2>
           <p className="font-body text-[14px] text-stone text-center mb-10 max-w-lg mx-auto">
-            Handcrafted art for every special occasion.
+            {cv("homepage.gifts.subheading", "Handcrafted art for every special occasion.")}
           </p>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-4">
             {[
-              { label: "For Parents", img: IMG.sketch2 },
-              { label: "For Couples", img: IMG.portrait2 },
-              { label: "New Home", img: IMG.mirror2 },
-              { label: "Memorials", img: IMG.clay2 },
+              { labelKey: "homepage.gifts.card_1_label", imgKey: "homepage.gifts.card_1_image", label: "For Parents", img: IMG.sketch2 },
+              { labelKey: "homepage.gifts.card_2_label", imgKey: "homepage.gifts.card_2_image", label: "For Couples", img: IMG.portrait2 },
+              { labelKey: "homepage.gifts.card_3_label", imgKey: "homepage.gifts.card_3_image", label: "New Home", img: IMG.mirror2 },
+              { labelKey: "homepage.gifts.card_4_label", imgKey: "homepage.gifts.card_4_image", label: "Memorials", img: IMG.clay2 },
             ].map((g) => (
-              <Link
-                key={g.label}
-                to="/portfolio"
-                className="aspect-square relative rounded-xl overflow-hidden active-scale shadow-sm cursor-pointer group"
-              >
-                <ImageWithFallback alt={g.label} className="w-full h-full object-cover img-zoom" src={g.img} loading="lazy" />
+              <Link key={g.label} to="/portfolio" className="aspect-square relative rounded-xl overflow-hidden active-scale shadow-sm cursor-pointer group">
+                <ImageWithFallback alt={cv(g.labelKey, g.label)} className="w-full h-full object-cover img-zoom" src={cv(g.imgKey, g.img)} loading="lazy" />
                 <div className="absolute inset-0 bg-black/30 flex items-center justify-center p-2 text-center group-hover:bg-black/40 transition-colors duration-300">
-                  <span className="font-display text-[18px] md:text-[22px] text-white font-medium drop-shadow-md">{g.label}</span>
+                  <span className="font-display text-[18px] md:text-[22px] text-white font-medium drop-shadow-md">{cv(g.labelKey, g.label)}</span>
                 </div>
               </Link>
             ))}
@@ -419,11 +387,13 @@ function Index() {
             href="mailto:Ajju_pandey@outlook.com?subject=Corporate%20%26%20Bulk%20Order%20Enquiry&body=Hi%20Artspire%20Team%2C%20I%20am%20interested%20in%20bulk%2Fcorporate%20orders."
             className="aspect-[21/9] relative rounded-xl overflow-hidden active-scale shadow-sm cursor-pointer group block"
           >
-            <ImageWithFallback alt="Corporate & Bulk" className="w-full h-full object-cover img-zoom" src={IMG.painting} loading="lazy" />
+            <ImageWithFallback alt="Corporate & Bulk" className="w-full h-full object-cover img-zoom" src={cv("homepage.gifts.corporate_image", IMG.painting)} loading="lazy" />
             <div className="absolute inset-0 bg-black/30 flex items-center justify-center p-4 group-hover:bg-black/40 transition-colors duration-300">
               <div className="flex items-center gap-2">
                 <Building2 size={20} className="text-white" />
-                <span className="font-display text-[20px] md:text-[24px] text-white font-medium drop-shadow-md">Corporate & Bulk Orders</span>
+                <span className="font-display text-[20px] md:text-[24px] text-white font-medium drop-shadow-md">
+                  {cv("homepage.gifts.corporate_label", "Corporate & Bulk Orders")}
+                </span>
               </div>
             </div>
           </a>
@@ -435,21 +405,20 @@ function Index() {
         <div className="container-main">
           <div className="flex flex-col items-center lg:flex-row lg:items-center lg:gap-14">
             <div className="w-full lg:w-1/2 aspect-[4/3] rounded-2xl overflow-hidden mb-8 lg:mb-0 shadow-md">
-              <ImageWithFallback alt="Himangi — Artist at Artspire" className="w-full h-full object-cover img-zoom" src={IMG.sketch} loading="lazy" />
+              <ImageWithFallback alt="Himangi — Artist at Artspire" className="w-full h-full object-cover img-zoom" src={cv("homepage.about.image", IMG.sketch)} loading="lazy" />
             </div>
             <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left">
               <p className="font-body text-[11px] font-bold text-gold mb-5 uppercase tracking-[0.25em]">
-                The Artist Behind Artspire
+                {cv("homepage.about.tagline", "The Artist Behind Artspire")}
               </p>
-              <h2 className="font-display text-[32px] md:text-[36px] text-forest mb-5 font-medium">Hi, I'm Himangi.</h2>
+              <h2 className="font-display text-[32px] md:text-[36px] text-forest mb-5 font-medium">
+                {cv("homepage.about.heading", "Hi, I'm Himangi.")}
+              </h2>
               <p className="font-body text-[15px] leading-relaxed text-stone mb-6">
-                For over 11 years, I've been helping people capture their most precious moments through art. Every stroke and detail is infused with passion and precision.
+                {cv("homepage.about.description", "For over 11 years, I've been helping people capture their most precious moments through art. Every stroke and detail is infused with passion and precision.")}
               </p>
-              <Link
-                to="/about"
-                className="font-body text-[14px] font-bold text-gold border-b-2 border-gold/30 pb-1 active-scale hover:border-gold transition-colors"
-              >
-                Read My Story →
+              <Link to="/about" className="font-body text-[14px] font-bold text-gold border-b-2 border-gold/30 pb-1 active-scale hover:border-gold transition-colors">
+                {cv("homepage.about.cta_text", "Read My Story →")}
               </Link>
             </div>
           </div>

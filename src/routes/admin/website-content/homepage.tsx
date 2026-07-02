@@ -66,16 +66,58 @@ function HomepageContentPage() {
   const servicesFields = [
     { key: "homepage.services.heading", label: "Section Heading", type: "text" as const, placeholder: "What Would You Like to Create?" },
     { key: "homepage.services.subheading", label: "Section Subheading", type: "textarea" as const, placeholder: "Choose from our signature handcrafted art services..." },
+    { key: "homepage.services.0.title", label: "Service 1 — Title", type: "text" as const, placeholder: "Pencil Sketches" },
+    { key: "homepage.services.0.price", label: "Service 1 — Price", type: "text" as const, placeholder: "From ₹999" },
+    { key: "homepage.services.0.days", label: "Service 1 — Delivery", type: "text" as const, placeholder: "5–7 days" },
+    { key: "homepage.services.0.image", label: "Service 1 — Image URL", type: "text" as const, placeholder: "https://..." },
+    { key: "homepage.services.1.title", label: "Service 2 — Title", type: "text" as const, placeholder: "Colour Portraits" },
+    { key: "homepage.services.1.price", label: "Service 2 — Price", type: "text" as const, placeholder: "From ₹1,999" },
+    { key: "homepage.services.1.days", label: "Service 2 — Delivery", type: "text" as const, placeholder: "7–10 days" },
+    { key: "homepage.services.1.image", label: "Service 2 — Image URL", type: "text" as const, placeholder: "https://..." },
+    { key: "homepage.services.2.title", label: "Service 3 — Title", type: "text" as const, placeholder: "Custom Paintings" },
+    { key: "homepage.services.2.price", label: "Service 3 — Price", type: "text" as const, placeholder: "From ₹2,999" },
+    { key: "homepage.services.2.days", label: "Service 3 — Delivery", type: "text" as const, placeholder: "10–14 days" },
+    { key: "homepage.services.2.image", label: "Service 3 — Image URL", type: "text" as const, placeholder: "https://..." },
+    { key: "homepage.services.3.title", label: "Service 4 — Title", type: "text" as const, placeholder: "Mirror Art" },
+    { key: "homepage.services.3.price", label: "Service 4 — Price", type: "text" as const, placeholder: "From ₹2,499" },
+    { key: "homepage.services.3.days", label: "Service 4 — Delivery", type: "text" as const, placeholder: "7–12 days" },
+    { key: "homepage.services.3.image", label: "Service 4 — Image URL", type: "text" as const, placeholder: "https://..." },
+    { key: "homepage.services.4.title", label: "Service 5 — Title", type: "text" as const, placeholder: "Clay Art" },
+    { key: "homepage.services.4.price", label: "Service 5 — Price", type: "text" as const, placeholder: "From ₹1,799" },
+    { key: "homepage.services.4.days", label: "Service 5 — Delivery", type: "text" as const, placeholder: "7–10 days" },
+    { key: "homepage.services.4.image", label: "Service 5 — Image URL", type: "text" as const, placeholder: "https://..." },
+    { key: "homepage.services.5.title", label: "Service 6 — Title", type: "text" as const, placeholder: "Personalized Gifts" },
+    { key: "homepage.services.5.price", label: "Service 6 — Price", type: "text" as const, placeholder: "From ₹799" },
+    { key: "homepage.services.5.days", label: "Service 6 — Delivery", type: "text" as const, placeholder: "5–10 days" },
+    { key: "homepage.services.5.image", label: "Service 6 — Image URL", type: "text" as const, placeholder: "https://..." },
   ];
 
   const beforeAfterFields = [
     { key: "homepage.before_after.heading", label: "Heading", type: "text" as const, placeholder: "Your Photo. Our Masterpiece." },
     { key: "homepage.before_after.subheading", label: "Subheading", type: "textarea" as const, placeholder: "See the transformation from photo to handcrafted art." },
+    { key: "homepage.before_after.cta_text", label: "Button Text", type: "text" as const, placeholder: "Commission Your Artwork" },
+    { key: "homepage.before_after.before_1", label: "Slider 1 — Before Image URL", type: "text" as const, placeholder: "https://..." },
+    { key: "homepage.before_after.after_1", label: "Slider 1 — After Image URL", type: "text" as const, placeholder: "https://..." },
+    { key: "homepage.before_after.caption_1", label: "Slider 1 — Caption", type: "text" as const, placeholder: "Pencil Sketch · 5 days" },
+    { key: "homepage.before_after.before_2", label: "Slider 2 — Before Image URL", type: "text" as const, placeholder: "https://..." },
+    { key: "homepage.before_after.after_2", label: "Slider 2 — After Image URL", type: "text" as const, placeholder: "https://..." },
+    { key: "homepage.before_after.caption_2", label: "Slider 2 — Caption", type: "text" as const, placeholder: "Color Portrait · 7 days" },
+    { key: "homepage.before_after.before_3", label: "Slider 3 — Before Image URL", type: "text" as const, placeholder: "https://..." },
+    { key: "homepage.before_after.after_3", label: "Slider 3 — After Image URL", type: "text" as const, placeholder: "https://..." },
+    { key: "homepage.before_after.caption_3", label: "Slider 3 — Caption", type: "text" as const, placeholder: "Custom Painting · 10 days" },
   ];
 
   const howItWorksFields = [
     { key: "homepage.how_it_works.heading", label: "Heading", type: "text" as const, placeholder: "Simple. Personal. Yours." },
     { key: "homepage.how_it_works.subheading", label: "Subheading", type: "textarea" as const, placeholder: "Four easy steps from idea to delivered artwork." },
+    { key: "homepage.how_it_works.step_1_title", label: "Step 1 — Title", type: "text" as const, placeholder: "Share Your Idea" },
+    { key: "homepage.how_it_works.step_1_desc", label: "Step 1 — Description", type: "textarea" as const, placeholder: "Send us your favorite photo..." },
+    { key: "homepage.how_it_works.step_2_title", label: "Step 2 — Title", type: "text" as const, placeholder: "We Discuss & Confirm" },
+    { key: "homepage.how_it_works.step_2_desc", label: "Step 2 — Description", type: "textarea" as const, placeholder: "We'll help you choose..." },
+    { key: "homepage.how_it_works.step_3_title", label: "Step 3 — Title", type: "text" as const, placeholder: "Watch It Come to Life" },
+    { key: "homepage.how_it_works.step_3_desc", label: "Step 3 — Description", type: "textarea" as const, placeholder: "Receive updates as our artist..." },
+    { key: "homepage.how_it_works.step_4_title", label: "Step 4 — Title", type: "text" as const, placeholder: "Delivered to Your Door" },
+    { key: "homepage.how_it_works.step_4_desc", label: "Step 4 — Description", type: "textarea" as const, placeholder: "Safely packaged and shipped..." },
   ];
 
   const categoriesFields = [
@@ -83,32 +125,55 @@ function HomepageContentPage() {
     { key: "homepage.categories.subheading", label: "Subheading", type: "textarea" as const, placeholder: "Browse our handcrafted art collections." },
   ];
 
-  const testimonialsFields = [
-    { key: "homepage.testimonials.heading", label: "Heading", type: "text" as const, placeholder: "What Our Clients Say" },
+  const recentWorkFields = [
+    { key: "homepage.recent_work.heading", label: "Heading", type: "text" as const, placeholder: "Recent Work" },
+    { key: "homepage.recent_work.subheading", label: "Subheading", type: "textarea" as const, placeholder: "A selection of our latest handcrafted commissions." },
   ];
 
-  const aboutFields = [
-    { key: "homepage.about.tagline", label: "Tagline", type: "text" as const, placeholder: "The Artist Behind Artspire" },
-    { key: "homepage.about.heading", label: "Heading", type: "text" as const, placeholder: "Hi, I'm Himangi." },
-    { key: "homepage.about.description", label: "Description", type: "textarea" as const, placeholder: "For over 11 years, I've been helping people capture..." },
-    { key: "homepage.about.cta_text", label: "CTA Text", type: "text" as const, placeholder: "Read My Story →" },
+  const testimonialsFields = [
+    { key: "homepage.testimonials.heading", label: "Section Heading", type: "text" as const, placeholder: "What Our Clients Say" },
+    { key: "homepage.testimonials.1_quote", label: "Review 1 — Quote", type: "textarea" as const, placeholder: "She saw details I never mentioned..." },
+    { key: "homepage.testimonials.1_author", label: "Review 1 — Name", type: "text" as const, placeholder: "— Rajiv M." },
+    { key: "homepage.testimonials.2_quote", label: "Review 2 — Quote", type: "textarea" as const, placeholder: "The clay sculpture made me cry..." },
+    { key: "homepage.testimonials.2_author", label: "Review 2 — Name", type: "text" as const, placeholder: "— Sneha K." },
+    { key: "homepage.testimonials.3_quote", label: "Review 3 — Quote", type: "textarea" as const, placeholder: "She redid the eyes because..." },
+    { key: "homepage.testimonials.3_author", label: "Review 3 — Name", type: "text" as const, placeholder: "— Anjali & Vikram S." },
   ];
 
   const giftsFields = [
     { key: "homepage.gifts.heading", label: "Heading", type: "text" as const, placeholder: "Find the Perfect Gift" },
     { key: "homepage.gifts.subheading", label: "Subheading", type: "textarea" as const, placeholder: "Handcrafted art for every special occasion." },
+    { key: "homepage.gifts.card_1_label", label: "Card 1 — Label", type: "text" as const, placeholder: "For Parents" },
+    { key: "homepage.gifts.card_1_image", label: "Card 1 — Image URL", type: "text" as const, placeholder: "https://..." },
+    { key: "homepage.gifts.card_2_label", label: "Card 2 — Label", type: "text" as const, placeholder: "For Couples" },
+    { key: "homepage.gifts.card_2_image", label: "Card 2 — Image URL", type: "text" as const, placeholder: "https://..." },
+    { key: "homepage.gifts.card_3_label", label: "Card 3 — Label", type: "text" as const, placeholder: "New Home" },
+    { key: "homepage.gifts.card_3_image", label: "Card 3 — Image URL", type: "text" as const, placeholder: "https://..." },
+    { key: "homepage.gifts.card_4_label", label: "Card 4 — Label", type: "text" as const, placeholder: "Memorials" },
+    { key: "homepage.gifts.card_4_image", label: "Card 4 — Image URL", type: "text" as const, placeholder: "https://..." },
+    { key: "homepage.gifts.corporate_label", label: "Corporate Banner — Text", type: "text" as const, placeholder: "Corporate & Bulk Orders" },
+    { key: "homepage.gifts.corporate_image", label: "Corporate Banner — Image URL", type: "text" as const, placeholder: "https://..." },
+  ];
+
+  const aboutFields = [
+    { key: "homepage.about.tagline", label: "Tagline", type: "text" as const, placeholder: "The Artist Behind Artspire" },
+    { key: "homepage.about.heading", label: "Heading", type: "text" as const, placeholder: "Hi, I'm Himangi." },
+    { key: "homepage.about.description", label: "Description", type: "textarea" as const, placeholder: "For over 11 years, I've been helping people..." },
+    { key: "homepage.about.cta_text", label: "Link Text", type: "text" as const, placeholder: "Read My Story →" },
+    { key: "homepage.about.image", label: "Artist Photo URL", type: "text" as const, placeholder: "https://..." },
   ];
 
   const sections = [
-    { name: "Hero Section", fields: heroFields },
-    { name: "Trust Strip", fields: trustFields },
-    { name: "Services", fields: servicesFields },
-    { name: "Before & After", fields: beforeAfterFields },
-    { name: "How It Works", fields: howItWorksFields },
-    { name: "Categories", fields: categoriesFields },
-    { name: "Testimonials", fields: testimonialsFields },
-    { name: "About Artist", fields: aboutFields },
-    { name: "Gift Section", fields: giftsFields },
+    { name: "🎯 Hero Section", fields: heroFields },
+    { name: "✨ Trust Strip", fields: trustFields },
+    { name: "🎨 Services", fields: servicesFields },
+    { name: "🖼️ Before & After", fields: beforeAfterFields },
+    { name: "📋 How It Works", fields: howItWorksFields },
+    { name: "🗂️ Categories", fields: categoriesFields },
+    { name: "🖼️ Recent Work", fields: recentWorkFields },
+    { name: "💬 Testimonials", fields: testimonialsFields },
+    { name: "🎁 Gift Section", fields: giftsFields },
+    { name: "👩‍🎨 About Artist", fields: aboutFields },
   ];
 
   return (
