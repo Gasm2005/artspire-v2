@@ -66,10 +66,10 @@ const faqJsonLd = {
   "@type": "FAQPage",
   mainEntity: sections.flatMap((section) =>
     section.items.map((item) => ({
-      "@type": "Question" as const,
+      "@type": "Question",
       name: item.question,
       acceptedAnswer: {
-        "@type": "Answer" as const,
+        "@type": "Answer",
         text: item.answer,
       },
     }))
