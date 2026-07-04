@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { getCategoryById, updateCategory } from "@/lib/categories";
 import { uploadMediaFile } from "@/lib/media-library";
 import { ArrowLeft, Upload, Loader2, Save, X } from "lucide-react";
+import { toast } from "@/lib/toast";
 
 export const Route = createFileRoute("/admin/categories/edit/$id")({
   component: EditCategoryPage,
@@ -13,7 +14,6 @@ function EditCategoryPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [saveStatus, setSaveStatus] = useState<"idle" | "saved" | "error">("idle");
 
   const [form, setForm] = useState({
     name: "",
@@ -49,7 +49,6 @@ function EditCategoryPage() {
 
   async function handleSave() {
     setSaving(true);
-    setSaveStatus("idle");
     try {
       let newImageId = categoryImageId;
       let newImageUrl = form.image_url;
@@ -70,11 +69,10 @@ function EditCategoryPage() {
         card_artwork_image_id: newImageId,
       } as any);
 
-      setSaveStatus("saved");
-      setTimeout(() => setSaveStatus("idle"), 2500);
+      toast.success("Category saved!", "Changes are now live on the website.");
     } catch (err) {
       console.error(err);
-      setSaveStatus("error");
+      toast.error("Failed to save.", "Please try again.");
     } finally {
       setSaving(false);
     }
@@ -168,12 +166,7 @@ function EditCategoryPage() {
             {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
             {saving ? "Saving…" : "Save Changes"}
           </button>
-          {saveStatus === "saved" && (
-            <span className="font-body text-[12px] text-green-600 font-medium">✓ Saved! Changes are live.</span>
-          )}
-          {saveStatus === "error" && (
-            <span className="font-body text-[12px] text-red-600 font-medium">Something went wrong. Try again.</span>
-          )}
+
         </div>
       </div>
     </div>

@@ -3,7 +3,8 @@ import { Layout } from "@/components/Layout";
 import { waLink } from "@/lib/whatsapp";
 import { getPublishedArtworkBySlug, getArtworkTags, getRelatedArtworks, type ArtworkWithCategory } from "@/lib";
 import { buildArtworkStructuredData, buildBreadcrumbStructuredData } from "@/lib/seo";
-import { MessageCircle, Ruler, Tag, ArrowLeft } from "lucide-react";
+import { MessageCircle, Ruler, Tag } from "lucide-react";
+import { ArtspireBreadcrumb, breadcrumbs } from "@/components/ArtspireBreadcrumb";
 
 interface LoaderData {
   artwork: ArtworkWithCategory;
@@ -84,14 +85,15 @@ function ArtworkPage() {
       <section className="bg-cream min-h-screen">
         <div className="container-main py-8 md:py-14">
 
-          {/* Back link */}
-          <Link
-            to="/portfolio"
-            className="inline-flex items-center gap-1.5 font-body text-[12px] text-stone/60 hover:text-forest transition-colors mb-8"
-          >
-            <ArrowLeft size={14} />
-            Back to Portfolio
-          </Link>
+          {/* Breadcrumb */}
+          <ArtspireBreadcrumb
+            crumbs={breadcrumbs.artwork(
+              artwork.title,
+              artwork.categories?.name,
+              artwork.categories?.slug
+            )}
+            className="mb-8"
+          />
 
           <div className="flex flex-col lg:flex-row gap-8 lg:gap-14 items-start">
 

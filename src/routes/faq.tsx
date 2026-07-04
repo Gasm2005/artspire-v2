@@ -78,19 +78,31 @@ const faqJsonLd = {
 
 function AccordionItem({
   item,
+  itemKey,
   isOpen,
   onToggle,
+  onKeyDown,
 }: {
   item: FaqItem;
+  itemKey: string;
   isOpen: boolean;
   onToggle: () => void;
+  onKeyDown?: (e: React.KeyboardEvent) => void;
 }) {
+  // Sanitize for use in HTML id attributes
+  const safeId = itemKey.replace(/[^a-zA-Z0-9]/g, "-").toLowerCase().slice(0, 60);
+  const headingId = `faq-btn-${safeId}`;
+  const panelId = `faq-panel-${safeId}`;
+
   return (
     <div className="border-b border-border/50 last:border-b-0">
       <button
+        id={headingId}
         onClick={onToggle}
+        onKeyDown={onKeyDown}
         className="w-full flex items-start justify-between gap-4 py-5 text-left group"
         aria-expanded={isOpen}
+        aria-controls={panelId}
       >
         <span className="font-body text-[14px] md:text-[15px] font-medium text-forest leading-snug group-hover:text-gold transition-colors">
           {item.question}
@@ -99,7 +111,12 @@ function AccordionItem({
           <ChevronDown size={18} />
         </span>
       </button>
-      <div className={`grid transition-all duration-300 ease-out ${isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
+      <div
+        id={panelId}
+        role="region"
+        aria-labelledby={headingId}
+        className={`grid transition-all duration-300 ease-out ${isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}
+      >
         <div className="overflow-hidden">
           <p className="font-body text-[13px] md:text-[14px] text-stone leading-relaxed pb-5">
             {item.answer}
@@ -128,6 +145,20 @@ function FaqPage() {
   const [openKey, setOpenKey] = useState<string | null>(null);
   const toggle = (key: string) => setOpenKey((prev) => (prev === key ? null : key));
 
+  // Arrow key navigation across all FAQ buttons
+  const handleKeyDown = (e: React.KeyboardEvent, allKeys: string[], currentKey: string) => {
+    const idx = allKeys.indexOf(currentKey);
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      const next = allKeys[(idx + 1) % allKeys.length];
+      document.getElementById(`faq-btn-${next}`)?.focus();
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      const prev = allKeys[(idx - 1 + allKeys.length) % allKeys.length];
+      document.getElementById(`faq-btn-${prev}`)?.focus();
+    }
+  };
+
   return (
     <Layout>
       <section className="section-padding bg-cream text-center">
@@ -146,12 +177,15 @@ function FaqPage() {
               <div className="bg-white rounded-xl border border-border/40 px-5 md:px-6">
                 {section.items.map((item) => {
                   const key = `${section.title}::${item.question}`;
+                  const sectionKeys = section.items.map((i) => `${section.title}::${i.question}`);
                   return (
                     <AccordionItem
                       key={key}
                       item={item}
+                      itemKey={key}
                       isOpen={openKey === key}
                       onToggle={() => toggle(key)}
+                      onKeyDown={(e) => handleKeyDown(e, sectionKeys, key)}
                     />
                   );
                 })}
