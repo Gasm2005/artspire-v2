@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useVisualAssets } from "@/hooks/useVisualAssets";
 import { uploadVisualAsset, deleteVisualAsset, type VisualAsset } from "@/lib/visual-assets";
-import { Layers, Upload, Trash2, Search, AlertTriangle, Loader2 } from "lucide-react";
+import { Layers, Upload, Trash2, Search, Loader2 } from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute("/admin/visual-assets/")({

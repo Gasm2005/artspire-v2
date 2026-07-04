@@ -3,7 +3,7 @@ import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Layout } from "../components/Layout";
 import { waLink } from "../lib/whatsapp";
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { getPageSEO } from "@/lib/website-content";
 
 type Service = {

@@ -1,4 +1,5 @@
 import { useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
+import { ChevronsUpDown } from "lucide-react";
 
 const FALLBACK_SVG = `data:image/svg+xml,${encodeURIComponent(
   `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><rect width="400" height="300" fill="#e7e2db"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="serif" font-size="16" fill="#51604d">Artspire Artwork</text></svg>`
@@ -59,7 +60,7 @@ export function BeforeAfterSlider({
           style={{ left: `${pct}%` }}
         >
           <div className="slider-handle">
-            <span className="material-symbols-outlined text-[18px]">unfold_more</span>
+            <ChevronsUpDown size={18} aria-hidden="true" />
           </div>
         </div>
         <div className="absolute top-4 left-4 bg-black/50 text-white font-body text-[10px] font-bold px-2 py-1 rounded backdrop-blur-sm z-20">

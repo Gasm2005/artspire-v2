@@ -2,7 +2,7 @@ import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import { useMediaLibrary } from "@/hooks/useMediaLibrary";
 import { uploadMediaFile, softDeleteMediaItem, type MediaItem } from "@/lib/media-library";
-import { Image, Upload, Trash2, Search, Folder, Tag, Loader2 } from "lucide-react";
+import { Image, Upload, Trash2, Search, Folder, Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/admin/media/")({
   component: MediaLibraryPage,

@@ -155,6 +155,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       meta: [
         { charSet: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1" },
+        { name: "robots", content: "index, follow" },
         { title: "Artspire | Handcrafted Custom Art by Himangi Pandey" },
         { name: "description", content: "Commission handcrafted pencil sketches, portraits, clay art and personalized gifts. Made by hand by Himangi Pandey. Ships across India." },
         { name: "author", content: "Himangi Pandey" },
@@ -184,10 +185,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           rel: "stylesheet",
           href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=EB+Garamond:wght@400;500;600&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;1,7..72,400&family=Montserrat:wght@400;500;600;700&display=swap",
         },
-        {
-          rel: "stylesheet",
-          href: "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap",
-        },
       ],
     };
   },
@@ -216,6 +213,13 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      {/* Accessibility: skip to main content */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[999] focus:px-4 focus:py-2 focus:bg-forest focus:text-white focus:rounded-lg focus:font-body focus:text-[13px] focus:font-semibold"
+      >
+        Skip to main content
+      </a>
       <TopLoader />
       <Outlet />
       <Toaster />

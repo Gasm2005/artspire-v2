@@ -1,5 +1,6 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { waLink } from "@/lib/whatsapp";
+import { Menu } from "lucide-react";
 
 const navLinks = [
   { to: "/portfolio", label: "Portfolio" },
@@ -29,7 +30,7 @@ export function Header({ onMenuClick }: { onMenuClick: () => void }) {
           className="p-2 -mr-2 text-on-surface active-scale"
           onClick={onMenuClick}
         >
-          <span className="material-symbols-outlined text-2xl">menu</span>
+          <Menu size={24} aria-hidden="true" />
         </button>
       </div>
 

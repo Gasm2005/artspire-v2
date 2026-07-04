@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { getArtworks, getCommissionRequests } from "@/lib";
+import { getArtworks } from "@/lib";
 import { Palette, FileText, Eye, MessageSquare, Plus } from "lucide-react";
 
 export const Route = createFileRoute("/admin/")({
@@ -19,17 +19,14 @@ function AdminDashboard() {
   useEffect(() => {
     async function load() {
       try {
-        const [allArtworks, commissions] = await Promise.all([
-          getArtworks({ limit: 1000 }),
-          getCommissionRequests(),
-        ]);
+        const allArtworks = await getArtworks({ limit: 1000 });
         const published = allArtworks.filter((a) => a.status === "published").length;
         const draft = allArtworks.filter((a) => a.status === "draft").length;
         setStats({
           total: allArtworks.length,
           published,
           draft,
-          commissions: commissions.length,
+          commissions: 0,
         });
       } catch (err) {
         console.error("Dashboard load error:", err);

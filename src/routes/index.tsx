@@ -147,6 +147,7 @@ function Index() {
                   className="w-full h-full object-cover img-zoom"
                   src={cv(img.key, img.fallback)}
                   loading={i === 0 ? "eager" : "lazy"}
+                  fetchPriority={i === 0 ? "high" : "auto"}
                 />
               </div>
             ))}
@@ -200,7 +201,7 @@ function Index() {
                       to="/portfolio"
                       className="font-body text-[12px] font-bold uppercase text-forest/70 flex items-center gap-1 hover:text-gold transition-colors mt-auto"
                     >
-                      Examples <span className="material-symbols-outlined text-sm">east</span>
+                      Examples <ArrowRight size={14} aria-hidden="true" />
                     </Link>
                   </div>
                 </div>

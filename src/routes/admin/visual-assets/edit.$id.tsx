@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useVisualAssets } from "@/hooks/useVisualAssets";
 import { useVisualAssetUsage } from "@/hooks/useVisualAssets";
 import { getVisualAsset, updateVisualAsset, type VisualAsset } from "@/lib/visual-assets";
-import { ArrowLeft, Save, Image, Layers, AlertTriangle, Loader2 } from "lucide-react";
+import { ArrowLeft, Save, Layers, AlertTriangle, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export const Route = createFileRoute("/admin/visual-assets/edit/$id")({

@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect } from "react";
+import { X } from "lucide-react";
 
 const links = [
   { to: "/portfolio", label: "Portfolio" },
@@ -36,7 +37,7 @@ export function NavDrawer({ open, onClose }: { open: boolean; onClose: () => voi
             className="p-2 text-on-surface active-scale"
             onClick={onClose}
           >
-            <span className="material-symbols-outlined text-3xl">close</span>
+            <X size={28} aria-hidden="true" />
           </button>
         </div>
         <div className="flex flex-col px-8 py-4 gap-8 font-display text-3xl text-on-surface mt-8">

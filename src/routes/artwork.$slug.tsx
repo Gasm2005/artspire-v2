@@ -3,7 +3,7 @@ import { Layout } from "@/components/Layout";
 import { waLink } from "@/lib/whatsapp";
 import { getPublishedArtworkBySlug, getArtworkTags, getRelatedArtworks, type ArtworkWithCategory } from "@/lib";
 import { buildArtworkStructuredData, buildBreadcrumbStructuredData } from "@/lib/seo";
-import { MessageCircle, Ruler, Tag } from "lucide-react";
+import { MessageCircle, Tag } from "lucide-react";
 import { ArtspireBreadcrumb, breadcrumbs } from "@/components/ArtspireBreadcrumb";
 
 interface LoaderData {

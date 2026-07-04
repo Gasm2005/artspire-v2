@@ -10,7 +10,7 @@ export function Layout({ children }: { children: ReactNode }) {
     <>
       <Header onMenuClick={() => setNavOpen(true)} />
       <NavDrawer open={navOpen} onClose={() => setNavOpen(false)} />
-      <main className="pt-[56px] pb-20 md:pb-0 md:pt-[68px]">
+      <main id="main-content" className="pt-[56px] pb-20 md:pb-0 md:pt-[68px]">
         {children}
       </main>
       <Footer />
