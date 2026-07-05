@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { Layout } from "../components/Layout";
 import { waLink } from "../lib/whatsapp";
@@ -138,17 +138,20 @@ function PortfolioPage() {
         <div className="container-main">
           <div id="portfolio-grid" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
             {visible.map((artwork) => (
-              <a
+              <Link
                 key={artwork.id}
-                href={`/artwork/${artwork.slug}`}
+                to="/artwork/$slug"
+                params={{ slug: artwork.slug }}
+                preload="intent"
                 className="work-card portfolio-item relative rounded-xl overflow-hidden flex flex-col h-[300px] md:h-[340px] shadow-sm group cursor-pointer"
               >
-                {/* Artwork image */}
+                {/* Artwork image — lazy outside viewport */}
                 <img
                   src={artwork.image_url ?? "/placeholder-artwork.jpg"}
                   alt={artwork.title}
                   className="absolute inset-0 w-full h-full object-cover"
                   loading="lazy"
+                  decoding="async"
                 />
                 {/* Gradient overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent z-10" />
@@ -156,7 +159,7 @@ function PortfolioPage() {
                 <div className="absolute bottom-0 left-0 right-0 p-5 z-20">
                   <span className="font-display text-[16px] md:text-[18px] text-white font-medium">{artwork.title}</span>
                 </div>
-              </a>
+              </Link>
             ))}
 
             {/* Empty state */}

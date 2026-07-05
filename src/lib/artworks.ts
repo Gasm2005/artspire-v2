@@ -167,7 +167,7 @@ export async function getHomepageArtworks(limit = 6) {
 export async function getRelatedArtworks(artworkId: string, categoryId: string | null, limit = 4) {
   let query = supabase
     .from("artworks")
-    .select("*, categories(*)")
+    .select("id, slug, title, image_url, category_id, categories(name, slug)")
     .eq("status", "published")
     .is("deleted_at", null)
     .neq("id", artworkId)
@@ -185,11 +185,11 @@ export async function getRelatedArtworks(artworkId: string, categoryId: string |
 export async function getArtworkTags(artworkId: string) {
   const { data, error } = await supabase
     .from("artwork_tags")
-    .select("tags(*)")
+    .select("tags(id, name, slug)")
     .eq("artwork_id", artworkId);
 
   if (error) throw error;
-  return (data ?? []).map((d) => d.tags) as Database["public"]["Tables"]["tags"]["Row"][];
+  return (data ?? []).map((d) => d.tags).filter(Boolean) as Database["public"]["Tables"]["tags"]["Row"][];
 }
 
 export async function getAllArtworkTags(artworkId: string) {

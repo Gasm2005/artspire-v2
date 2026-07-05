@@ -1,13 +1,14 @@
 import { cn } from "@/lib/utils";
 
 // Base skeleton with warm cream pulse — matches Artspire's paper/parchment feel
-function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+function Skeleton({ className, style, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       className={cn(
         "animate-pulse rounded-md bg-[#E8E0D5]",
         className
       )}
+      style={style}
       {...props}
     />
   );
@@ -37,26 +38,36 @@ function PortfolioGridSkeleton({ count = 6 }: { count?: number }) {
   );
 }
 
-// Artwork detail page skeleton
+// Artwork detail page skeleton — matches the real page layout exactly to prevent shift
 function ArtworkDetailSkeleton() {
   return (
     <div className="container-main py-8 md:py-14">
-      <Skeleton className="h-4 w-32 mb-8" />
-      <div className="flex flex-col lg:flex-row gap-8 lg:gap-14">
-        {/* Left: image */}
+      {/* Breadcrumb */}
+      <Skeleton className="h-3 w-64 mb-8" />
+
+      <div className="flex flex-col lg:flex-row gap-8 lg:gap-14 items-start">
+        {/* Left: image placeholder — same aspect ratio as real image area */}
         <div className="w-full lg:w-1/2">
-          <Skeleton className="w-full aspect-[3/4] rounded-2xl" />
+          <Skeleton className="w-full rounded-2xl" style={{ aspectRatio: "3/4", maxHeight: "85vh" }} />
         </div>
-        {/* Right: story */}
-        <div className="w-full lg:w-1/2 space-y-5">
-          <Skeleton className="h-5 w-28 rounded-full" />
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-10 w-4/5" />
-          <div className="space-y-2 pt-2">
+
+        {/* Right: content */}
+        <div className="w-full lg:w-1/2 flex flex-col gap-6">
+          {/* Category badge */}
+          <Skeleton className="h-6 w-28 rounded-full" />
+          {/* Title */}
+          <div className="space-y-2">
+            <Skeleton className="h-9 w-full" />
+            <Skeleton className="h-9 w-3/4" />
+          </div>
+          {/* Story */}
+          <div className="space-y-2">
             <Skeleton className="h-4 w-full" />
             <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-4/5" />
             <Skeleton className="h-4 w-3/4" />
           </div>
+          {/* Details card */}
           <div className="bg-white rounded-2xl border border-border p-5 space-y-4">
             <Skeleton className="h-4 w-32" />
             <div className="grid grid-cols-2 gap-3">
@@ -68,8 +79,11 @@ function ArtworkDetailSkeleton() {
               ))}
             </div>
           </div>
+          {/* CTAs */}
           <Skeleton className="h-[54px] w-full rounded-xl" />
           <Skeleton className="h-[48px] w-full rounded-xl" />
+          {/* Trust note */}
+          <Skeleton className="h-3 w-64 mx-auto" />
         </div>
       </div>
     </div>
