@@ -49,14 +49,15 @@ function HomepageContentPage() {
   };
 
   const heroFields = [
-    { key: "homepage.hero.tagline", label: "Tagline (small text above heading)", type: "text" as const, placeholder: "Handmade. Personalized. Yours." },
-    { key: "homepage.hero.heading", label: "Main Heading (H1)", type: "text" as const, placeholder: "Custom Handmade Art for Your Most Treasured Memories" },
-    { key: "homepage.hero.subheading", label: "Subheading (below heading)", type: "textarea" as const, placeholder: "Transform your memories into handcrafted pencil sketches..." },
-    { key: "homepage.hero.cta_text", label: "Button Text", type: "text" as const, placeholder: "Commission Art" },
-    { key: "homepage.hero.image_1", label: "Hero Image 1 URL (top-left grid)", type: "text" as const, placeholder: "https://..." },
-    { key: "homepage.hero.image_2", label: "Hero Image 2 URL (top-right grid)", type: "text" as const, placeholder: "https://..." },
-    { key: "homepage.hero.image_3", label: "Hero Image 3 URL (bottom-left grid)", type: "text" as const, placeholder: "https://..." },
-    { key: "homepage.hero.image_4", label: "Hero Image 4 URL (bottom-right grid)", type: "text" as const, placeholder: "https://..." },
+    { key: "homepage.hero.tagline", label: "Tagline (provenance line — who & where)", type: "text" as const, placeholder: "Himangi Pandey · Kanpur, India" },
+    { key: "homepage.hero.heading", label: "Main Heading (H1) — include keywords", type: "text" as const, placeholder: "Handmade Pencil Sketches & Custom Art from Your Photos" },
+    { key: "homepage.hero.subheading", label: "Subheading", type: "textarea" as const, placeholder: "Each piece drawn by hand — one stroke at a time..." },
+    { key: "homepage.hero.cta_text", label: "Primary Button Text", type: "text" as const, placeholder: "Commission a Piece" },
+    { key: "homepage.hero.availability", label: "⭐ Availability Signal (high conversion impact!)", type: "text" as const, placeholder: "Currently accepting commissions for July 2026" },
+    { key: "homepage.hero.image_1", label: "Hero Image 1 URL", type: "text" as const, placeholder: "https://..." },
+    { key: "homepage.hero.image_2", label: "Hero Image 2 URL", type: "text" as const, placeholder: "https://..." },
+    { key: "homepage.hero.image_3", label: "Hero Image 3 URL", type: "text" as const, placeholder: "https://..." },
+    { key: "homepage.hero.image_4", label: "Hero Image 4 URL", type: "text" as const, placeholder: "https://..." },
   ];
 
   const trustFields = [
@@ -156,24 +157,30 @@ function HomepageContentPage() {
   ];
 
   const aboutFields = [
-    { key: "homepage.about.tagline", label: "Tagline", type: "text" as const, placeholder: "The Artist Behind Artspire" },
+    { key: "homepage.about.tagline", label: "Tagline (small label above heading)", type: "text" as const, placeholder: "The Artist" },
     { key: "homepage.about.heading", label: "Heading", type: "text" as const, placeholder: "Hi, I'm Himangi." },
-    { key: "homepage.about.description", label: "Description", type: "textarea" as const, placeholder: "For over 11 years, I've been helping people..." },
-    { key: "homepage.about.cta_text", label: "Link Text", type: "text" as const, placeholder: "Read My Story →" },
+    { key: "homepage.about.description", label: "Description paragraph 1 (GEO entity — be specific)", type: "textarea" as const, placeholder: "I am a visual artist based in Kanpur, India, working in pencil, graphite, colour, clay, and mirror..." },
+    { key: "homepage.about.description_2", label: "Description paragraph 2", type: "textarea" as const, placeholder: "Every piece I make is drawn or sculpted by my hands alone..." },
+    { key: "homepage.about.cta_text", label: "Link Text", type: "text" as const, placeholder: "Read my story →" },
     { key: "homepage.about.image", label: "Artist Photo URL", type: "text" as const, placeholder: "https://..." },
+  ];
+
+  const ctaFields = [
+    { key: "homepage.cta.heading", label: "Closing CTA Heading", type: "text" as const, placeholder: "Ready to commission something extraordinary?" },
+    { key: "homepage.cta.subheading", label: "Closing CTA Subheading", type: "textarea" as const, placeholder: "Tell Himangi about the person, the memory, or the occasion..." },
   ];
 
   const sections = [
     { name: "🎯 Hero Section", fields: heroFields },
     { name: "✨ Trust Strip", fields: trustFields },
-    { name: "🎨 Services", fields: servicesFields },
+    { name: "👩‍🎨 About Artist", fields: aboutFields },
     { name: "🖼️ Before & After", fields: beforeAfterFields },
-    { name: "📋 How It Works", fields: howItWorksFields },
+    { name: "🎨 Services", fields: servicesFields },
     { name: "🗂️ Categories", fields: categoriesFields },
     { name: "🖼️ Recent Work", fields: recentWorkFields },
     { name: "💬 Testimonials", fields: testimonialsFields },
     { name: "🎁 Gift Section", fields: giftsFields },
-    { name: "👩‍🎨 About Artist", fields: aboutFields },
+    { name: "🔚 Closing CTA", fields: ctaFields },
   ];
 
   return (

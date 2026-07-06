@@ -1,88 +1,62 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
 import { Layout } from "../components/Layout";
 import { BeforeAfterSlider } from "../components/BeforeAfterSlider";
 import { ImageWithFallback } from "../components/ImageWithFallback";
 import { waLink } from "../lib/whatsapp";
 import { getCategories, type CategoryWithVisuals } from "../lib/categories";
 import { getWebsiteContent, getPageSEO, type WebsiteContent } from "../lib/website-content";
+import { getArtworks, type ArtworkWithCategory } from "../lib/artworks";
 import { ArrowRight, Palette, Pencil, Frame, Sparkles, Gift, Building2 } from "lucide-react";
 
+// ─── Static fallback images (until real photography exists) ──
 const IMG = {
-  // Hero images
-  sketch: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=800&q=80",
+  sketch:   "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=800&q=80",
   portrait: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800&q=80",
-  mirror: "https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?w=800&q=80",
-  clay: "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=800&q=80",
-  // Before/After images
+  mirror:   "https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?w=800&q=80",
+  clay:     "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=800&q=80",
+  painting: "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=800&q=80",
+  gift:     "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=800&q=80",
   sliderA1: "https://images.unsplash.com/photo-1555685812-4b943f1cb0eb?w=800&q=80",
   sliderB1: "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=800&q=80",
   sliderA2: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800&q=80",
   sliderB2: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80",
   sliderA3: "https://images.unsplash.com/photo-1452860606245-08befc0ff44b?w=800&q=80",
   sliderB3: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
-  // Services
-  painting: "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=800&q=80",
-  gift: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=800&q=80",
-  gift2: "https://images.unsplash.com/photo-1607344645866-009c320b63e0?w=800&q=80",
-  mirror2: "https://images.unsplash.com/photo-1549490349-8643362247b5?w=800&q=80",
-  clay2: "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80",
-  portrait2: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800&q=80",
-  sketch2: "https://images.unsplash.com/photo-1555685812-4b943f1cb0eb?w=800&q=80",
+  himangi:  "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=800&q=80",
 };
 
+// ─── Services data ─────────────────────────────────────────
 const services = [
-  { title: "Pencil Sketches", price: "From ₹999", img: IMG.sketch, icon: Pencil, days: "5–7 days" },
-  { title: "Colour Portraits", price: "From ₹1,999", img: IMG.portrait, icon: Palette, days: "7–10 days" },
-  { title: "Custom Paintings", price: "From ₹2,999", img: IMG.painting, icon: Frame, days: "10–14 days" },
-  { title: "Mirror Art", price: "From ₹2,499", img: IMG.mirror, icon: Sparkles, days: "7–12 days" },
-  { title: "Clay Art", price: "From ₹1,799", img: IMG.clay, icon: Gift, days: "7–10 days" },
-  { title: "Personalized Gifts", price: "From ₹799", img: IMG.gift, icon: Gift, days: "5–10 days" },
+  { title: "Pencil Sketches",    img: IMG.sketch,   icon: Pencil,   days: "5–7 days" },
+  { title: "Colour Portraits",   img: IMG.portrait, icon: Palette,  days: "7–10 days" },
+  { title: "Custom Paintings",   img: IMG.painting, icon: Frame,    days: "10–14 days" },
+  { title: "Mirror Art",         img: IMG.mirror,   icon: Sparkles, days: "7–12 days" },
+  { title: "Clay Art",           img: IMG.clay,     icon: Gift,     days: "7–10 days" },
+  { title: "Personalised Gifts", img: IMG.gift,     icon: Gift,     days: "5–10 days" },
 ];
 
-const portfolioCategories = [
-  { key: "pencil-sketches", label: "Pencil Sketches", subtitle: "Timeless. Precise.", img: IMG.sketch },
-  { key: "colour-portraits", label: "Colour Portraits", subtitle: "Vivid. Warm.", img: IMG.portrait },
-  { key: "paintings", label: "Paintings", subtitle: "Bold. Textured.", img: IMG.painting },
-  { key: "mirror-art", label: "Mirror Art", subtitle: "Functional. Beautiful.", img: IMG.mirror },
-  { key: "clay-art", label: "Clay Art", subtitle: "Three-dimensional. Personal.", img: IMG.clay },
-  { key: "personalized-gifts", label: "Personalized Gifts", subtitle: "Made for one person.", img: IMG.gift },
-];
-
-const recentWork = [
-  { id: 1, title: "Family Portrait", cat: "sketches", price: "From ₹999", img: IMG.sketch },
-  { id: 2, title: "Sunset Canvas", cat: "paintings", price: "From ₹2,999", img: IMG.painting },
-  { id: 3, title: "Couple Sketch", cat: "portraits", price: "From ₹1,999", img: IMG.portrait },
-  { id: 4, title: "Clay Sculpture", cat: "clay", price: "From ₹1,799", img: IMG.clay },
-  { id: 5, title: "Mirror Mandala", cat: "mirror", price: "From ₹2,499", img: IMG.mirror },
-  { id: 6, title: "Gift Set", cat: "gifts", price: "From ₹799", img: IMG.gift },
-];
-
-const filters = [
-  { key: "all", label: "All" },
-  { key: "sketches", label: "Pencil Sketches" },
-  { key: "portraits", label: "Colour Portraits" },
-  { key: "paintings", label: "Paintings" },
-  { key: "clay", label: "Clay Art" },
-  { key: "mirror", label: "Mirror Art" },
-  { key: "gifts", label: "Personalized Gifts" },
-];
-
+// ─── Route ────────────────────────────────────────────────
 export const Route = createFileRoute("/")({
   loader: async () => {
-    const [categories, content, seo] = await Promise.all([
+    const [categories, content, seo, homepageArtworks] = await Promise.all([
       getCategories().catch(() => []),
       getWebsiteContent({ page: "homepage", activeOnly: true }).catch(() => []),
       getPageSEO("homepage").catch(() => ({ title: null, description: null, ogImage: null })),
+      getArtworks({ status: "published", limit: 6, orderBy: "display_order" }).catch(() => []),
     ]);
-    return { categories: categories as CategoryWithVisuals[], content: content as WebsiteContent[], seo };
+    return {
+      categories: categories as CategoryWithVisuals[],
+      content: content as WebsiteContent[],
+      seo,
+      homepageArtworks: homepageArtworks as ArtworkWithCategory[],
+    };
   },
   head: ({ loaderData }) => {
     const seo = loaderData?.seo;
     return {
       meta: [
-        { title: seo?.title ?? "Artspire | Custom Handmade Art by Himangi Pandey" },
-        { name: "description", content: seo?.description ?? "Custom handmade pencil sketches, paintings, mirror art and clay sculptures from your photos. Delivered across India." },
+        { title: seo?.title ?? "Artspire | Handmade Pencil Sketches & Custom Art by Himangi Pandey" },
+        { name: "description", content: seo?.description ?? "Commission handcrafted pencil sketches, portraits, paintings, clay art and personalised gifts from photo. Made by Himangi Pandey, Kanpur. Delivered across India." },
         ...(seo?.ogImage ? [{ property: "og:image", content: seo.ogImage }] : []),
       ],
     };
@@ -91,55 +65,70 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const { categories, content } = Route.useLoaderData();
+  const { categories, content, homepageArtworks } = Route.useLoaderData();
 
-  // Helper — get DB value or fallback to hardcoded default
+  // DB value → fallback helper
   const cv = (key: string, fallback: string) =>
     content.find((c) => c.content_key === key)?.value_text ?? fallback;
 
-  const [activeFilter, setActiveFilter] = useState("all");
+  // Only show real artworks if we have them; hide the section if empty
+  const hasRealWork = homepageArtworks.length > 0;
 
   return (
     <Layout>
-      {/* ===== HERO ===== */}
-      <section className="min-h-[100dvh] flex flex-col justify-center px-6 pt-16 pb-12 lg:flex-row lg:items-center lg:gap-16 lg:px-8 hero-texture">
+
+      {/* ═══════════════════════════════════════════════════
+          HERO
+          ═══════════════════════════════════════════════════ */}
+      <section className="min-h-[100dvh] flex flex-col justify-center px-6 pt-20 pb-12 lg:flex-row lg:items-center lg:gap-16 lg:px-8 hero-texture">
         <div className="flex-[1.5] flex flex-col items-center text-center lg:items-start lg:text-left max-w-2xl">
-          <p className="font-body text-[11px] md:text-[12px] font-semibold text-gold uppercase tracking-[0.25em] mb-5">
-            {cv("homepage.hero.tagline", "Handmade. Personalized. Yours.")}
+
+          {/* Provenance — who, where */}
+          <p className="font-body text-[11px] md:text-[12px] font-semibold text-gold uppercase tracking-[0.3em] mb-6">
+            {cv("homepage.hero.tagline", "Himangi Pandey · Kanpur, India")}
           </p>
-          <h1 className="font-display text-[32px] sm:text-[36px] md:text-[48px] lg:text-[64px] leading-[1.05] text-forest mb-6 font-medium px-2 lg:px-0">
-            {cv("homepage.hero.heading", "Custom Handmade Art for Your Most Treasured Memories")}
+
+          {/* H1 — brand identity + SEO keywords combined */}
+          <h1 className="font-display text-[32px] sm:text-[38px] md:text-[52px] lg:text-[66px] leading-[1.04] text-forest mb-6 font-medium">
+            {cv("homepage.hero.heading", "Handmade Pencil Sketches & Custom Art from Your Photos")}
           </h1>
-          <p className="font-body text-[15px] md:text-[18px] leading-relaxed text-stone mb-10 max-w-lg">
-            {cv("homepage.hero.subheading", "Transform your memories into handcrafted pencil sketches, paintings, and clay masterpieces.")}
+
+          <p className="font-body text-[15px] md:text-[17px] leading-relaxed text-stone mb-8 max-w-lg">
+            {cv("homepage.hero.subheading", "Each piece drawn by hand — one stroke at a time. Commission a pencil sketch, portrait, or clay sculpture that captures someone you love.")}
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto mb-8">
+
+          {/* CTAs */}
+          <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto mb-6">
             <a
               href={waLink("Hi Artspire! I want to commission artwork")}
               target="_blank"
               rel="noreferrer"
-              className="h-[52px] md:h-[56px] px-8 bg-forest text-white font-body font-semibold text-[13px] md:text-[14px] uppercase rounded-xl flex items-center justify-center gap-2 active-scale btn-primary"
+              className="h-[52px] md:h-[56px] px-8 bg-forest text-white font-body font-semibold text-[13px] uppercase tracking-wider rounded-sm flex items-center justify-center gap-2 active-scale btn-primary"
             >
-              {cv("homepage.hero.cta_text", "Commission Art")} <ArrowRight size={18} />
+              {cv("homepage.hero.cta_text", "Commission a Piece")} <ArrowRight size={16} />
             </a>
             <Link
               to="/portfolio"
-              className="h-[52px] md:h-[56px] px-8 bg-transparent border-2 border-forest text-forest font-body font-semibold text-[13px] md:text-[14px] uppercase rounded-xl flex items-center justify-center gap-2 active-scale btn-secondary"
+              className="h-[52px] md:h-[56px] px-8 bg-transparent border border-forest/50 text-forest font-body font-semibold text-[13px] uppercase tracking-wider rounded-sm flex items-center justify-center gap-2 active-scale"
             >
-              View Portfolio
+              View the Portfolio
             </Link>
           </div>
-          <p className="font-body text-[12px] md:text-[13px] font-medium text-stone">
-            500+ Customers · 1000+ Artworks · 4.9★
+
+          {/* Availability signal — admin-editable, high conversion impact */}
+          <p className="font-body text-[12px] text-stone/60 italic">
+            {cv("homepage.hero.availability", "Currently accepting commissions for July 2026")}
           </p>
         </div>
+
+        {/* Hero image grid */}
         <div className="flex-1 w-full max-w-lg mt-10 lg:mt-0">
-          <div className="grid grid-cols-2 gap-2 rounded-2xl overflow-hidden shadow-lg">
+          <div className="grid grid-cols-2 gap-2 rounded-sm overflow-hidden shadow-lg">
             {[
-              { key: "homepage.hero.image_1", fallback: IMG.sketch, alt: "Handmade pencil sketch portrait by Artspire" },
+              { key: "homepage.hero.image_1", fallback: IMG.sketch,   alt: "Handmade pencil sketch portrait by Artspire" },
               { key: "homepage.hero.image_2", fallback: IMG.portrait, alt: "Custom colour portrait painting by Artspire" },
-              { key: "homepage.hero.image_3", fallback: IMG.mirror, alt: "Custom mirror art handcrafted by Artspire" },
-              { key: "homepage.hero.image_4", fallback: IMG.clay, alt: "Clay art sculpture handcrafted by Artspire" },
+              { key: "homepage.hero.image_3", fallback: IMG.mirror,   alt: "Custom mirror art by Artspire" },
+              { key: "homepage.hero.image_4", fallback: IMG.clay,     alt: "Clay art sculpture by Artspire" },
             ].map((img, i) => (
               <div key={i} className="aspect-square bg-surface-variant overflow-hidden">
                 <ImageWithFallback
@@ -155,141 +144,187 @@ function Index() {
         </div>
       </section>
 
-      {/* ===== TRUST STRIP ===== */}
+      {/* ═══════════════════════════════════════════════════
+          TRUST STRIP — editorial, not metric
+          ═══════════════════════════════════════════════════ */}
       <section className="bg-white py-5 w-full border-y border-border/40">
-        <div className="container-main text-center font-body text-[11px] md:text-[12px] font-semibold uppercase tracking-widest text-forest leading-relaxed">
-          {cv("homepage.trust_strip.text", "11+ Years • 1000+ Artworks • One Artist • Handcrafted")}
+        <div className="container-main text-center font-body text-[11px] md:text-[12px] text-stone/60 leading-relaxed tracking-widest uppercase">
+          {cv("homepage.trust_strip.text", "Eleven years of meticulous craft · One artist · Every piece made by hand")}
         </div>
       </section>
 
-      {/* ===== SERVICES ===== */}
+      {/* ═══════════════════════════════════════════════════
+          ABOUT THE ARTIST — moved up to position 3
+          The human is the product. Introduce her before services.
+          ═══════════════════════════════════════════════════ */}
       <section className="section-padding bg-cream">
         <div className="container-main">
-          <h2 className="font-display text-[28px] md:text-[36px] text-center text-forest mb-4 leading-tight">
-            {cv("homepage.services.heading", "What Would You Like to Create?")}
+          <div className="flex flex-col items-center lg:flex-row lg:items-center lg:gap-16">
+            <div className="w-full lg:w-5/12 aspect-[4/3] rounded-sm overflow-hidden mb-8 lg:mb-0 shadow-md shrink-0">
+              <ImageWithFallback
+                alt="Himangi Pandey — artist at Artspire, Kanpur"
+                className="w-full h-full object-cover img-zoom"
+                src={cv("homepage.about.image", IMG.himangi)}
+                loading="lazy"
+              />
+            </div>
+            <div className="w-full flex flex-col items-center lg:items-start text-center lg:text-left">
+              <p className="font-body text-[11px] font-bold text-gold mb-4 uppercase tracking-[0.3em]">
+                {cv("homepage.about.tagline", "The Artist")}
+              </p>
+              <h2 className="font-display text-[28px] md:text-[36px] text-forest mb-5 font-medium leading-tight">
+                {cv("homepage.about.heading", "Hi, I'm Himangi.")}
+              </h2>
+
+              {/* GEO entity paragraph — dense, accurate, citable by AI tools */}
+              <p className="font-body text-[14px] md:text-[15px] leading-relaxed text-stone mb-3">
+                {cv("homepage.about.description",
+                  "I am a visual artist based in Kanpur, India, working in pencil, graphite, colour, clay, and mirror. Since 2013 I have completed over 1,000 handmade commissions — portraits of parents, newborns, couples, pets, and people no longer here but never forgotten."
+                )}
+              </p>
+              <p className="font-body text-[14px] md:text-[15px] leading-relaxed text-stone mb-7">
+                {cv("homepage.about.description_2",
+                  "Every piece I make is drawn or sculpted by my hands alone. I take on a limited number of commissions each month so I can give each one the full attention it deserves."
+                )}
+              </p>
+              <Link
+                to="/about"
+                className="font-body text-[13px] font-semibold text-forest border-b border-forest/30 pb-0.5 hover:border-forest transition-colors tracking-wide"
+              >
+                {cv("homepage.about.cta_text", "Read my story →")}
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════
+          BEFORE & AFTER
+          ═══════════════════════════════════════════════════ */}
+      <section className="section-padding bg-white">
+        <div className="container-main">
+          <p className="font-body text-[11px] font-semibold text-gold uppercase tracking-[0.3em] text-center mb-3">
+            The Transformation
+          </p>
+          <h2 className="font-display text-[26px] md:text-[34px] text-center text-forest mb-3 leading-tight">
+            {cv("homepage.before_after.heading", "Your Photo. Her Hands. One Irreplaceable Piece.")}
           </h2>
-          <p className="font-body text-[14px] text-stone text-center mb-12 max-w-lg mx-auto">
-            {cv("homepage.services.subheading", "Choose from our signature handcrafted art services, each made with care and precision.")}
+          <p className="font-body text-[13px] md:text-[14px] text-stone text-center mb-12 max-w-md mx-auto">
+            {cv("homepage.before_after.subheading", "Drag the slider to see each transformation.")}
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+            <BeforeAfterSlider
+              beforeSrc={cv("homepage.before_after.before_1", IMG.sliderB1)}
+              afterSrc={cv("homepage.before_after.after_1", IMG.sliderA1)}
+              caption={cv("homepage.before_after.caption_1", "Pencil Sketch · 5 days")}
+            />
+            <BeforeAfterSlider
+              beforeSrc={cv("homepage.before_after.before_2", IMG.sliderB2)}
+              afterSrc={cv("homepage.before_after.after_2", IMG.sliderA2)}
+              caption={cv("homepage.before_after.caption_2", "Colour Portrait · 7 days")}
+            />
+            <BeforeAfterSlider
+              beforeSrc={cv("homepage.before_after.before_3", IMG.sliderB3)}
+              afterSrc={cv("homepage.before_after.after_3", IMG.sliderA3)}
+              caption={cv("homepage.before_after.caption_3", "Custom Painting · 10 days")}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════
+          SERVICES — no prices on homepage
+          ═══════════════════════════════════════════════════ */}
+      <section className="section-padding bg-cream">
+        <div className="container-main">
+          <p className="font-body text-[11px] font-semibold text-gold uppercase tracking-[0.3em] text-center mb-3">
+            What Himangi Makes
+          </p>
+          <h2 className="font-display text-[26px] md:text-[34px] text-center text-forest mb-3 leading-tight">
+            {cv("homepage.services.heading", "Six Kinds of Handmade Art")}
+          </h2>
+          <p className="font-body text-[13px] md:text-[14px] text-stone text-center mb-12 max-w-md mx-auto">
+            {cv("homepage.services.subheading", "Each medium is a different way to hold a memory.")}
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
             {services.map((s, i) => {
               const Icon = s.icon;
+              const title = cv(`homepage.services.${i}.title`, s.title);
+              const days  = cv(`homepage.services.${i}.days`, s.days);
+              const imgSrc = cv(`homepage.services.${i}.image`, s.img);
               return (
-                <div key={s.title} className="bg-white rounded-xl overflow-hidden border border-border/60 flex flex-col hover-lift shadow-sm cursor-pointer card-stretch">
+                <Link
+                  key={s.title}
+                  to="/portfolio"
+                  search={{ category: title.toLowerCase().replace(/\s+/g, "-") }}
+                  className="group bg-white rounded-sm overflow-hidden border border-border/60 flex flex-col hover-lift shadow-sm"
+                >
                   <div className="h-[180px] md:h-[200px] overflow-hidden">
                     <ImageWithFallback
-                      alt={cv(`homepage.services.${i}.title`, s.title)}
+                      alt={title}
                       className="w-full h-full object-cover img-zoom"
-                      src={cv(`homepage.services.${i}.image`, s.img)}
+                      src={imgSrc}
                       loading="lazy"
                     />
                   </div>
                   <div className="p-4 md:p-5 flex flex-col flex-grow">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Icon size={16} className="text-gold" />
-                      <h3 className="font-display text-[16px] md:text-[19px] text-forest font-medium leading-tight">
-                        {cv(`homepage.services.${i}.title`, s.title)}
-                      </h3>
-                    </div>
-                    <p className="font-body text-[13px] text-gold font-semibold mb-1">
-                      {cv(`homepage.services.${i}.price`, s.price)}
-                    </p>
-                    <p className="font-body text-[11px] text-stone mb-3">
-                      {cv(`homepage.services.${i}.days`, s.days)}
-                    </p>
-                    <Link
-                      to="/portfolio"
-                      className="font-body text-[12px] font-bold uppercase text-forest/70 flex items-center gap-1 hover:text-gold transition-colors mt-auto"
-                    >
-                      Examples <ArrowRight size={14} aria-hidden="true" />
-                    </Link>
+                    <h3 className="font-display text-[17px] md:text-[20px] text-forest font-medium leading-tight mb-1">
+                      {title}
+                    </h3>
+                    <p className="font-body text-[11px] text-stone/50 mb-3">{days}</p>
+                    <span className="font-body text-[11px] font-semibold uppercase tracking-widest text-forest/50 group-hover:text-gold transition-colors mt-auto flex items-center gap-1">
+                      See examples <ArrowRight size={11} />
+                    </span>
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>
-        </div>
-      </section>
-
-      {/* ===== BEFORE & AFTER ===== */}
-      <section className="section-padding bg-cream-dark">
-        <div className="container-main">
-          <h2 className="font-display text-[28px] md:text-[36px] text-center text-forest mb-4 leading-tight">
-            {cv("homepage.before_after.heading", "Your Photo. Our Masterpiece.")}
-          </h2>
-          <p className="font-body text-[14px] text-stone text-center mb-12 max-w-lg mx-auto">
-            {cv("homepage.before_after.subheading", "See the transformation from photo to handcrafted art.")}
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-            <BeforeAfterSlider beforeSrc={cv("homepage.before_after.before_1", IMG.sliderB1)} afterSrc={cv("homepage.before_after.after_1", IMG.sliderA1)} caption={cv("homepage.before_after.caption_1", "Pencil Sketch · 5 days")} />
-            <BeforeAfterSlider beforeSrc={cv("homepage.before_after.before_2", IMG.sliderB2)} afterSrc={cv("homepage.before_after.after_2", IMG.sliderA2)} caption={cv("homepage.before_after.caption_2", "Color Portrait · 7 days")} />
-            <BeforeAfterSlider beforeSrc={cv("homepage.before_after.before_3", IMG.sliderB3)} afterSrc={cv("homepage.before_after.after_3", IMG.sliderA3)} caption={cv("homepage.before_after.caption_3", "Custom Painting · 10 days")} />
-          </div>
-          <div className="text-center mt-10 md:mt-12">
-            <a
-              href={waLink("Hi Artspire! I want to commission artwork")}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex h-[52px] bg-forest text-white font-body font-semibold text-[13px] md:text-[14px] uppercase rounded-xl active-scale btn-primary shadow-md items-center justify-center px-10"
+          <div className="text-center mt-10">
+            <Link
+              to="/services"
+              className="font-body text-[12px] font-semibold text-stone/60 border-b border-stone/20 pb-0.5 hover:text-forest hover:border-forest transition-colors tracking-wide uppercase"
             >
-              {cv("homepage.before_after.cta_text", "Commission Your Artwork")}
-            </a>
+              View full pricing and details →
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* ===== HOW IT WORKS ===== */}
+      {/* ═══════════════════════════════════════════════════
+          CATEGORIES
+          ═══════════════════════════════════════════════════ */}
       <section className="section-padding bg-white">
         <div className="container-main">
-          <h2 className="font-display text-[28px] md:text-[36px] text-center text-forest mb-4 leading-tight">
-            {cv("homepage.how_it_works.heading", "Simple. Personal. Yours.")}
-          </h2>
-          <p className="font-body text-[14px] text-stone text-center mb-14 max-w-lg mx-auto">
-            {cv("homepage.how_it_works.subheading", "Four easy steps from idea to delivered artwork.")}
+          <p className="font-body text-[11px] font-semibold text-gold uppercase tracking-[0.3em] text-center mb-3">
+            Browse by Medium
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-            {[
-              { n: "01", tKey: "homepage.how_it_works.step_1_title", dKey: "homepage.how_it_works.step_1_desc", t: "Share Your Idea", d: "Send us your favorite photo and tell us what makes it special to you." },
-              { n: "02", tKey: "homepage.how_it_works.step_2_title", dKey: "homepage.how_it_works.step_2_desc", t: "We Discuss & Confirm", d: "We'll help you choose the best style and size, and share a final quote." },
-              { n: "03", tKey: "homepage.how_it_works.step_3_title", dKey: "homepage.how_it_works.step_3_desc", t: "Watch It Come to Life", d: "Receive updates as our artist meticulously crafts your one-of-a-kind piece." },
-              { n: "04", tKey: "homepage.how_it_works.step_4_title", dKey: "homepage.how_it_works.step_4_desc", t: "Delivered to Your Door", d: "Safely packaged and shipped right to you, ready to be displayed and cherished." },
-            ].map((step, i) => (
-              <div key={step.n} className="relative text-center px-4 py-8">
-                <span className="process-step-num">{step.n}</span>
-                {i < 3 && <div className="hidden lg:block process-divider" />}
-                <div className="relative z-10">
-                  <h3 className="font-display text-[18px] md:text-[20px] text-forest mb-3 font-medium mt-4">{cv(step.tKey, step.t)}</h3>
-                  <p className="font-body text-[14px] leading-relaxed text-stone">{cv(step.dKey, step.d)}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ===== PORTFOLIO CATEGORIES ===== */}
-      <section className="section-padding bg-cream-dark">
-        <div className="container-main">
-          <h2 className="font-display text-[28px] md:text-[36px] text-center text-forest mb-4 leading-tight">
-            {cv("homepage.categories.heading", "Explore by Category")}
+          <h2 className="font-display text-[26px] md:text-[34px] text-center text-forest mb-12 leading-tight">
+            {cv("homepage.categories.heading", "Explore the Collection")}
           </h2>
-          <p className="font-body text-[14px] text-stone text-center mb-12 max-w-lg mx-auto">
-            {cv("homepage.categories.subheading", "Browse our handcrafted art collections.")}
-          </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
             {categories.map((cat) => (
               <Link
                 key={cat.id}
                 to="/portfolio"
                 search={{ category: cat.slug }}
-                className="cat-card relative rounded-xl overflow-hidden aspect-[4/3] cursor-pointer group"
+                className="cat-card relative rounded-sm overflow-hidden aspect-[4/3] cursor-pointer group"
               >
-                <img src={cat.image_url ?? IMG.sketch} alt={cat.name} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent z-10" />
-                <div className="relative z-10 flex flex-col items-center justify-end h-full p-5 pb-6">
-                  <span className="font-display text-[18px] md:text-[22px] text-white font-medium drop-shadow-lg text-center">{cat.name}</span>
+                <img
+                  src={cat.image_url ?? IMG.sketch}
+                  alt={cat.name}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/20 to-transparent z-10" />
+                <div className="relative z-10 flex flex-col items-start justify-end h-full p-5 pb-6">
+                  <span className="font-display text-[18px] md:text-[21px] text-white font-medium drop-shadow-lg">
+                    {cat.name}
+                  </span>
                   {cat.short_summary && (
-                    <span className="font-body text-[13px] text-gold mt-1 font-medium">{cat.short_summary}</span>
+                    <span className="font-body text-[12px] text-white/70 mt-0.5">
+                      {cat.short_summary}
+                    </span>
                   )}
                 </div>
               </Link>
@@ -298,138 +333,195 @@ function Index() {
         </div>
       </section>
 
-      {/* ===== RECENT WORK ===== */}
-      <section className="section-padding bg-cream">
-        <div className="container-main">
-          <h2 className="font-display text-[28px] md:text-[36px] text-center text-forest mb-4 leading-tight">
-            {cv("homepage.recent_work.heading", "Recent Work")}
-          </h2>
-          <p className="font-body text-[14px] text-stone text-center mb-10 max-w-lg mx-auto">
-            {cv("homepage.recent_work.subheading", "A selection of our latest handcrafted commissions.")}
-          </p>
-          <div className="flex overflow-x-auto no-scrollbar gap-2 mb-10 pb-2 justify-start md:justify-center">
-            {filters.map((f) => {
-              const active = activeFilter === f.key;
-              return (
-                <button key={f.key} onClick={() => setActiveFilter(f.key)}
-                  className={`px-5 py-2.5 rounded-full font-body text-[12px] md:text-[13px] font-bold whitespace-nowrap active-scale transition-all duration-200 ${active ? "bg-forest text-white shadow-md" : "border border-border text-stone hover:border-forest/40 hover:text-forest"}`}>
-                  {f.label}
-                </button>
-              );
-            })}
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-            {recentWork.map((w) => {
-              const visible = activeFilter === "all" || w.cat === activeFilter;
-              return (
-                <div key={w.id} className="work-card portfolio-item rounded-xl overflow-hidden shadow-sm cursor-pointer h-[280px] md:h-[320px] flex flex-col group relative" style={{ display: visible ? undefined : "none" }}>
-                  <img src={w.img} alt={w.title} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
-                  <div className="absolute top-4 left-4 z-20">
-                    <span className="inline-block px-3 py-1 bg-gold/90 text-white font-body text-[10px] font-bold uppercase tracking-wider rounded-full">{w.cat}</span>
+      {/* ═══════════════════════════════════════════════════
+          RECENT WORK — only shown when real artworks exist
+          Fake placeholder data actively harms credibility.
+          ═══════════════════════════════════════════════════ */}
+      {hasRealWork && (
+        <section className="section-padding bg-cream">
+          <div className="container-main">
+            <p className="font-body text-[11px] font-semibold text-gold uppercase tracking-[0.3em] text-center mb-3">
+              Recent Commissions
+            </p>
+            <h2 className="font-display text-[26px] md:text-[34px] text-center text-forest mb-12 leading-tight">
+              {cv("homepage.recent_work.heading", "From the Studio")}
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+              {homepageArtworks.slice(0, 6).map((artwork) => (
+                <Link
+                  key={artwork.id}
+                  to="/artwork/$slug"
+                  params={{ slug: artwork.slug }}
+                  preload="intent"
+                  className="group relative rounded-sm overflow-hidden h-[280px] md:h-[320px] shadow-sm block"
+                >
+                  <img
+                    src={artwork.image_url ?? IMG.sketch}
+                    alt={artwork.title}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-5">
+                    <p className="font-display text-[16px] md:text-[18px] text-white font-medium leading-snug">
+                      {artwork.title}
+                    </p>
+                    {artwork.categories?.name && (
+                      <p className="font-body text-[11px] text-white/60 mt-0.5">
+                        {artwork.categories.name}
+                      </p>
+                    )}
                   </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent z-10" />
-                  <div className="absolute bottom-0 left-0 right-0 p-5 z-20">
-                    <span className="font-display text-[16px] md:text-[18px] text-white font-medium">{w.title}</span>
-                    <p className="font-body text-[13px] text-gold font-semibold mt-1">{w.price}</p>
-                  </div>
-                </div>
-              );
-            })}
+                </Link>
+              ))}
+            </div>
+            <div className="text-center mt-10">
+              <Link
+                to="/portfolio"
+                className="inline-flex items-center gap-2 h-[48px] px-8 border border-forest text-forest font-body font-semibold text-[12px] uppercase tracking-wider rounded-sm active-scale hover:bg-forest hover:text-white transition-colors"
+              >
+                View All Work <ArrowRight size={14} />
+              </Link>
+            </div>
           </div>
-          <div className="text-center mt-10">
-            <Link to="/portfolio" className="inline-flex h-[48px] px-8 border-2 border-forest text-forest font-body font-semibold text-[13px] uppercase rounded-xl items-center justify-center gap-2 active-scale btn-secondary">
-              View All Work <ArrowRight size={16} />
-            </Link>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      {/* ===== TESTIMONIALS ===== */}
-      <section className="section-padding bg-cream-dark">
-        <div className="container-main">
-          <h2 className="font-display text-[28px] md:text-[36px] text-center text-forest mb-12 leading-tight">
-            {cv("homepage.testimonials.heading", "What Our Clients Say")}
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
-            {[
-              { qKey: "homepage.testimonials.1_quote", aKey: "homepage.testimonials.1_author", q: "She saw details I never mentioned. It's like she captured his soul, not just his face.", a: "— Rajiv M." },
-              { qKey: "homepage.testimonials.2_quote", aKey: "homepage.testimonials.2_author", q: "The clay sculpture made me cry. It's the most precious thing in our home now.", a: "— Sneha K." },
-              { qKey: "homepage.testimonials.3_quote", aKey: "homepage.testimonials.3_author", q: "She redid the eyes because she wasn't happy with them. That dedication is rare.", a: "— Anjali & Vikram S." },
-            ].map((t, i) => (
-              <div key={i} className="bg-white p-6 md:p-7 rounded-xl border-l-4 border-gold shadow-sm flex flex-col gap-3 hover-lift">
-                <p className="font-accent text-[17px] md:text-[19px] italic text-forest leading-relaxed">"{cv(t.qKey, t.q)}"</p>
-                <p className="font-body text-[13px] md:text-[14px] font-bold text-stone uppercase tracking-wider mt-auto">{cv(t.aKey, t.a)}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ===== GIFTS ===== */}
+      {/* ═══════════════════════════════════════════════════
+          TESTIMONIALS — featured + supporting
+          ═══════════════════════════════════════════════════ */}
       <section className="section-padding bg-white">
         <div className="container-main">
-          <h2 className="font-display text-[28px] md:text-[36px] text-center text-forest mb-4 leading-tight">
-            {cv("homepage.gifts.heading", "Find the Perfect Gift")}
-          </h2>
-          <p className="font-body text-[14px] text-stone text-center mb-10 max-w-lg mx-auto">
-            {cv("homepage.gifts.subheading", "Handcrafted art for every special occasion.")}
+          <p className="font-body text-[11px] font-semibold text-gold uppercase tracking-[0.3em] text-center mb-12">
+            {cv("homepage.testimonials.heading", "What clients say")}
           </p>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-4">
+
+          {/* Featured testimonial — full width, display type */}
+          <blockquote className="text-center mb-12 max-w-2xl mx-auto">
+            <p className="font-accent text-[22px] md:text-[28px] italic text-forest leading-relaxed mb-5">
+              "{cv("homepage.testimonials.1_quote", "She saw details I never mentioned. It's like she captured his soul, not just his face.")}"
+            </p>
+            <footer className="font-body text-[11px] text-stone/50 uppercase tracking-[0.2em]">
+              {cv("homepage.testimonials.1_author", "— Rajiv M., Delhi · Portrait commission")}
+            </footer>
+          </blockquote>
+
+          {/* Two supporting quotes */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
             {[
-              { labelKey: "homepage.gifts.card_1_label", imgKey: "homepage.gifts.card_1_image", label: "For Parents", img: IMG.sketch2 },
-              { labelKey: "homepage.gifts.card_2_label", imgKey: "homepage.gifts.card_2_image", label: "For Couples", img: IMG.portrait2 },
-              { labelKey: "homepage.gifts.card_3_label", imgKey: "homepage.gifts.card_3_image", label: "New Home", img: IMG.mirror2 },
-              { labelKey: "homepage.gifts.card_4_label", imgKey: "homepage.gifts.card_4_image", label: "Memorials", img: IMG.clay2 },
+              {
+                qKey: "homepage.testimonials.2_quote",
+                aKey: "homepage.testimonials.2_author",
+                q: "The clay sculpture made me cry. It's the most precious thing in our home now.",
+                a: "— Sneha K., Mumbai · Clay sculpture",
+              },
+              {
+                qKey: "homepage.testimonials.3_quote",
+                aKey: "homepage.testimonials.3_author",
+                q: "She redid the eyes because she wasn't happy with them. That dedication is rare.",
+                a: "— Anjali & Vikram S., Bengaluru · Couple portrait",
+              },
+            ].map((t, i) => (
+              <blockquote key={i} className="border-l-2 border-gold/30 pl-5">
+                <p className="font-accent text-[16px] md:text-[17px] italic text-stone leading-relaxed mb-3">
+                  "{cv(t.qKey, t.q)}"
+                </p>
+                <footer className="font-body text-[10px] text-stone/40 uppercase tracking-[0.2em]">
+                  {cv(t.aKey, t.a)}
+                </footer>
+              </blockquote>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════
+          GIFTS — personal occasions only (no corporate)
+          ═══════════════════════════════════════════════════ */}
+      <section className="section-padding bg-cream">
+        <div className="container-main">
+          <p className="font-body text-[11px] font-semibold text-gold uppercase tracking-[0.3em] text-center mb-3">
+            The Perfect Gift
+          </p>
+          <h2 className="font-display text-[26px] md:text-[34px] text-center text-forest mb-3 leading-tight">
+            {cv("homepage.gifts.heading", "Art for Every Occasion")}
+          </h2>
+          <p className="font-body text-[13px] md:text-[14px] text-stone text-center mb-12 max-w-md mx-auto">
+            {cv("homepage.gifts.subheading", "A handmade portrait is the only gift that cannot be bought in a store.")}
+          </p>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+            {[
+              { labelKey: "homepage.gifts.card_1_label", imgKey: "homepage.gifts.card_1_image", label: "For Parents",  img: IMG.sketch },
+              { labelKey: "homepage.gifts.card_2_label", imgKey: "homepage.gifts.card_2_image", label: "For Couples",  img: IMG.portrait },
+              { labelKey: "homepage.gifts.card_3_label", imgKey: "homepage.gifts.card_3_image", label: "New Home",     img: IMG.mirror },
+              { labelKey: "homepage.gifts.card_4_label", imgKey: "homepage.gifts.card_4_image", label: "In Memory Of", img: IMG.clay },
             ].map((g) => (
-              <Link key={g.label} to="/portfolio" className="aspect-square relative rounded-xl overflow-hidden active-scale shadow-sm cursor-pointer group">
-                <ImageWithFallback alt={cv(g.labelKey, g.label)} className="w-full h-full object-cover img-zoom" src={cv(g.imgKey, g.img)} loading="lazy" />
-                <div className="absolute inset-0 bg-black/30 flex items-center justify-center p-2 text-center group-hover:bg-black/40 transition-colors duration-300">
-                  <span className="font-display text-[18px] md:text-[22px] text-white font-medium drop-shadow-md">{cv(g.labelKey, g.label)}</span>
+              <Link
+                key={g.label}
+                to="/portfolio"
+                className="aspect-square relative rounded-sm overflow-hidden active-scale group"
+              >
+                <ImageWithFallback
+                  alt={cv(g.labelKey, g.label)}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  src={cv(g.imgKey, g.img)}
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-black/35 group-hover:bg-black/45 transition-colors duration-300 flex items-end p-4">
+                  <span className="font-display text-[16px] md:text-[19px] text-white font-medium leading-tight">
+                    {cv(g.labelKey, g.label)}
+                  </span>
                 </div>
               </Link>
             ))}
           </div>
-          <a
-            href="mailto:Ajju_pandey@outlook.com?subject=Corporate%20%26%20Bulk%20Order%20Enquiry&body=Hi%20Artspire%20Team%2C%20I%20am%20interested%20in%20bulk%2Fcorporate%20orders."
-            className="aspect-[21/9] relative rounded-xl overflow-hidden active-scale shadow-sm cursor-pointer group block"
-          >
-            <ImageWithFallback alt="Corporate & Bulk" className="w-full h-full object-cover img-zoom" src={cv("homepage.gifts.corporate_image", IMG.painting)} loading="lazy" />
-            <div className="absolute inset-0 bg-black/30 flex items-center justify-center p-4 group-hover:bg-black/40 transition-colors duration-300">
-              <div className="flex items-center gap-2">
-                <Building2 size={20} className="text-white" />
-                <span className="font-display text-[20px] md:text-[24px] text-white font-medium drop-shadow-md">
+
+          {/* Corporate — separate, lower visual weight */}
+          <div className="mt-4 border border-border/50 rounded-sm px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <Building2 size={18} className="text-stone/40 shrink-0" aria-hidden="true" />
+              <div>
+                <p className="font-display text-[15px] text-forest font-medium">
                   {cv("homepage.gifts.corporate_label", "Corporate & Bulk Orders")}
-                </span>
+                </p>
+                <p className="font-body text-[12px] text-stone/50">Custom artwork for events, offices, and gifting programmes</p>
               </div>
             </div>
-          </a>
-        </div>
-      </section>
-
-      {/* ===== ABOUT HIMANGI ===== */}
-      <section className="section-padding bg-cream-dark">
-        <div className="container-main">
-          <div className="flex flex-col items-center lg:flex-row lg:items-center lg:gap-14">
-            <div className="w-full lg:w-1/2 aspect-[4/3] rounded-2xl overflow-hidden mb-8 lg:mb-0 shadow-md">
-              <ImageWithFallback alt="Himangi — Artist at Artspire" className="w-full h-full object-cover img-zoom" src={cv("homepage.about.image", IMG.sketch)} loading="lazy" />
-            </div>
-            <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left">
-              <p className="font-body text-[11px] font-bold text-gold mb-5 uppercase tracking-[0.25em]">
-                {cv("homepage.about.tagline", "The Artist Behind Artspire")}
-              </p>
-              <h2 className="font-display text-[32px] md:text-[36px] text-forest mb-5 font-medium">
-                {cv("homepage.about.heading", "Hi, I'm Himangi.")}
-              </h2>
-              <p className="font-body text-[15px] leading-relaxed text-stone mb-6">
-                {cv("homepage.about.description", "For over 11 years, I've been helping people capture their most precious moments through art. Every stroke and detail is infused with passion and precision.")}
-              </p>
-              <Link to="/about" className="font-body text-[14px] font-bold text-gold border-b-2 border-gold/30 pb-1 active-scale hover:border-gold transition-colors">
-                {cv("homepage.about.cta_text", "Read My Story →")}
-              </Link>
-            </div>
+            <a
+              href="mailto:Ajju_pandey@outlook.com?subject=Corporate%20%26%20Bulk%20Order%20Enquiry&body=Hi%20Artspire%20Team%2C%20I%20am%20interested%20in%20bulk%2Fcorporate%20orders."
+              className="shrink-0 font-body text-[12px] font-semibold text-forest border border-forest/30 hover:border-forest rounded-sm px-4 py-2 transition-colors"
+            >
+              Enquire →
+            </a>
           </div>
         </div>
       </section>
+
+      {/* ═══════════════════════════════════════════════════
+          CLOSING CTA — simple, confident
+          ═══════════════════════════════════════════════════ */}
+      <section className="section-padding bg-forest text-white text-center">
+        <div className="container-main max-w-2xl">
+          <h2 className="font-display text-[28px] md:text-[38px] mb-5 leading-tight font-medium">
+            {cv("homepage.cta.heading", "Ready to commission something extraordinary?")}
+          </h2>
+          <p className="font-body text-[14px] text-white/70 mb-8 leading-relaxed">
+            {cv("homepage.cta.subheading", "Tell Himangi about the person, the memory, or the occasion. She'll take care of the rest.")}
+          </p>
+          <a
+            href={waLink("Hi Artspire! I want to commission artwork")}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 h-[52px] px-10 bg-white text-forest font-body font-semibold text-[13px] uppercase tracking-wider rounded-sm active-scale hover:bg-cream transition-colors"
+          >
+            Start the Conversation <ArrowRight size={16} />
+          </a>
+          <p className="font-body text-[11px] text-white/40 mt-5 italic">
+            {cv("homepage.hero.availability", "Currently accepting commissions for July 2026")}
+          </p>
+        </div>
+      </section>
+
     </Layout>
   );
 }

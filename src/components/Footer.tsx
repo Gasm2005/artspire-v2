@@ -39,7 +39,7 @@ export function Footer() {
         </div>
         <div className="w-20 h-px bg-gold-accent/30 mx-auto mb-10" />
         <p className="font-body text-[11px] text-white/40 uppercase tracking-[0.2em]">
-          © 2025 Artspire Studio · All Rights Reserved
+          © 2026 Artspire Studio · All Rights Reserved
         </p>
       </div>
 
@@ -97,9 +97,8 @@ export function Footer() {
               <div className="flex items-center gap-2 font-body text-[13px] text-cream/60">
                 <Clock size={16} className="shrink-0" /> Mon–Sat, 9am–9pm
               </div>
-              <a href={waLink("Hi Himangi! I'd love to chat about a custom artwork.")} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-brand-whatsapp px-5 py-2.5 text-[13px] font-semibold text-white shadow-sm hover:shadow-md transition-all duration-200 mt-3 max-w-[200px] whitespace-nowrap">
-                <span className="w-2 h-2 bg-white rounded-full animate-pulse" />
-                Chat on WhatsApp
+              <a href={waLink("Hi Himangi! I'd love to chat about a custom artwork.")} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 h-[38px] px-5 rounded-sm border border-cream/30 text-cream font-body text-[12px] font-semibold hover:bg-cream/10 transition-colors mt-3 whitespace-nowrap">
+                Commission Art
               </a>
             </div>
           </div>
@@ -109,7 +108,7 @@ export function Footer() {
       {/* Desktop bottom bar */}
       <div className="hidden md:block border-t border-cream/10">
         <div className="container-main py-5 text-center">
-          <p className="font-body text-[12px] text-cream/40 tracking-wide">© 2025 Artspire Studio · All Rights Reserved</p>
+          <p className="font-body text-[12px] text-cream/40 tracking-wide">© 2026 Artspire Studio · All Rights Reserved</p>
         </div>
       </div>
     </footer>
