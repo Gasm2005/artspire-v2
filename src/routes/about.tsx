@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Layout } from "../components/Layout";
 import { waLink } from "../lib/whatsapp";
 import { ImageWithFallback } from "../components/ImageWithFallback";
-import { getPageSEO } from "@/lib/website-content";
+import { getPageSEO, getWebsiteContent, type WebsiteContent } from "@/lib/website-content";
 
 const IMG = {
   sketch: "https://picsum.photos/seed/artspire-about1/600/400",
@@ -26,11 +26,31 @@ const milestones = [
 ];
 
 export const Route = createFileRoute("/about")({
-  head: () => ({ meta: [{ title: "About | Artspire" }, { name: "description", content: "Meet Himangi — the artist behind Artspire and the philosophy behind every handcrafted piece." }] }),
+  loader: async () => {
+    const [seo, content] = await Promise.all([
+      getPageSEO("about").catch(() => ({ title: null, description: null, ogImage: null })),
+      getWebsiteContent({ page: "about", activeOnly: true }).catch(() => []),
+    ]);
+    return { seo, content: content as WebsiteContent[] };
+  },
+  head: ({ loaderData }) => {
+    const seo = loaderData?.seo;
+    return {
+      meta: [
+        { title: seo?.title ?? "About | Artspire" },
+        { name: "description", content: seo?.description ?? "Meet Himangi — the artist behind Artspire and the philosophy behind every handcrafted piece." },
+        ...(seo?.ogImage ? [{ property: "og:image", content: seo.ogImage }] : []),
+      ],
+    };
+  },
   component: AboutPage,
 });
 
 function AboutPage() {
+  const { content } = Route.useLoaderData();
+  const cv = (key: string, fallback: string) =>
+    content.find((c) => c.content_key === key)?.value_text ?? fallback;
+
   return (
     <Layout>
       {/* Hero / Intro */}
@@ -54,12 +74,12 @@ function AboutPage() {
         <div className="container-main">
           <div className="flex flex-col lg:flex-row lg:items-center lg:gap-14">
             <div className="w-full lg:w-1/2 aspect-[4/3] rounded-2xl overflow-hidden mb-8 lg:mb-0 shadow-lg">
-              <ImageWithFallback alt="Himangi working in her studio" className="w-full h-full object-cover img-zoom" src={IMG.sketch} />
+              <ImageWithFallback alt="Himangi working in her studio" className="w-full h-full object-cover img-zoom" src={cv("about.hero.image", IMG.sketch)} />
             </div>
             <div className="w-full lg:w-1/2">
               <h2 className="font-display text-[24px] md:text-[28px] text-forest font-medium mb-4">Why Artspire Exists</h2>
               <p className="font-body text-[14px] md:text-[15px] leading-relaxed text-stone mb-8">
-                Think about the last time you wanted to give someone something truly original. Not something pulled from a shelf. Not a name stamped on a mug. Something that captured them — the way they laugh, the memory that still makes your chest ache. That gap — between wanting something deeply personal and finding a way to create it — is exactly where Artspire was born.
+                {cv("about.why.content", "Think about the last time you wanted to give someone something truly original. Not something pulled from a shelf. Not a name stamped on a mug. Something that captured them — the way they laugh, the memory that still makes your chest ache. That gap — between wanting something deeply personal and finding a way to create it — is exactly where Artspire was born.")}
               </p>
               <h2 className="font-display text-[24px] md:text-[28px] text-forest font-medium mb-4">What I Believe</h2>
               <div className="flex flex-col gap-4">
@@ -93,16 +113,16 @@ function AboutPage() {
         <div className="container-main">
           <div className="flex flex-col lg:flex-row-reverse lg:items-center lg:gap-14">
             <div className="w-full lg:w-1/2 aspect-[4/3] rounded-2xl overflow-hidden mb-8 lg:mb-0 shadow-lg">
-              <ImageWithFallback alt="Artwork in progress" className="w-full h-full object-cover img-zoom" src={IMG.studio} />
+              <ImageWithFallback alt="Artwork in progress" className="w-full h-full object-cover img-zoom" src={cv("about.story.image", IMG.studio)} />
             </div>
             <div className="w-full lg:w-1/2">
               <h2 className="font-display text-[24px] md:text-[28px] text-forest font-medium mb-4">The Night I Started Over</h2>
               <p className="font-body text-[14px] md:text-[15px] leading-relaxed text-stone mb-8">
-                A client needed a portrait — a birthday gift for a local MLA. Timeline: seven days. By day six, the portrait was nearly finished. But something felt wrong. Not wrong in a way a client would notice. Wrong in a way only the artist can feel. I faced a choice: deliver what I had, or admit it wasn't good enough. I chose to start over. Entirely. When he saw the final portrait, he held it — and handed me an additional ₹1,000. Voluntarily. "This," he said, "is what I wanted."
+                {cv("about.night.content", "A client needed a portrait — a birthday gift for a local MLA. Timeline: seven days. By day six, the portrait was nearly finished. But something felt wrong. Not wrong in a way a client would notice. Wrong in a way only the artist can feel. I faced a choice: deliver what I had, or admit it wasn't good enough. I chose to start over. Entirely. When he saw the final portrait, he held it — and handed me an additional ₹1,000. Voluntarily. \"This,\" he said, \"is what I wanted.\"")}
               </p>
               <h2 className="font-display text-[24px] md:text-[28px] text-forest font-medium mb-4">Why Clients Return</h2>
               <p className="font-body text-[14px] md:text-[15px] leading-relaxed text-stone">
-                Trust is not built through marketing. When you describe the way your father's eyes crinkle when he laughs, I hear it from you directly. Over 1,000 completed artworks have taught me what lasts.
+                {cv("about.return.content", "Trust is not built through marketing. When you describe the way your father's eyes crinkle when he laughs, I hear it from you directly. Over 1,000 completed artworks have taught me what lasts.")}
               </p>
             </div>
           </div>
