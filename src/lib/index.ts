@@ -10,3 +10,5 @@ export * from "./whatsapp";
 export * from "./media-library";
 export * from "./visual-assets";
 export * from "./website-content";
+export * from "./products";
+export * from "./collections";
