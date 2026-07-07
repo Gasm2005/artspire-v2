@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ShopRouteImport } from './routes/shop'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PortfolioRouteImport } from './routes/portfolio'
@@ -18,6 +19,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as ShopCategoryRouteImport } from './routes/shop.$category'
 import { Route as ArtworkSlugRouteImport } from './routes/artwork.$slug'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminWhatsappIndexRouteImport } from './routes/admin/whatsapp/index'
@@ -31,6 +33,8 @@ import { Route as AdminLeadsIndexRouteImport } from './routes/admin/leads/index'
 import { Route as AdminFaqsIndexRouteImport } from './routes/admin/faqs/index'
 import { Route as AdminCategoriesIndexRouteImport } from './routes/admin/categories/index'
 import { Route as AdminArtworksIndexRouteImport } from './routes/admin/artworks/index'
+import { Route as ShopProductSlugRouteImport } from './routes/shop.product.$slug'
+import { Route as ShopCollectionsSlugRouteImport } from './routes/shop.collections.$slug'
 import { Route as AdminWebsiteContentHomepageRouteImport } from './routes/admin/website-content/homepage'
 import { Route as AdminWebsiteContentFooterRouteImport } from './routes/admin/website-content/footer'
 import { Route as AdminWebsiteContentContactRouteImport } from './routes/admin/website-content/contact'
@@ -41,6 +45,11 @@ import { Route as AdminVisualAssetsEditIdRouteImport } from './routes/admin/visu
 import { Route as AdminCategoriesEditIdRouteImport } from './routes/admin/categories/edit.$id'
 import { Route as AdminArtworksEditIdRouteImport } from './routes/admin/artworks/edit.$id'
 
+const ShopRoute = ShopRouteImport.update({
+  id: '/shop',
+  path: '/shop',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
   path: '/services',
@@ -85,6 +94,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminRouteRoute,
+} as any)
+const ShopCategoryRoute = ShopCategoryRouteImport.update({
+  id: '/$category',
+  path: '/$category',
+  getParentRoute: () => ShopRoute,
 } as any)
 const ArtworkSlugRoute = ArtworkSlugRouteImport.update({
   id: '/artwork/$slug',
@@ -152,6 +166,16 @@ const AdminArtworksIndexRoute = AdminArtworksIndexRouteImport.update({
   path: '/artworks/',
   getParentRoute: () => AdminRouteRoute,
 } as any)
+const ShopProductSlugRoute = ShopProductSlugRouteImport.update({
+  id: '/product/$slug',
+  path: '/product/$slug',
+  getParentRoute: () => ShopRoute,
+} as any)
+const ShopCollectionsSlugRoute = ShopCollectionsSlugRouteImport.update({
+  id: '/collections/$slug',
+  path: '/collections/$slug',
+  getParentRoute: () => ShopRoute,
+} as any)
 const AdminWebsiteContentHomepageRoute =
   AdminWebsiteContentHomepageRouteImport.update({
     id: '/website-content/homepage',
@@ -211,8 +235,10 @@ export interface FileRoutesByFullPath {
   '/portfolio': typeof PortfolioRoute
   '/pricing': typeof PricingRoute
   '/services': typeof ServicesRoute
+  '/shop': typeof ShopRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
   '/artwork/$slug': typeof ArtworkSlugRoute
+  '/shop/$category': typeof ShopCategoryRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/artworks/new': typeof AdminArtworksNewRoute
   '/admin/media/$id': typeof AdminMediaIdRoute
@@ -220,6 +246,8 @@ export interface FileRoutesByFullPath {
   '/admin/website-content/contact': typeof AdminWebsiteContentContactRoute
   '/admin/website-content/footer': typeof AdminWebsiteContentFooterRoute
   '/admin/website-content/homepage': typeof AdminWebsiteContentHomepageRoute
+  '/shop/collections/$slug': typeof ShopCollectionsSlugRoute
+  '/shop/product/$slug': typeof ShopProductSlugRoute
   '/admin/artworks/': typeof AdminArtworksIndexRoute
   '/admin/categories/': typeof AdminCategoriesIndexRoute
   '/admin/faqs/': typeof AdminFaqsIndexRoute
@@ -243,8 +271,10 @@ export interface FileRoutesByTo {
   '/portfolio': typeof PortfolioRoute
   '/pricing': typeof PricingRoute
   '/services': typeof ServicesRoute
+  '/shop': typeof ShopRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
   '/artwork/$slug': typeof ArtworkSlugRoute
+  '/shop/$category': typeof ShopCategoryRoute
   '/admin': typeof AdminIndexRoute
   '/admin/artworks/new': typeof AdminArtworksNewRoute
   '/admin/media/$id': typeof AdminMediaIdRoute
@@ -252,6 +282,8 @@ export interface FileRoutesByTo {
   '/admin/website-content/contact': typeof AdminWebsiteContentContactRoute
   '/admin/website-content/footer': typeof AdminWebsiteContentFooterRoute
   '/admin/website-content/homepage': typeof AdminWebsiteContentHomepageRoute
+  '/shop/collections/$slug': typeof ShopCollectionsSlugRoute
+  '/shop/product/$slug': typeof ShopProductSlugRoute
   '/admin/artworks': typeof AdminArtworksIndexRoute
   '/admin/categories': typeof AdminCategoriesIndexRoute
   '/admin/faqs': typeof AdminFaqsIndexRoute
@@ -277,8 +309,10 @@ export interface FileRoutesById {
   '/portfolio': typeof PortfolioRoute
   '/pricing': typeof PricingRoute
   '/services': typeof ServicesRoute
+  '/shop': typeof ShopRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
   '/artwork/$slug': typeof ArtworkSlugRoute
+  '/shop/$category': typeof ShopCategoryRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/artworks/new': typeof AdminArtworksNewRoute
   '/admin/media/$id': typeof AdminMediaIdRoute
@@ -286,6 +320,8 @@ export interface FileRoutesById {
   '/admin/website-content/contact': typeof AdminWebsiteContentContactRoute
   '/admin/website-content/footer': typeof AdminWebsiteContentFooterRoute
   '/admin/website-content/homepage': typeof AdminWebsiteContentHomepageRoute
+  '/shop/collections/$slug': typeof ShopCollectionsSlugRoute
+  '/shop/product/$slug': typeof ShopProductSlugRoute
   '/admin/artworks/': typeof AdminArtworksIndexRoute
   '/admin/categories/': typeof AdminCategoriesIndexRoute
   '/admin/faqs/': typeof AdminFaqsIndexRoute
@@ -312,8 +348,10 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/pricing'
     | '/services'
+    | '/shop'
     | '/admin/login'
     | '/artwork/$slug'
+    | '/shop/$category'
     | '/admin/'
     | '/admin/artworks/new'
     | '/admin/media/$id'
@@ -321,6 +359,8 @@ export interface FileRouteTypes {
     | '/admin/website-content/contact'
     | '/admin/website-content/footer'
     | '/admin/website-content/homepage'
+    | '/shop/collections/$slug'
+    | '/shop/product/$slug'
     | '/admin/artworks/'
     | '/admin/categories/'
     | '/admin/faqs/'
@@ -344,8 +384,10 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/pricing'
     | '/services'
+    | '/shop'
     | '/admin/login'
     | '/artwork/$slug'
+    | '/shop/$category'
     | '/admin'
     | '/admin/artworks/new'
     | '/admin/media/$id'
@@ -353,6 +395,8 @@ export interface FileRouteTypes {
     | '/admin/website-content/contact'
     | '/admin/website-content/footer'
     | '/admin/website-content/homepage'
+    | '/shop/collections/$slug'
+    | '/shop/product/$slug'
     | '/admin/artworks'
     | '/admin/categories'
     | '/admin/faqs'
@@ -377,8 +421,10 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/pricing'
     | '/services'
+    | '/shop'
     | '/admin/login'
     | '/artwork/$slug'
+    | '/shop/$category'
     | '/admin/'
     | '/admin/artworks/new'
     | '/admin/media/$id'
@@ -386,6 +432,8 @@ export interface FileRouteTypes {
     | '/admin/website-content/contact'
     | '/admin/website-content/footer'
     | '/admin/website-content/homepage'
+    | '/shop/collections/$slug'
+    | '/shop/product/$slug'
     | '/admin/artworks/'
     | '/admin/categories/'
     | '/admin/faqs/'
@@ -411,11 +459,19 @@ export interface RootRouteChildren {
   PortfolioRoute: typeof PortfolioRoute
   PricingRoute: typeof PricingRoute
   ServicesRoute: typeof ServicesRoute
+  ShopRoute: typeof ShopRouteWithChildren
   ArtworkSlugRoute: typeof ArtworkSlugRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/shop': {
+      id: '/shop'
+      path: '/shop'
+      fullPath: '/shop'
+      preLoaderRoute: typeof ShopRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/services': {
       id: '/services'
       path: '/services'
@@ -478,6 +534,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRouteRoute
+    }
+    '/shop/$category': {
+      id: '/shop/$category'
+      path: '/$category'
+      fullPath: '/shop/$category'
+      preLoaderRoute: typeof ShopCategoryRouteImport
+      parentRoute: typeof ShopRoute
     }
     '/artwork/$slug': {
       id: '/artwork/$slug'
@@ -569,6 +632,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/artworks/'
       preLoaderRoute: typeof AdminArtworksIndexRouteImport
       parentRoute: typeof AdminRouteRoute
+    }
+    '/shop/product/$slug': {
+      id: '/shop/product/$slug'
+      path: '/product/$slug'
+      fullPath: '/shop/product/$slug'
+      preLoaderRoute: typeof ShopProductSlugRouteImport
+      parentRoute: typeof ShopRoute
+    }
+    '/shop/collections/$slug': {
+      id: '/shop/collections/$slug'
+      path: '/collections/$slug'
+      fullPath: '/shop/collections/$slug'
+      preLoaderRoute: typeof ShopCollectionsSlugRouteImport
+      parentRoute: typeof ShopRoute
     }
     '/admin/website-content/homepage': {
       id: '/admin/website-content/homepage'
@@ -690,6 +767,20 @@ const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
   AdminRouteRouteChildren,
 )
 
+interface ShopRouteChildren {
+  ShopCategoryRoute: typeof ShopCategoryRoute
+  ShopCollectionsSlugRoute: typeof ShopCollectionsSlugRoute
+  ShopProductSlugRoute: typeof ShopProductSlugRoute
+}
+
+const ShopRouteChildren: ShopRouteChildren = {
+  ShopCategoryRoute: ShopCategoryRoute,
+  ShopCollectionsSlugRoute: ShopCollectionsSlugRoute,
+  ShopProductSlugRoute: ShopProductSlugRoute,
+}
+
+const ShopRouteWithChildren = ShopRoute._addFileChildren(ShopRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRouteRoute: AdminRouteRouteWithChildren,
@@ -699,6 +790,7 @@ const rootRouteChildren: RootRouteChildren = {
   PortfolioRoute: PortfolioRoute,
   PricingRoute: PricingRoute,
   ServicesRoute: ServicesRoute,
+  ShopRoute: ShopRouteWithChildren,
   ArtworkSlugRoute: ArtworkSlugRoute,
 }
 export const routeTree = rootRouteImport

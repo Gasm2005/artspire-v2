@@ -103,6 +103,10 @@ export const breadcrumbs = {
     { label: "Home", href: "/" },
     { label: "Portfolio", href: "/portfolio" },
   ],
+  shop: [
+    { label: "Home", href: "/" },
+    { label: "Shop", href: "/shop" },
+  ],
   artwork: (title: string, categoryName?: string, categorySlug?: string) => [
     { label: "Home", href: "/" },
     { label: "Portfolio", href: "/portfolio" },
