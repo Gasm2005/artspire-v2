@@ -1,5 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
-import type { Category } from "./categories";
+import type { ShopCategory } from "./shop-categories";
 
 // ─── TYPES ──────────────────────────────────────────────────
 // Manually typed since products table isn't in the auto-generated
@@ -51,7 +51,7 @@ export type ProductInsert = Partial<Omit<Product, "id" | "created_at" | "updated
 export type ProductUpdate = Partial<Omit<Product, "id" | "created_at">>;
 
 export type ProductWithCategory = Product & {
-  categories: Category | null;
+  categories: ShopCategory | null;
 };
 
 export interface ProductGalleryImage {

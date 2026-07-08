@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { getProducts, type ProductWithCategory } from "@/lib/products";
-import { getCategories, type CategoryWithVisuals } from "@/lib/categories";
+import { getShopCategories, type ShopCategory } from "@/lib/shop-categories";
 import { getCollections, type Collection } from "@/lib/collections";
 import { getPageSEO } from "@/lib/website-content";
 import { ArtspireBreadcrumb } from "@/components/ArtspireBreadcrumb";
@@ -17,13 +17,13 @@ export const Route = createFileRoute("/shop")({
   loader: async () => {
     const [products, categories, collections, seo] = await Promise.all([
       getProducts({ status: "published", orderBy: "display_order", limit: 100 }).catch(() => []),
-      getCategories().catch(() => []),
+      getShopCategories().catch(() => []),
       getCollections({ activeOnly: true }).catch(() => []),
       getPageSEO("shop").catch(() => ({ title: null, description: null, ogImage: null })),
     ]);
     return {
       products: products as ProductWithCategory[],
-      categories: categories as CategoryWithVisuals[],
+      categories: categories as ShopCategory[],
       collections: collections as Collection[],
       seo,
     };

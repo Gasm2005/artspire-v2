@@ -25,8 +25,10 @@ import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminWhatsappIndexRouteImport } from './routes/admin/whatsapp/index'
 import { Route as AdminWebsiteContentIndexRouteImport } from './routes/admin/website-content/index'
 import { Route as AdminVisualAssetsIndexRouteImport } from './routes/admin/visual-assets/index'
+import { Route as AdminShopCategoriesIndexRouteImport } from './routes/admin/shop-categories/index'
 import { Route as AdminSettingsIndexRouteImport } from './routes/admin/settings/index'
 import { Route as AdminSeoIndexRouteImport } from './routes/admin/seo/index'
+import { Route as AdminProductsIndexRouteImport } from './routes/admin/products/index'
 import { Route as AdminPagesIndexRouteImport } from './routes/admin/pages/index'
 import { Route as AdminMediaIndexRouteImport } from './routes/admin/media/index'
 import { Route as AdminLeadsIndexRouteImport } from './routes/admin/leads/index'
@@ -39,9 +41,12 @@ import { Route as AdminWebsiteContentHomepageRouteImport } from './routes/admin/
 import { Route as AdminWebsiteContentFooterRouteImport } from './routes/admin/website-content/footer'
 import { Route as AdminWebsiteContentContactRouteImport } from './routes/admin/website-content/contact'
 import { Route as AdminWebsiteContentAboutRouteImport } from './routes/admin/website-content/about'
+import { Route as AdminProductsNewRouteImport } from './routes/admin/products/new'
 import { Route as AdminMediaIdRouteImport } from './routes/admin/media/$id'
 import { Route as AdminArtworksNewRouteImport } from './routes/admin/artworks/new'
 import { Route as AdminVisualAssetsEditIdRouteImport } from './routes/admin/visual-assets/edit.$id'
+import { Route as AdminShopCategoriesEditIdRouteImport } from './routes/admin/shop-categories/edit.$id'
+import { Route as AdminProductsEditIdRouteImport } from './routes/admin/products/edit.$id'
 import { Route as AdminCategoriesEditIdRouteImport } from './routes/admin/categories/edit.$id'
 import { Route as AdminArtworksEditIdRouteImport } from './routes/admin/artworks/edit.$id'
 
@@ -126,6 +131,12 @@ const AdminVisualAssetsIndexRoute = AdminVisualAssetsIndexRouteImport.update({
   path: '/visual-assets/',
   getParentRoute: () => AdminRouteRoute,
 } as any)
+const AdminShopCategoriesIndexRoute =
+  AdminShopCategoriesIndexRouteImport.update({
+    id: '/shop-categories/',
+    path: '/shop-categories/',
+    getParentRoute: () => AdminRouteRoute,
+  } as any)
 const AdminSettingsIndexRoute = AdminSettingsIndexRouteImport.update({
   id: '/settings/',
   path: '/settings/',
@@ -134,6 +145,11 @@ const AdminSettingsIndexRoute = AdminSettingsIndexRouteImport.update({
 const AdminSeoIndexRoute = AdminSeoIndexRouteImport.update({
   id: '/seo/',
   path: '/seo/',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminProductsIndexRoute = AdminProductsIndexRouteImport.update({
+  id: '/products/',
+  path: '/products/',
   getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminPagesIndexRoute = AdminPagesIndexRouteImport.update({
@@ -200,6 +216,11 @@ const AdminWebsiteContentAboutRoute =
     path: '/website-content/about',
     getParentRoute: () => AdminRouteRoute,
   } as any)
+const AdminProductsNewRoute = AdminProductsNewRouteImport.update({
+  id: '/products/new',
+  path: '/products/new',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
 const AdminMediaIdRoute = AdminMediaIdRouteImport.update({
   id: '/media/$id',
   path: '/media/$id',
@@ -213,6 +234,17 @@ const AdminArtworksNewRoute = AdminArtworksNewRouteImport.update({
 const AdminVisualAssetsEditIdRoute = AdminVisualAssetsEditIdRouteImport.update({
   id: '/visual-assets/edit/$id',
   path: '/visual-assets/edit/$id',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminShopCategoriesEditIdRoute =
+  AdminShopCategoriesEditIdRouteImport.update({
+    id: '/shop-categories/edit/$id',
+    path: '/shop-categories/edit/$id',
+    getParentRoute: () => AdminRouteRoute,
+  } as any)
+const AdminProductsEditIdRoute = AdminProductsEditIdRouteImport.update({
+  id: '/products/edit/$id',
+  path: '/products/edit/$id',
   getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminCategoriesEditIdRoute = AdminCategoriesEditIdRouteImport.update({
@@ -242,6 +274,7 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminIndexRoute
   '/admin/artworks/new': typeof AdminArtworksNewRoute
   '/admin/media/$id': typeof AdminMediaIdRoute
+  '/admin/products/new': typeof AdminProductsNewRoute
   '/admin/website-content/about': typeof AdminWebsiteContentAboutRoute
   '/admin/website-content/contact': typeof AdminWebsiteContentContactRoute
   '/admin/website-content/footer': typeof AdminWebsiteContentFooterRoute
@@ -254,13 +287,17 @@ export interface FileRoutesByFullPath {
   '/admin/leads/': typeof AdminLeadsIndexRoute
   '/admin/media/': typeof AdminMediaIndexRoute
   '/admin/pages/': typeof AdminPagesIndexRoute
+  '/admin/products/': typeof AdminProductsIndexRoute
   '/admin/seo/': typeof AdminSeoIndexRoute
   '/admin/settings/': typeof AdminSettingsIndexRoute
+  '/admin/shop-categories/': typeof AdminShopCategoriesIndexRoute
   '/admin/visual-assets/': typeof AdminVisualAssetsIndexRoute
   '/admin/website-content/': typeof AdminWebsiteContentIndexRoute
   '/admin/whatsapp/': typeof AdminWhatsappIndexRoute
   '/admin/artworks/edit/$id': typeof AdminArtworksEditIdRoute
   '/admin/categories/edit/$id': typeof AdminCategoriesEditIdRoute
+  '/admin/products/edit/$id': typeof AdminProductsEditIdRoute
+  '/admin/shop-categories/edit/$id': typeof AdminShopCategoriesEditIdRoute
   '/admin/visual-assets/edit/$id': typeof AdminVisualAssetsEditIdRoute
 }
 export interface FileRoutesByTo {
@@ -278,6 +315,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/admin/artworks/new': typeof AdminArtworksNewRoute
   '/admin/media/$id': typeof AdminMediaIdRoute
+  '/admin/products/new': typeof AdminProductsNewRoute
   '/admin/website-content/about': typeof AdminWebsiteContentAboutRoute
   '/admin/website-content/contact': typeof AdminWebsiteContentContactRoute
   '/admin/website-content/footer': typeof AdminWebsiteContentFooterRoute
@@ -290,13 +328,17 @@ export interface FileRoutesByTo {
   '/admin/leads': typeof AdminLeadsIndexRoute
   '/admin/media': typeof AdminMediaIndexRoute
   '/admin/pages': typeof AdminPagesIndexRoute
+  '/admin/products': typeof AdminProductsIndexRoute
   '/admin/seo': typeof AdminSeoIndexRoute
   '/admin/settings': typeof AdminSettingsIndexRoute
+  '/admin/shop-categories': typeof AdminShopCategoriesIndexRoute
   '/admin/visual-assets': typeof AdminVisualAssetsIndexRoute
   '/admin/website-content': typeof AdminWebsiteContentIndexRoute
   '/admin/whatsapp': typeof AdminWhatsappIndexRoute
   '/admin/artworks/edit/$id': typeof AdminArtworksEditIdRoute
   '/admin/categories/edit/$id': typeof AdminCategoriesEditIdRoute
+  '/admin/products/edit/$id': typeof AdminProductsEditIdRoute
+  '/admin/shop-categories/edit/$id': typeof AdminShopCategoriesEditIdRoute
   '/admin/visual-assets/edit/$id': typeof AdminVisualAssetsEditIdRoute
 }
 export interface FileRoutesById {
@@ -316,6 +358,7 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/admin/artworks/new': typeof AdminArtworksNewRoute
   '/admin/media/$id': typeof AdminMediaIdRoute
+  '/admin/products/new': typeof AdminProductsNewRoute
   '/admin/website-content/about': typeof AdminWebsiteContentAboutRoute
   '/admin/website-content/contact': typeof AdminWebsiteContentContactRoute
   '/admin/website-content/footer': typeof AdminWebsiteContentFooterRoute
@@ -328,13 +371,17 @@ export interface FileRoutesById {
   '/admin/leads/': typeof AdminLeadsIndexRoute
   '/admin/media/': typeof AdminMediaIndexRoute
   '/admin/pages/': typeof AdminPagesIndexRoute
+  '/admin/products/': typeof AdminProductsIndexRoute
   '/admin/seo/': typeof AdminSeoIndexRoute
   '/admin/settings/': typeof AdminSettingsIndexRoute
+  '/admin/shop-categories/': typeof AdminShopCategoriesIndexRoute
   '/admin/visual-assets/': typeof AdminVisualAssetsIndexRoute
   '/admin/website-content/': typeof AdminWebsiteContentIndexRoute
   '/admin/whatsapp/': typeof AdminWhatsappIndexRoute
   '/admin/artworks/edit/$id': typeof AdminArtworksEditIdRoute
   '/admin/categories/edit/$id': typeof AdminCategoriesEditIdRoute
+  '/admin/products/edit/$id': typeof AdminProductsEditIdRoute
+  '/admin/shop-categories/edit/$id': typeof AdminShopCategoriesEditIdRoute
   '/admin/visual-assets/edit/$id': typeof AdminVisualAssetsEditIdRoute
 }
 export interface FileRouteTypes {
@@ -355,6 +402,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/admin/artworks/new'
     | '/admin/media/$id'
+    | '/admin/products/new'
     | '/admin/website-content/about'
     | '/admin/website-content/contact'
     | '/admin/website-content/footer'
@@ -367,13 +415,17 @@ export interface FileRouteTypes {
     | '/admin/leads/'
     | '/admin/media/'
     | '/admin/pages/'
+    | '/admin/products/'
     | '/admin/seo/'
     | '/admin/settings/'
+    | '/admin/shop-categories/'
     | '/admin/visual-assets/'
     | '/admin/website-content/'
     | '/admin/whatsapp/'
     | '/admin/artworks/edit/$id'
     | '/admin/categories/edit/$id'
+    | '/admin/products/edit/$id'
+    | '/admin/shop-categories/edit/$id'
     | '/admin/visual-assets/edit/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -391,6 +443,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin/artworks/new'
     | '/admin/media/$id'
+    | '/admin/products/new'
     | '/admin/website-content/about'
     | '/admin/website-content/contact'
     | '/admin/website-content/footer'
@@ -403,13 +456,17 @@ export interface FileRouteTypes {
     | '/admin/leads'
     | '/admin/media'
     | '/admin/pages'
+    | '/admin/products'
     | '/admin/seo'
     | '/admin/settings'
+    | '/admin/shop-categories'
     | '/admin/visual-assets'
     | '/admin/website-content'
     | '/admin/whatsapp'
     | '/admin/artworks/edit/$id'
     | '/admin/categories/edit/$id'
+    | '/admin/products/edit/$id'
+    | '/admin/shop-categories/edit/$id'
     | '/admin/visual-assets/edit/$id'
   id:
     | '__root__'
@@ -428,6 +485,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/admin/artworks/new'
     | '/admin/media/$id'
+    | '/admin/products/new'
     | '/admin/website-content/about'
     | '/admin/website-content/contact'
     | '/admin/website-content/footer'
@@ -440,13 +498,17 @@ export interface FileRouteTypes {
     | '/admin/leads/'
     | '/admin/media/'
     | '/admin/pages/'
+    | '/admin/products/'
     | '/admin/seo/'
     | '/admin/settings/'
+    | '/admin/shop-categories/'
     | '/admin/visual-assets/'
     | '/admin/website-content/'
     | '/admin/whatsapp/'
     | '/admin/artworks/edit/$id'
     | '/admin/categories/edit/$id'
+    | '/admin/products/edit/$id'
+    | '/admin/shop-categories/edit/$id'
     | '/admin/visual-assets/edit/$id'
   fileRoutesById: FileRoutesById
 }
@@ -577,6 +639,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminVisualAssetsIndexRouteImport
       parentRoute: typeof AdminRouteRoute
     }
+    '/admin/shop-categories/': {
+      id: '/admin/shop-categories/'
+      path: '/shop-categories'
+      fullPath: '/admin/shop-categories/'
+      preLoaderRoute: typeof AdminShopCategoriesIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
     '/admin/settings/': {
       id: '/admin/settings/'
       path: '/settings'
@@ -589,6 +658,13 @@ declare module '@tanstack/react-router' {
       path: '/seo'
       fullPath: '/admin/seo/'
       preLoaderRoute: typeof AdminSeoIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/products/': {
+      id: '/admin/products/'
+      path: '/products'
+      fullPath: '/admin/products/'
+      preLoaderRoute: typeof AdminProductsIndexRouteImport
       parentRoute: typeof AdminRouteRoute
     }
     '/admin/pages/': {
@@ -675,6 +751,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminWebsiteContentAboutRouteImport
       parentRoute: typeof AdminRouteRoute
     }
+    '/admin/products/new': {
+      id: '/admin/products/new'
+      path: '/products/new'
+      fullPath: '/admin/products/new'
+      preLoaderRoute: typeof AdminProductsNewRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
     '/admin/media/$id': {
       id: '/admin/media/$id'
       path: '/media/$id'
@@ -694,6 +777,20 @@ declare module '@tanstack/react-router' {
       path: '/visual-assets/edit/$id'
       fullPath: '/admin/visual-assets/edit/$id'
       preLoaderRoute: typeof AdminVisualAssetsEditIdRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/shop-categories/edit/$id': {
+      id: '/admin/shop-categories/edit/$id'
+      path: '/shop-categories/edit/$id'
+      fullPath: '/admin/shop-categories/edit/$id'
+      preLoaderRoute: typeof AdminShopCategoriesEditIdRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/products/edit/$id': {
+      id: '/admin/products/edit/$id'
+      path: '/products/edit/$id'
+      fullPath: '/admin/products/edit/$id'
+      preLoaderRoute: typeof AdminProductsEditIdRouteImport
       parentRoute: typeof AdminRouteRoute
     }
     '/admin/categories/edit/$id': {
@@ -718,6 +815,7 @@ interface AdminRouteRouteChildren {
   AdminIndexRoute: typeof AdminIndexRoute
   AdminArtworksNewRoute: typeof AdminArtworksNewRoute
   AdminMediaIdRoute: typeof AdminMediaIdRoute
+  AdminProductsNewRoute: typeof AdminProductsNewRoute
   AdminWebsiteContentAboutRoute: typeof AdminWebsiteContentAboutRoute
   AdminWebsiteContentContactRoute: typeof AdminWebsiteContentContactRoute
   AdminWebsiteContentFooterRoute: typeof AdminWebsiteContentFooterRoute
@@ -728,13 +826,17 @@ interface AdminRouteRouteChildren {
   AdminLeadsIndexRoute: typeof AdminLeadsIndexRoute
   AdminMediaIndexRoute: typeof AdminMediaIndexRoute
   AdminPagesIndexRoute: typeof AdminPagesIndexRoute
+  AdminProductsIndexRoute: typeof AdminProductsIndexRoute
   AdminSeoIndexRoute: typeof AdminSeoIndexRoute
   AdminSettingsIndexRoute: typeof AdminSettingsIndexRoute
+  AdminShopCategoriesIndexRoute: typeof AdminShopCategoriesIndexRoute
   AdminVisualAssetsIndexRoute: typeof AdminVisualAssetsIndexRoute
   AdminWebsiteContentIndexRoute: typeof AdminWebsiteContentIndexRoute
   AdminWhatsappIndexRoute: typeof AdminWhatsappIndexRoute
   AdminArtworksEditIdRoute: typeof AdminArtworksEditIdRoute
   AdminCategoriesEditIdRoute: typeof AdminCategoriesEditIdRoute
+  AdminProductsEditIdRoute: typeof AdminProductsEditIdRoute
+  AdminShopCategoriesEditIdRoute: typeof AdminShopCategoriesEditIdRoute
   AdminVisualAssetsEditIdRoute: typeof AdminVisualAssetsEditIdRoute
 }
 
@@ -743,6 +845,7 @@ const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminIndexRoute: AdminIndexRoute,
   AdminArtworksNewRoute: AdminArtworksNewRoute,
   AdminMediaIdRoute: AdminMediaIdRoute,
+  AdminProductsNewRoute: AdminProductsNewRoute,
   AdminWebsiteContentAboutRoute: AdminWebsiteContentAboutRoute,
   AdminWebsiteContentContactRoute: AdminWebsiteContentContactRoute,
   AdminWebsiteContentFooterRoute: AdminWebsiteContentFooterRoute,
@@ -753,13 +856,17 @@ const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminLeadsIndexRoute: AdminLeadsIndexRoute,
   AdminMediaIndexRoute: AdminMediaIndexRoute,
   AdminPagesIndexRoute: AdminPagesIndexRoute,
+  AdminProductsIndexRoute: AdminProductsIndexRoute,
   AdminSeoIndexRoute: AdminSeoIndexRoute,
   AdminSettingsIndexRoute: AdminSettingsIndexRoute,
+  AdminShopCategoriesIndexRoute: AdminShopCategoriesIndexRoute,
   AdminVisualAssetsIndexRoute: AdminVisualAssetsIndexRoute,
   AdminWebsiteContentIndexRoute: AdminWebsiteContentIndexRoute,
   AdminWhatsappIndexRoute: AdminWhatsappIndexRoute,
   AdminArtworksEditIdRoute: AdminArtworksEditIdRoute,
   AdminCategoriesEditIdRoute: AdminCategoriesEditIdRoute,
+  AdminProductsEditIdRoute: AdminProductsEditIdRoute,
+  AdminShopCategoriesEditIdRoute: AdminShopCategoriesEditIdRoute,
   AdminVisualAssetsEditIdRoute: AdminVisualAssetsEditIdRoute,
 }
 

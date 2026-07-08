@@ -2,7 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { getProducts, type ProductWithCategory } from "@/lib/products";
-import { getCategoryBySlug } from "@/lib/categories";
+import { getShopCategoryBySlug } from "@/lib/shop-categories";
 import { ArtspireBreadcrumb } from "@/components/ArtspireBreadcrumb";
 import { ArtspirePagination } from "@/components/ArtspirePagination";
 
@@ -10,7 +10,7 @@ const PAGE_SIZE = 12;
 
 export const Route = createFileRoute("/shop/$category")({
   loader: async ({ params }) => {
-    const category = await getCategoryBySlug(params.category);
+    const category = await getShopCategoryBySlug(params.category);
     if (!category) throw notFound();
 
     const products = await getProducts({

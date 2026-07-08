@@ -7,6 +7,8 @@ import {
   LogOut,
   Globe,
   Search,
+  ShoppingBag,
+  Tag,
 } from "lucide-react";
 import { signOut } from "@/lib/admin";
 
@@ -14,6 +16,8 @@ const navItems = [
   { label: "Dashboard", to: "/admin", icon: LayoutDashboard, exact: true },
   { label: "Artworks", to: "/admin/artworks", icon: Palette },
   { label: "Categories", to: "/admin/categories", icon: FolderOpen },
+  { label: "Shop Products", to: "/admin/products", icon: ShoppingBag },
+  { label: "Shop Categories", to: "/admin/shop-categories", icon: Tag },
   { label: "Pages", to: "/admin/website-content", icon: FileText },
   { label: "SEO", to: "/admin/seo", icon: Search },
   { label: "View Site", to: "/", icon: Globe, external: true },
