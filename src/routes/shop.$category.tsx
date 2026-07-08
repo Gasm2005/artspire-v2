@@ -82,7 +82,7 @@ function ShopCategoryPage() {
                 >
                   <div className="relative aspect-square overflow-hidden">
                     <img
-                      src={product.image_url ?? "/placeholder-artwork.jpg"}
+                      src={product.image_url ?? "/placeholder-artwork.svg"}
                       alt={product.title}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       loading="lazy"

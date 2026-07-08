@@ -196,7 +196,7 @@ function ProductPage() {
             {/* LEFT: Gallery */}
             <div className="w-full lg:w-1/2 lg:sticky lg:top-8">
               <ProductGallery
-                mainImage={product.image_url ?? "/placeholder-artwork.jpg"}
+                mainImage={product.image_url ?? "/placeholder-artwork.svg"}
                 gallery={galleryUrls}
                 title={product.title}
               />
@@ -321,7 +321,7 @@ function ProductPage() {
                 >
                   <div className="relative aspect-square overflow-hidden">
                     <img
-                      src={item.image_url ?? "/placeholder-artwork.jpg"}
+                      src={item.image_url ?? "/placeholder-artwork.svg"}
                       alt={item.title}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       loading="lazy"

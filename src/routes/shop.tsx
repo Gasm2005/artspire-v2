@@ -123,7 +123,7 @@ function ShopPage() {
                 className="lg:col-span-2 group relative rounded-sm overflow-hidden aspect-[16/10] block"
               >
                 <img
-                  src={featured.hero_image_url ?? "/placeholder-artwork.jpg"}
+                  src={featured.hero_image_url ?? "/placeholder-artwork.svg"}
                   alt={featured.title}
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   loading="eager"
@@ -146,7 +146,7 @@ function ShopPage() {
                     className="group relative rounded-sm overflow-hidden flex-1 min-h-[140px] block"
                   >
                     <img
-                      src={c.hero_image_url ?? "/placeholder-artwork.jpg"}
+                      src={c.hero_image_url ?? "/placeholder-artwork.svg"}
                       alt={c.title}
                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                       loading="lazy"
@@ -181,7 +181,7 @@ function ShopPage() {
                 className="group relative rounded-sm overflow-hidden aspect-[4/3]"
               >
                 <img
-                  src={cat.image_url ?? "/placeholder-artwork.jpg"}
+                  src={cat.image_url ?? "/placeholder-artwork.svg"}
                   alt={cat.name}
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   loading="lazy"
@@ -274,7 +274,7 @@ function ProductCard({ product }: { product: ProductWithCategory }) {
     >
       <div className="relative aspect-square overflow-hidden">
         <img
-          src={product.image_url ?? "/placeholder-artwork.jpg"}
+          src={product.image_url ?? "/placeholder-artwork.svg"}
           alt={product.title}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           loading="lazy"

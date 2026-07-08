@@ -147,7 +147,7 @@ function PortfolioPage() {
               >
                 {/* Artwork image — lazy outside viewport */}
                 <img
-                  src={artwork.image_url ?? "/placeholder-artwork.jpg"}
+                  src={artwork.image_url ?? "/placeholder-artwork.svg"}
                   alt={artwork.title}
                   className="absolute inset-0 w-full h-full object-cover"
                   loading="lazy"
