@@ -82,7 +82,7 @@ export async function getProducts(opts?: {
 }) {
   let query = supabase
     .from("products")
-    .select("*, categories(*)")
+    .select("*, categories:shop_categories(*)")
     .is("deleted_at", null);
 
   if (opts?.status) query = query.eq("status", opts.status);
@@ -105,7 +105,7 @@ export async function getProducts(opts?: {
 export async function getProductBySlug(slug: string) {
   const { data, error } = await supabase
     .from("products")
-    .select("*, categories(*)")
+    .select("*, categories:shop_categories(*)")
     .eq("slug", slug)
     .is("deleted_at", null)
     .single();
@@ -117,7 +117,7 @@ export async function getProductBySlug(slug: string) {
 export async function getProductById(id: string) {
   const { data, error } = await supabase
     .from("products")
-    .select("*, categories(*)")
+    .select("*, categories:shop_categories(*)")
     .eq("id", id)
     .is("deleted_at", null)
     .single();
@@ -129,7 +129,7 @@ export async function getProductById(id: string) {
 export async function getPublishedProductBySlug(slug: string) {
   const { data, error } = await supabase
     .from("products")
-    .select("*, categories(*)")
+    .select("*, categories:shop_categories(*)")
     .eq("slug", slug)
     .eq("status", "published")
     .is("deleted_at", null)
@@ -150,7 +150,7 @@ export async function getHomepageProducts(limit = 6) {
 export async function getRelatedProducts(productId: string, categoryId: string | null, limit = 4) {
   let query = supabase
     .from("products")
-    .select("id, slug, title, image_url, price, category_id, categories(name, slug)")
+    .select("id, slug, title, image_url, price, category_id, categories:shop_categories(name, slug)")
     .eq("status", "published")
     .is("deleted_at", null)
     .neq("id", productId)
