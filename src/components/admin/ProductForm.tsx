@@ -159,7 +159,8 @@ export function ProductForm({ product, onSuccess }: ProductFormProps) {
         await updateProduct(product.id, payload);
         savedId = product.id;
       } else {
-        const slug = form.slug.trim() ? form.slug.trim() : await ensureUniqueProductSlug(form.title);
+        const baseSlug = form.slug.trim() || generateProductSlug(form.title);
+        const slug = await ensureUniqueProductSlug(baseSlug);
         const created = await createProduct({ ...payload, slug });
         savedId = created.id;
       }
