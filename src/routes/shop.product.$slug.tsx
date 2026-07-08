@@ -1,6 +1,6 @@
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
 import { useState, useEffect, useRef } from "react";
-import { Layout } from "@/components/Layout";
+import { ShopLayout } from "@/components/shop/ShopLayout";
 import { waLink } from "@/lib/whatsapp";
 import {
   getPublishedProductBySlug,
@@ -89,24 +89,24 @@ export const Route = createFileRoute("/shop/product/$slug")({
 
   component: ProductPage,
   notFoundComponent: () => (
-    <Layout>
+    <ShopLayout>
       <div className="min-h-[60vh] flex items-center justify-center">
         <div className="text-center">
           <h1 className="font-display text-[48px] text-forest">404</h1>
           <p className="font-body text-stone mt-2">This piece is no longer available</p>
         </div>
       </div>
-    </Layout>
+    </ShopLayout>
   ),
 });
 
 function ProductPendingSkeleton() {
   return (
-    <Layout>
+    <ShopLayout>
       <div className="artwork-page-enter bg-cream min-h-screen">
         <ArtworkDetailSkeleton />
       </div>
-    </Layout>
+    </ShopLayout>
   );
 }
 
@@ -179,7 +179,7 @@ function ProductPage() {
   const soldOut = product.status === "sold_out";
 
   return (
-    <Layout>
+    <ShopLayout>
       <section className="artwork-page-enter bg-cream min-h-screen">
         <div className="container-main py-8 md:py-14">
           <ArtspireBreadcrumb
@@ -337,6 +337,6 @@ function ProductPage() {
           </div>
         </section>
       )}
-    </Layout>
+    </ShopLayout>
   );
 }

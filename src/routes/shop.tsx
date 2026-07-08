@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Layout } from "@/components/Layout";
+import { ShopLayout } from "@/components/shop/ShopLayout";
 import { getProducts, type ProductWithCategory } from "@/lib/products";
 import { getShopCategories, type ShopCategory } from "@/lib/shop-categories";
 import { getCollections, type Collection } from "@/lib/collections";
@@ -60,22 +60,51 @@ function ShopPage() {
   const secondaryCollections = collections.filter((c) => c.id !== featured?.id).slice(0, 2);
 
   return (
-    <Layout>
-      {/* ═══ EDITORIAL HERO ═══ */}
-      <section className="min-h-[60vh] flex flex-col justify-center px-6 py-16 lg:px-8 bg-cream hero-texture text-center">
-        <div className="container-main max-w-2xl mx-auto">
-          <ArtspireBreadcrumb
-            crumbs={[{ label: "Home", href: "/" }, { label: "Shop" }]}
-            className="justify-center mb-6"
-          />
-          <p className="font-body text-[11px] font-semibold text-gold uppercase tracking-[0.3em] mb-5">
-            The Collection
+    <ShopLayout>
+      {/* ═══ FULL-BLEED EDITORIAL HERO ═══ */}
+      <section className="relative min-h-[70vh] md:min-h-[85vh] flex flex-col justify-end px-6 pb-16 md:pb-20 lg:px-12">
+        <div className="absolute inset-0 bg-gradient-to-br from-forest/20 to-gold/10">
+          {collections[0]?.hero_image_url && (
+            <img
+              src={collections[0].hero_image_url}
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover"
+              loading="eager"
+              fetchPriority="high"
+            />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-black/20" />
+        </div>
+        <div className="relative z-10 container-main max-w-xl">
+          <div className="mb-4">
+            <ArtspireBreadcrumb
+              crumbs={[{ label: "Home", href: "/" }, { label: "Shop" }]}
+              className="[&_*]:text-white/70 [&_svg]:text-white/50"
+            />
+          </div>
+          <p className="font-body text-[11px] font-semibold text-white/70 uppercase tracking-[0.3em] mb-4">
+            Handcrafted · Limited Editions · Made in India
           </p>
-          <h1 className="font-display text-[32px] md:text-[46px] text-forest font-medium leading-tight mb-5">
-            Pieces Already Made. Ready for a Home.
+          <h1 className="font-display text-[34px] md:text-[52px] text-white font-medium leading-[1.08] mb-5">
+            Objects made to be lived with, and left behind.
           </h1>
-          <p className="font-body text-[15px] md:text-[16px] text-stone leading-relaxed max-w-lg mx-auto">
-            Each piece in this collection was made by hand, one at a time, with no promise it will ever be made again.
+          <p className="font-body text-[15px] md:text-[17px] text-white/80 leading-relaxed max-w-md mb-8">
+            Each piece in this collection was shaped by hand, one at a time — with no promise it will ever be made again.
+          </p>
+          <a
+            href="#shop-grid"
+            className="inline-flex items-center gap-2 h-[48px] px-8 bg-white text-forest font-body font-semibold text-[13px] uppercase tracking-wider rounded-sm hover:bg-cream transition-colors"
+          >
+            Explore the Collection
+          </a>
+        </div>
+      </section>
+
+      {/* ═══ ETHOS STRIP ═══ */}
+      <section className="bg-white py-6 border-b border-border/40">
+        <div className="container-main text-center">
+          <p className="font-body text-[12px] md:text-[13px] text-stone/70 leading-relaxed max-w-2xl mx-auto">
+            Every piece begins as raw material and passes through unhurried hands. Nothing is rushed, and no two objects leave the studio exactly alike.
           </p>
         </div>
       </section>
@@ -231,7 +260,7 @@ function ShopPage() {
           )}
         </div>
       </section>
-    </Layout>
+    </ShopLayout>
   );
 }
 

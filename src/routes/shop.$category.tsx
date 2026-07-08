@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
-import { Layout } from "@/components/Layout";
+import { ShopLayout } from "@/components/shop/ShopLayout";
 import { getProducts, type ProductWithCategory } from "@/lib/products";
 import { getShopCategoryBySlug } from "@/lib/shop-categories";
 import { ArtspireBreadcrumb } from "@/components/ArtspireBreadcrumb";
@@ -34,14 +34,14 @@ export const Route = createFileRoute("/shop/$category")({
   },
   component: ShopCategoryPage,
   notFoundComponent: () => (
-    <Layout>
+    <ShopLayout>
       <div className="min-h-[60vh] flex items-center justify-center">
         <div className="text-center">
           <h1 className="font-display text-[48px] text-forest">404</h1>
           <p className="font-body text-stone mt-2">Category not found</p>
         </div>
       </div>
-    </Layout>
+    </ShopLayout>
   ),
 });
 
@@ -53,7 +53,7 @@ function ShopCategoryPage() {
   const visible = products.slice(startIdx, startIdx + PAGE_SIZE);
 
   return (
-    <Layout>
+    <ShopLayout>
       <section className="section-padding bg-cream text-center">
         <div className="container-main">
           <div className="flex justify-center mb-4">
@@ -126,6 +126,6 @@ function ShopCategoryPage() {
           )}
         </div>
       </section>
-    </Layout>
+    </ShopLayout>
   );
 }

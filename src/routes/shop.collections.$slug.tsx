@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { Layout } from "@/components/Layout";
+import { ShopLayout } from "@/components/shop/ShopLayout";
 import { getCollectionBySlug, getProductsInCollection } from "@/lib/collections";
 import { ArtspireBreadcrumb } from "@/components/ArtspireBreadcrumb";
 import type { ProductWithCategory } from "@/lib/products";
@@ -24,14 +24,14 @@ export const Route = createFileRoute("/shop/collections/$slug")({
   },
   component: CollectionPage,
   notFoundComponent: () => (
-    <Layout>
+    <ShopLayout>
       <div className="min-h-[60vh] flex items-center justify-center">
         <div className="text-center">
           <h1 className="font-display text-[48px] text-forest">404</h1>
           <p className="font-body text-stone mt-2">Collection not found</p>
         </div>
       </div>
-    </Layout>
+    </ShopLayout>
   ),
 });
 
@@ -39,7 +39,7 @@ function CollectionPage() {
   const { collection, products } = Route.useLoaderData();
 
   return (
-    <Layout>
+    <ShopLayout>
       {/* Hero */}
       <section className="relative min-h-[50vh] flex flex-col justify-center items-center text-center px-6 py-16">
         {collection.hero_image_url && (
@@ -107,6 +107,6 @@ function CollectionPage() {
           )}
         </div>
       </section>
-    </Layout>
+    </ShopLayout>
   );
 }
