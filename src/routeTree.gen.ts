@@ -15,12 +15,14 @@ import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PortfolioRouteImport } from './routes/portfolio'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as ShopCategoryRouteImport } from './routes/shop.$category'
+import { Route as OrderConfirmationOrderIdRouteImport } from './routes/order-confirmation.$orderId'
 import { Route as ArtworkSlugRouteImport } from './routes/artwork.$slug'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminWhatsappIndexRouteImport } from './routes/admin/whatsapp/index'
@@ -81,6 +83,11 @@ const ContactRoute = ContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CartRoute = CartRouteImport.update({
   id: '/cart',
   path: '/cart',
@@ -111,6 +118,12 @@ const ShopCategoryRoute = ShopCategoryRouteImport.update({
   path: '/$category',
   getParentRoute: () => ShopRoute,
 } as any)
+const OrderConfirmationOrderIdRoute =
+  OrderConfirmationOrderIdRouteImport.update({
+    id: '/order-confirmation/$orderId',
+    path: '/order-confirmation/$orderId',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ArtworkSlugRoute = ArtworkSlugRouteImport.update({
   id: '/artwork/$slug',
   path: '/artwork/$slug',
@@ -269,6 +282,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/cart': typeof CartRoute
+  '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
   '/portfolio': typeof PortfolioRoute
@@ -277,6 +291,7 @@ export interface FileRoutesByFullPath {
   '/shop': typeof ShopRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
   '/artwork/$slug': typeof ArtworkSlugRoute
+  '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
   '/shop/$category': typeof ShopCategoryRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/artworks/new': typeof AdminArtworksNewRoute
@@ -311,6 +326,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/cart': typeof CartRoute
+  '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
   '/portfolio': typeof PortfolioRoute
@@ -319,6 +335,7 @@ export interface FileRoutesByTo {
   '/shop': typeof ShopRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
   '/artwork/$slug': typeof ArtworkSlugRoute
+  '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
   '/shop/$category': typeof ShopCategoryRoute
   '/admin': typeof AdminIndexRoute
   '/admin/artworks/new': typeof AdminArtworksNewRoute
@@ -355,6 +372,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/cart': typeof CartRoute
+  '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
   '/portfolio': typeof PortfolioRoute
@@ -363,6 +381,7 @@ export interface FileRoutesById {
   '/shop': typeof ShopRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
   '/artwork/$slug': typeof ArtworkSlugRoute
+  '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
   '/shop/$category': typeof ShopCategoryRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/artworks/new': typeof AdminArtworksNewRoute
@@ -400,6 +419,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/about'
     | '/cart'
+    | '/checkout'
     | '/contact'
     | '/faq'
     | '/portfolio'
@@ -408,6 +428,7 @@ export interface FileRouteTypes {
     | '/shop'
     | '/admin/login'
     | '/artwork/$slug'
+    | '/order-confirmation/$orderId'
     | '/shop/$category'
     | '/admin/'
     | '/admin/artworks/new'
@@ -442,6 +463,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/cart'
+    | '/checkout'
     | '/contact'
     | '/faq'
     | '/portfolio'
@@ -450,6 +472,7 @@ export interface FileRouteTypes {
     | '/shop'
     | '/admin/login'
     | '/artwork/$slug'
+    | '/order-confirmation/$orderId'
     | '/shop/$category'
     | '/admin'
     | '/admin/artworks/new'
@@ -485,6 +508,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/about'
     | '/cart'
+    | '/checkout'
     | '/contact'
     | '/faq'
     | '/portfolio'
@@ -493,6 +517,7 @@ export interface FileRouteTypes {
     | '/shop'
     | '/admin/login'
     | '/artwork/$slug'
+    | '/order-confirmation/$orderId'
     | '/shop/$category'
     | '/admin/'
     | '/admin/artworks/new'
@@ -529,6 +554,7 @@ export interface RootRouteChildren {
   AdminRouteRoute: typeof AdminRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
   CartRoute: typeof CartRoute
+  CheckoutRoute: typeof CheckoutRoute
   ContactRoute: typeof ContactRoute
   FaqRoute: typeof FaqRoute
   PortfolioRoute: typeof PortfolioRoute
@@ -536,6 +562,7 @@ export interface RootRouteChildren {
   ServicesRoute: typeof ServicesRoute
   ShopRoute: typeof ShopRouteWithChildren
   ArtworkSlugRoute: typeof ArtworkSlugRoute
+  OrderConfirmationOrderIdRoute: typeof OrderConfirmationOrderIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -582,6 +609,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/cart': {
       id: '/cart'
       path: '/cart'
@@ -623,6 +657,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/shop/$category'
       preLoaderRoute: typeof ShopCategoryRouteImport
       parentRoute: typeof ShopRoute
+    }
+    '/order-confirmation/$orderId': {
+      id: '/order-confirmation/$orderId'
+      path: '/order-confirmation/$orderId'
+      fullPath: '/order-confirmation/$orderId'
+      preLoaderRoute: typeof OrderConfirmationOrderIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/artwork/$slug': {
       id: '/artwork/$slug'
@@ -913,6 +954,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRouteRoute: AdminRouteRouteWithChildren,
   AboutRoute: AboutRoute,
   CartRoute: CartRoute,
+  CheckoutRoute: CheckoutRoute,
   ContactRoute: ContactRoute,
   FaqRoute: FaqRoute,
   PortfolioRoute: PortfolioRoute,
@@ -920,6 +962,7 @@ const rootRouteChildren: RootRouteChildren = {
   ServicesRoute: ServicesRoute,
   ShopRoute: ShopRouteWithChildren,
   ArtworkSlugRoute: ArtworkSlugRoute,
+  OrderConfirmationOrderIdRoute: OrderConfirmationOrderIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
