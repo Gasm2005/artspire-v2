@@ -1,6 +1,8 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { Menu, X, ShoppingBag, Search } from "lucide-react";
+import { CartDrawer } from "./CartDrawer";
+import { getCartCount, getOrCreateSessionId } from "@/lib/cart";
 
 const shopNavLinks = [
   { to: "/shop", label: "All Pieces" },
@@ -16,8 +18,10 @@ const shopNavLinks = [
  * letter-spaced minimal nav, cart icon with count badge.
  * Original Artspire execution: forest/gold palette, EB Garamond wordmark.
  */
-export function ShopHeader({ cartCount = 0 }: { cartCount?: number }) {
+export function ShopHeader({ cartCount: cartCountProp }: { cartCount?: number }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
+  const [cartCount, setCartCount] = useState(cartCountProp ?? 0);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
 
@@ -25,6 +29,17 @@ export function ShopHeader({ cartCount = 0 }: { cartCount?: number }) {
     const onScroll = () => setScrolled(window.scrollY > 8);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const refreshCartCount = () => {
+    const sessionId = getOrCreateSessionId();
+    getCartCount(sessionId).then(setCartCount).catch(() => {});
+  };
+
+  useEffect(() => {
+    refreshCartCount();
+    window.addEventListener("artspire:cart-updated", refreshCartCount);
+    return () => window.removeEventListener("artspire:cart-updated", refreshCartCount);
   }, []);
 
   useEffect(() => {
@@ -75,14 +90,14 @@ export function ShopHeader({ cartCount = 0 }: { cartCount?: number }) {
             <button aria-label="Search the shop" className="hidden md:block text-stone/60 hover:text-forest transition-colors">
               <Search size={18} />
             </button>
-            <Link to="/shop" className="relative text-stone/60 hover:text-forest transition-colors" aria-label="View cart">
+            <button onClick={() => setCartOpen(true)} className="relative text-stone/60 hover:text-forest transition-colors" aria-label="Open cart">
               <ShoppingBag size={19} />
               {cartCount > 0 && (
                 <span className="absolute -top-1.5 -right-1.5 w-4 h-4 flex items-center justify-center bg-gold text-white text-[9px] font-bold rounded-full">
                   {cartCount}
                 </span>
               )}
-            </Link>
+            </button>
           </div>
         </div>
       </header>
@@ -110,6 +125,8 @@ export function ShopHeader({ cartCount = 0 }: { cartCount?: number }) {
           </div>
         </div>
       )}
+
+      <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
     </>
   );
 }

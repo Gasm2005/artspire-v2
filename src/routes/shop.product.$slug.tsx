@@ -10,9 +10,11 @@ import {
 } from "@/lib/products";
 import { getMediumCraftContent, type MediumCraftContent } from "@/lib/collections";
 import { buildBreadcrumbStructuredData } from "@/lib/seo";
-import { MessageCircle, Package, Ruler, Sparkles } from "lucide-react";
+import { MessageCircle, Package, Ruler, Sparkles, ShoppingBag, Minus, Plus, Loader2 } from "lucide-react";
 import { ArtspireBreadcrumb } from "@/components/ArtspireBreadcrumb";
 import { ArtworkDetailSkeleton } from "@/components/ui/skeleton";
+import { addToCart, getOrCreateSessionId } from "@/lib/cart";
+import { toast } from "@/lib/toast";
 
 interface LoaderData {
   product: ProductWithCategory;
@@ -168,6 +170,9 @@ function ProductGallery({ mainImage, gallery, title }: { mainImage: string; gall
 function ProductPage() {
   const { product, gallery, related, craftContent } = Route.useLoaderData() as LoaderData;
 
+  const [quantity, setQuantity] = useState(1);
+  const [addingToCart, setAddingToCart] = useState(false);
+
   const galleryUrls = gallery.map((g) => g.media?.public_url).filter(Boolean) as string[];
   const waMessage = waLink(
     `Hi Artspire! I'm interested in "${product.title}" from the shop (₹${product.price.toLocaleString("en-IN")}). Is it still available?`
@@ -175,6 +180,21 @@ function ProductPage() {
   const commissionMessage = waLink(
     `Hi Artspire! I saw "${product.title}" in your shop and would love something similar made for me. Can you help?`
   );
+
+  async function handleAddToCart() {
+    setAddingToCart(true);
+    try {
+      const sessionId = getOrCreateSessionId();
+      await addToCart(sessionId, product, quantity);
+      toast.success("Added to cart!", `${product.title} × ${quantity}`);
+      window.dispatchEvent(new CustomEvent("artspire:cart-updated"));
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to add to cart.", "Please try again.");
+    } finally {
+      setAddingToCart(false);
+    }
+  }
 
   const soldOut = product.status === "sold_out";
 
@@ -267,29 +287,58 @@ function ProductPage() {
                 </div>
               )}
 
-              {/* CTAs */}
+              {/* Quantity + Add to Cart */}
               <div className="artwork-content-enter space-y-3" style={{ animationDelay: "140ms" }}>
                 {soldOut ? (
                   <div className="w-full h-[54px] flex items-center justify-center bg-stone/10 text-stone/50 font-body font-bold text-[13px] uppercase tracking-wider rounded-xl">
                     Sold Out
                   </div>
                 ) : (
-                  <a
-                    href={waMessage}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex items-center justify-center gap-2 w-full h-[54px] bg-forest text-white font-body font-bold text-[14px] rounded-xl hover:bg-forest/90 transition-colors shadow-md"
-                  >
-                    <MessageCircle size={18} />
-                    Enquire on WhatsApp
-                  </a>
+                  <>
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center border border-border rounded-xl overflow-hidden">
+                        <button
+                          onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                          aria-label="Decrease quantity"
+                          className="w-10 h-[48px] flex items-center justify-center text-forest hover:bg-cream transition-colors"
+                        >
+                          <Minus size={14} />
+                        </button>
+                        <span className="w-10 text-center font-body text-[14px] font-semibold text-forest">{quantity}</span>
+                        <button
+                          onClick={() => setQuantity((q) => Math.min(product.inventory_count || 99, q + 1))}
+                          aria-label="Increase quantity"
+                          className="w-10 h-[48px] flex items-center justify-center text-forest hover:bg-cream transition-colors"
+                        >
+                          <Plus size={14} />
+                        </button>
+                      </div>
+                      <button
+                        onClick={handleAddToCart}
+                        disabled={addingToCart}
+                        className="flex-1 flex items-center justify-center gap-2 h-[48px] bg-forest text-white font-body font-bold text-[14px] rounded-xl hover:bg-forest/90 transition-colors shadow-md disabled:opacity-60"
+                      >
+                        {addingToCart ? <Loader2 size={18} className="animate-spin" /> : <ShoppingBag size={18} />}
+                        {addingToCart ? "Adding…" : "Add to Cart"}
+                      </button>
+                    </div>
+                    <a
+                      href={waMessage}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center justify-center gap-2 w-full h-[46px] bg-white border border-forest/30 text-forest font-body font-semibold text-[13px] rounded-xl hover:bg-forest/5 transition-colors"
+                    >
+                      <MessageCircle size={16} />
+                      Enquire on WhatsApp
+                    </a>
+                  </>
                 )}
                 {product.commission_similar_enabled && (
                   <a
                     href={commissionMessage}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center justify-center gap-2 w-full h-[48px] bg-white border-2 border-forest text-forest font-body font-bold text-[13px] rounded-xl hover:bg-forest/5 transition-colors"
+                    className="flex items-center justify-center gap-2 w-full h-[44px] text-forest/70 font-body font-semibold text-[12px] hover:text-forest transition-colors"
                   >
                     Want something like this, made for you?
                   </a>
