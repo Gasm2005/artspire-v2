@@ -211,10 +211,11 @@ export async function ensureUniqueProductSlug(title: string, currentId?: string)
   while (!isUnique) {
     const { data, error } = await supabase
       .from("products")
-      .select("id")
+      .select("id, status")
       .eq("slug", slug)
       .is("deleted_at", null)
-      .single();
+      .neq("status", "archived")
+      .maybeSingle();
 
     if (error || !data || data.id === currentId) {
       isUnique = true;
