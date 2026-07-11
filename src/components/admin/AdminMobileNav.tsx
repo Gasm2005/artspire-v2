@@ -1,10 +1,12 @@
-import { LayoutDashboard, Palette, FolderOpen, FileText, Search } from "lucide-react";
+import { LayoutDashboard, Palette, FolderOpen, ShoppingBag, Tag, FileText, Search } from "lucide-react";
 import { useRouter } from "@tanstack/react-router";
 
 const mobileTabs = [
   { label: "Home", to: "/admin", icon: LayoutDashboard, exact: true },
   { label: "Artworks", to: "/admin/artworks", icon: Palette },
+  { label: "Products", to: "/admin/products", icon: ShoppingBag },
   { label: "Categories", to: "/admin/categories", icon: FolderOpen },
+  { label: "Shop Cats", to: "/admin/shop-categories", icon: Tag },
   { label: "Pages", to: "/admin/website-content", icon: FileText },
   { label: "SEO", to: "/admin/seo", icon: Search },
 ];
@@ -20,19 +22,19 @@ export function AdminMobileNav() {
 
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-border">
-      <div className="flex items-center justify-around h-[56px] max-w-[390px] mx-auto">
+      <div className="flex items-center h-[60px] w-full overflow-x-auto no-scrollbar">
         {mobileTabs.map((tab) => {
           const active = isActive(tab.to, tab.exact);
           return (
             <a
               key={tab.to}
               href={tab.to}
-              className={`flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-colors ${
+              className={`flex flex-col items-center justify-center gap-0.5 shrink-0 min-w-[64px] h-full transition-colors px-2 ${
                 active ? "text-forest" : "text-stone/50"
               }`}
             >
-              <tab.icon size={19} />
-              <span className="font-body text-[10px] font-medium">{tab.label}</span>
+              <tab.icon size={18} />
+              <span className="font-body text-[9px] font-medium whitespace-nowrap">{tab.label}</span>
             </a>
           );
         })}

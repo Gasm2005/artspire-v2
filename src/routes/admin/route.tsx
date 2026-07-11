@@ -44,7 +44,7 @@ function AdminLayout() {
       {/* Main content area */}
       <div className="flex-1 flex flex-col min-h-screen">
         <AdminHeader />
-        <main className="flex-1 p-4 md:p-6 max-w-[390px] mx-auto md:max-w-none w-full pb-24 md:pb-6">
+        <main className="flex-1 p-4 md:p-6 w-full pb-24 md:pb-6 overflow-x-hidden">
           <Outlet />
         </main>
         {/* Mobile bottom nav */}

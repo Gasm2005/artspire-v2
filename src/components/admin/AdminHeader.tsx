@@ -1,5 +1,5 @@
 import { useRouter } from "@tanstack/react-router";
-import { Search, Menu } from "lucide-react";
+import { Search } from "lucide-react";
 
 export function AdminHeader() {
   const router = useRouter();
@@ -9,6 +9,8 @@ export function AdminHeader() {
     if (path === "/admin") return "Dashboard";
     if (path.startsWith("/admin/artworks")) return "Artworks";
     if (path.startsWith("/admin/categories")) return "Categories";
+    if (path.startsWith("/admin/products")) return "Shop Products";
+    if (path.startsWith("/admin/shop-categories")) return "Shop Categories";
     if (path.startsWith("/admin/faqs")) return "FAQs";
     if (path.startsWith("/admin/media")) return "Media Library";
     if (path.startsWith("/admin/visual-assets")) return "Visual Assets";
@@ -23,14 +25,8 @@ export function AdminHeader() {
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-border">
       <div className="flex items-center justify-between h-[56px] px-4">
-        {/* Mobile menu toggle + title */}
+        {/* Page title */}
         <div className="flex items-center gap-3">
-          <button
-            className="md:hidden p-2 -ml-2 text-stone hover:text-forest"
-            aria-label="Toggle menu"
-          >
-            <Menu size={20} />
-          </button>
           <h1 className="font-display text-[18px] text-forest font-medium">
             {getPageTitle()}
           </h1>
