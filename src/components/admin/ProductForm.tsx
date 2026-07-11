@@ -15,7 +15,6 @@ import { getShopCategories, type ShopCategory } from "@/lib/shop-categories";
 import { toast } from "@/lib/toast";
 import { Upload, X, Loader2, Save, Rocket, Plus } from "lucide-react";
 
-const MEDIUM_OPTIONS = ["pencil", "clay", "mirror", "painting", "other"];
 
 interface ProductFormProps {
   product?: ProductWithCategory; // present when editing
@@ -280,13 +279,14 @@ export function ProductForm({ product, onSuccess }: ProductFormProps) {
             </select>
           </div>
           <div>
-            <label className={labelClass}>Medium</label>
-            <select value={form.medium} onChange={(e) => updateField("medium", e.target.value)} className={inputClass}>
-              <option value="">Select medium</option>
-              {MEDIUM_OPTIONS.map((m) => (
-                <option key={m} value={m}>{m.charAt(0).toUpperCase() + m.slice(1)}</option>
-              ))}
-            </select>
+            <label className={labelClass}>Material / Medium</label>
+            <input
+              type="text"
+              value={form.medium}
+              onChange={(e) => updateField("medium", e.target.value)}
+              placeholder="e.g. Brass, Ceramic, Teak Wood, Cement"
+              className={inputClass}
+            />
           </div>
         </div>
 

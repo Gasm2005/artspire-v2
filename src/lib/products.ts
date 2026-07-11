@@ -203,7 +203,8 @@ export function generateProductSlug(title: string): string {
 }
 
 export async function ensureUniqueProductSlug(title: string, currentId?: string): Promise<string> {
-  let slug = generateProductSlug(title);
+  const baseSlug = generateProductSlug(title);
+  let slug = baseSlug;
   let counter = 2;
   let isUnique = false;
 
@@ -218,7 +219,7 @@ export async function ensureUniqueProductSlug(title: string, currentId?: string)
     if (error || !data || data.id === currentId) {
       isUnique = true;
     } else {
-      slug = `${generateProductSlug(title)}-${counter}`;
+      slug = `${baseSlug}-${counter}`;
       counter++;
     }
   }
