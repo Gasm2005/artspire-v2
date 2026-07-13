@@ -34,7 +34,10 @@ export const Route = createFileRoute("/shop/product/$slug")({
 
     const [gallery, related, craftContent] = await Promise.all([
       getProductGalleryImages(product.id).catch(() => []),
-      getRelatedProducts(product.id, product.category_id, 4),
+      getRelatedProducts(product.id, product.category_id, 4).catch((err) => {
+        console.error("getRelatedProducts failed:", err);
+        return [];
+      }),
       product.medium ? getMediumCraftContent(product.medium) : Promise.resolve(null),
     ]);
 
