@@ -108,7 +108,7 @@ export async function getProductBySlug(slug: string) {
     .select("*, categories:shop_categories(*)")
     .eq("slug", slug)
     .is("deleted_at", null)
-    .single();
+    .maybeSingle();
 
   if (error) throw error;
   return data as ProductWithCategory | null;
@@ -120,7 +120,7 @@ export async function getProductById(id: string) {
     .select("*, categories:shop_categories(*)")
     .eq("id", id)
     .is("deleted_at", null)
-    .single();
+    .maybeSingle();
 
   if (error) throw error;
   return data as ProductWithCategory | null;
@@ -133,9 +133,12 @@ export async function getPublishedProductBySlug(slug: string) {
     .eq("slug", slug)
     .eq("status", "published")
     .is("deleted_at", null)
-    .single();
+    .maybeSingle();
 
-  if (error) return null;
+  if (error) {
+    console.error("getPublishedProductBySlug error:", error);
+    return null;
+  }
   return data as ProductWithCategory | null;
 }
 
