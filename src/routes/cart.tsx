@@ -74,6 +74,10 @@ function CartPage() {
     }
   }
 
+  function handleProceedToCheckout() {
+    sessionStorage.setItem("artspire_gift_message", giftMessage);
+  }
+
   const subtotal = items.reduce((sum, item) => sum + item.price_at_add * item.quantity, 0);
 
   return (
@@ -183,6 +187,7 @@ function CartPage() {
                   <p className="font-body text-[11px] text-stone/50">Shipping calculated at checkout.</p>
                   <Link
                     to="/checkout"
+                    onClick={handleProceedToCheckout}
                     className="flex items-center justify-center gap-2 w-full h-[50px] bg-forest text-white font-body font-bold text-[13px] uppercase tracking-wider rounded-xl hover:bg-forest/90 transition-colors"
                   >
                     Proceed to Checkout <ArrowRight size={14} />

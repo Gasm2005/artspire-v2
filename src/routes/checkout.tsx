@@ -79,9 +79,52 @@ function CheckoutPage() {
 
   useEffect(() => { load(); }, [load]);
 
+  useEffect(() => {
+    const saved = sessionStorage.getItem("artspire_gift_message");
+    if (saved) setForm((prev) => ({ ...prev, giftMessage: saved }));
+  }, []);
+
   function updateField<K extends keyof typeof form>(key: K, value: string) {
     setForm((prev) => ({ ...prev, [key]: value }));
   }
+
+  const [pincodeLookupState, setPincodeLookupState] = useState<"idle" | "loading" | "done" | "error">("idle");
+
+  useEffect(() => {
+    const pincode = form.postal_code.trim();
+    if (!/^\d{6}$/.test(pincode)) {
+      setPincodeLookupState("idle");
+      return;
+    }
+
+    let cancelled = false;
+    setPincodeLookupState("loading");
+
+    const timer = setTimeout(async () => {
+      try {
+        const res = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
+        const data = await res.json();
+        const office = data?.[0]?.PostOffice?.[0];
+        if (!cancelled && office) {
+          setForm((prev) => ({
+            ...prev,
+            city: prev.city.trim() ? prev.city : office.District,
+            state: office.State,
+          }));
+          setPincodeLookupState("done");
+        } else if (!cancelled) {
+          setPincodeLookupState("error");
+        }
+      } catch {
+        if (!cancelled) setPincodeLookupState("error");
+      }
+    }, 500);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [form.postal_code]);
 
   const subtotal = items.reduce((sum, item) => sum + item.price_at_add * item.quantity, 0);
   const total = subtotal + SHIPPING_COST;
@@ -174,6 +217,7 @@ function CheckoutPage() {
             const confirmedOrder = await confirmOrderPayment(order.id, response.razorpay_payment_id, response.razorpay_signature);
             await clearCart(getOrCreateSessionId());
             window.dispatchEvent(new CustomEvent("artspire:cart-updated"));
+            sessionStorage.removeItem("artspire_gift_message");
 
             // Fire-and-forget — email failure should never block the
             // user from reaching their confirmation page.
@@ -271,6 +315,24 @@ function CheckoutPage() {
                   <label className={labelClass}>Address Line 2</label>
                   <input type="text" value={form.line2} onChange={(e) => updateField("line2", e.target.value)} className={inputClass} />
                 </div>
+                <div>
+                  <label className={labelClass}>Postal Code *</label>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={6}
+                    value={form.postal_code}
+                    onChange={(e) => updateField("postal_code", e.target.value.replace(/\D/g, ""))}
+                    className={inputClass}
+                    placeholder="e.g. 208001"
+                  />
+                  {pincodeLookupState === "loading" && (
+                    <p className="font-body text-[11px] text-stone/50 mt-1">Looking up city/state…</p>
+                  )}
+                  {pincodeLookupState === "error" && (
+                    <p className="font-body text-[11px] text-stone/50 mt-1">Couldn't auto-fill — please enter manually.</p>
+                  )}
+                </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className={labelClass}>City *</label>
@@ -282,10 +344,6 @@ function CheckoutPage() {
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className={labelClass}>Postal Code *</label>
-                    <input type="text" value={form.postal_code} onChange={(e) => updateField("postal_code", e.target.value)} className={inputClass} />
-                  </div>
                   <div>
                     <label className={labelClass}>Country</label>
                     <input type="text" value={form.country} onChange={(e) => updateField("country", e.target.value)} className={inputClass} />
