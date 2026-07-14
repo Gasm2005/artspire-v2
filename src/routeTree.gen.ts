@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as ShopRouteImport } from './routes/shop'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PortfolioRouteImport } from './routes/portfolio'
@@ -20,6 +19,7 @@ import { Route as CartRouteImport } from './routes/cart'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ShopIndexRouteImport } from './routes/shop.index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as ShopCategoryRouteImport } from './routes/shop.$category'
 import { Route as OrderConfirmationOrderIdRouteImport } from './routes/order-confirmation.$orderId'
@@ -53,11 +53,6 @@ import { Route as AdminProductsEditIdRouteImport } from './routes/admin/products
 import { Route as AdminCategoriesEditIdRouteImport } from './routes/admin/categories/edit.$id'
 import { Route as AdminArtworksEditIdRouteImport } from './routes/admin/artworks/edit.$id'
 
-const ShopRoute = ShopRouteImport.update({
-  id: '/shop',
-  path: '/shop',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
   path: '/services',
@@ -108,15 +103,20 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ShopIndexRoute = ShopIndexRouteImport.update({
+  id: '/shop/',
+  path: '/shop/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminRouteRoute,
 } as any)
 const ShopCategoryRoute = ShopCategoryRouteImport.update({
-  id: '/$category',
-  path: '/$category',
-  getParentRoute: () => ShopRoute,
+  id: '/shop/$category',
+  path: '/shop/$category',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const OrderConfirmationOrderIdRoute =
   OrderConfirmationOrderIdRouteImport.update({
@@ -202,14 +202,14 @@ const AdminArtworksIndexRoute = AdminArtworksIndexRouteImport.update({
   getParentRoute: () => AdminRouteRoute,
 } as any)
 const ShopProductSlugRoute = ShopProductSlugRouteImport.update({
-  id: '/product/$slug',
-  path: '/product/$slug',
-  getParentRoute: () => ShopRoute,
+  id: '/shop/product/$slug',
+  path: '/shop/product/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ShopCollectionsSlugRoute = ShopCollectionsSlugRouteImport.update({
-  id: '/collections/$slug',
-  path: '/collections/$slug',
-  getParentRoute: () => ShopRoute,
+  id: '/shop/collections/$slug',
+  path: '/shop/collections/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminWebsiteContentHomepageRoute =
   AdminWebsiteContentHomepageRouteImport.update({
@@ -288,12 +288,12 @@ export interface FileRoutesByFullPath {
   '/portfolio': typeof PortfolioRoute
   '/pricing': typeof PricingRoute
   '/services': typeof ServicesRoute
-  '/shop': typeof ShopRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
   '/artwork/$slug': typeof ArtworkSlugRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
   '/shop/$category': typeof ShopCategoryRoute
   '/admin/': typeof AdminIndexRoute
+  '/shop/': typeof ShopIndexRoute
   '/admin/artworks/new': typeof AdminArtworksNewRoute
   '/admin/media/$id': typeof AdminMediaIdRoute
   '/admin/products/new': typeof AdminProductsNewRoute
@@ -332,12 +332,12 @@ export interface FileRoutesByTo {
   '/portfolio': typeof PortfolioRoute
   '/pricing': typeof PricingRoute
   '/services': typeof ServicesRoute
-  '/shop': typeof ShopRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
   '/artwork/$slug': typeof ArtworkSlugRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
   '/shop/$category': typeof ShopCategoryRoute
   '/admin': typeof AdminIndexRoute
+  '/shop': typeof ShopIndexRoute
   '/admin/artworks/new': typeof AdminArtworksNewRoute
   '/admin/media/$id': typeof AdminMediaIdRoute
   '/admin/products/new': typeof AdminProductsNewRoute
@@ -378,12 +378,12 @@ export interface FileRoutesById {
   '/portfolio': typeof PortfolioRoute
   '/pricing': typeof PricingRoute
   '/services': typeof ServicesRoute
-  '/shop': typeof ShopRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
   '/artwork/$slug': typeof ArtworkSlugRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
   '/shop/$category': typeof ShopCategoryRoute
   '/admin/': typeof AdminIndexRoute
+  '/shop/': typeof ShopIndexRoute
   '/admin/artworks/new': typeof AdminArtworksNewRoute
   '/admin/media/$id': typeof AdminMediaIdRoute
   '/admin/products/new': typeof AdminProductsNewRoute
@@ -425,12 +425,12 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/pricing'
     | '/services'
-    | '/shop'
     | '/admin/login'
     | '/artwork/$slug'
     | '/order-confirmation/$orderId'
     | '/shop/$category'
     | '/admin/'
+    | '/shop/'
     | '/admin/artworks/new'
     | '/admin/media/$id'
     | '/admin/products/new'
@@ -469,12 +469,12 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/pricing'
     | '/services'
-    | '/shop'
     | '/admin/login'
     | '/artwork/$slug'
     | '/order-confirmation/$orderId'
     | '/shop/$category'
     | '/admin'
+    | '/shop'
     | '/admin/artworks/new'
     | '/admin/media/$id'
     | '/admin/products/new'
@@ -514,12 +514,12 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/pricing'
     | '/services'
-    | '/shop'
     | '/admin/login'
     | '/artwork/$slug'
     | '/order-confirmation/$orderId'
     | '/shop/$category'
     | '/admin/'
+    | '/shop/'
     | '/admin/artworks/new'
     | '/admin/media/$id'
     | '/admin/products/new'
@@ -560,20 +560,16 @@ export interface RootRouteChildren {
   PortfolioRoute: typeof PortfolioRoute
   PricingRoute: typeof PricingRoute
   ServicesRoute: typeof ServicesRoute
-  ShopRoute: typeof ShopRouteWithChildren
   ArtworkSlugRoute: typeof ArtworkSlugRoute
   OrderConfirmationOrderIdRoute: typeof OrderConfirmationOrderIdRoute
+  ShopCategoryRoute: typeof ShopCategoryRoute
+  ShopIndexRoute: typeof ShopIndexRoute
+  ShopCollectionsSlugRoute: typeof ShopCollectionsSlugRoute
+  ShopProductSlugRoute: typeof ShopProductSlugRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/shop': {
-      id: '/shop'
-      path: '/shop'
-      fullPath: '/shop'
-      preLoaderRoute: typeof ShopRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/services': {
       id: '/services'
       path: '/services'
@@ -644,6 +640,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/shop/': {
+      id: '/shop/'
+      path: '/shop'
+      fullPath: '/shop/'
+      preLoaderRoute: typeof ShopIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/': {
       id: '/admin/'
       path: '/'
@@ -653,10 +656,10 @@ declare module '@tanstack/react-router' {
     }
     '/shop/$category': {
       id: '/shop/$category'
-      path: '/$category'
+      path: '/shop/$category'
       fullPath: '/shop/$category'
       preLoaderRoute: typeof ShopCategoryRouteImport
-      parentRoute: typeof ShopRoute
+      parentRoute: typeof rootRouteImport
     }
     '/order-confirmation/$orderId': {
       id: '/order-confirmation/$orderId'
@@ -772,17 +775,17 @@ declare module '@tanstack/react-router' {
     }
     '/shop/product/$slug': {
       id: '/shop/product/$slug'
-      path: '/product/$slug'
+      path: '/shop/product/$slug'
       fullPath: '/shop/product/$slug'
       preLoaderRoute: typeof ShopProductSlugRouteImport
-      parentRoute: typeof ShopRoute
+      parentRoute: typeof rootRouteImport
     }
     '/shop/collections/$slug': {
       id: '/shop/collections/$slug'
-      path: '/collections/$slug'
+      path: '/shop/collections/$slug'
       fullPath: '/shop/collections/$slug'
       preLoaderRoute: typeof ShopCollectionsSlugRouteImport
-      parentRoute: typeof ShopRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/website-content/homepage': {
       id: '/admin/website-content/homepage'
@@ -935,20 +938,6 @@ const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
   AdminRouteRouteChildren,
 )
 
-interface ShopRouteChildren {
-  ShopCategoryRoute: typeof ShopCategoryRoute
-  ShopCollectionsSlugRoute: typeof ShopCollectionsSlugRoute
-  ShopProductSlugRoute: typeof ShopProductSlugRoute
-}
-
-const ShopRouteChildren: ShopRouteChildren = {
-  ShopCategoryRoute: ShopCategoryRoute,
-  ShopCollectionsSlugRoute: ShopCollectionsSlugRoute,
-  ShopProductSlugRoute: ShopProductSlugRoute,
-}
-
-const ShopRouteWithChildren = ShopRoute._addFileChildren(ShopRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRouteRoute: AdminRouteRouteWithChildren,
@@ -960,9 +949,12 @@ const rootRouteChildren: RootRouteChildren = {
   PortfolioRoute: PortfolioRoute,
   PricingRoute: PricingRoute,
   ServicesRoute: ServicesRoute,
-  ShopRoute: ShopRouteWithChildren,
   ArtworkSlugRoute: ArtworkSlugRoute,
   OrderConfirmationOrderIdRoute: OrderConfirmationOrderIdRoute,
+  ShopCategoryRoute: ShopCategoryRoute,
+  ShopIndexRoute: ShopIndexRoute,
+  ShopCollectionsSlugRoute: ShopCollectionsSlugRoute,
+  ShopProductSlugRoute: ShopProductSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -13,7 +13,7 @@ import { ArrowRight } from "lucide-react";
 
 const PAGE_SIZE = 12;
 
-export const Route = createFileRoute("/shop")({
+export const Route = createFileRoute("/shop/")({
   loader: async () => {
     const [products, categories, collections, seo] = await Promise.all([
       getProducts({ status: "published", orderBy: "display_order", limit: 100 }).catch(() => []),
