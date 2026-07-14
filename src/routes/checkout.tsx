@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 import { ShopLayout } from "@/components/shop/ShopLayout";
 import { getCartItems, getOrCreateSessionId, clearCart, type CartItem } from "@/lib/cart";
 import { createPendingOrder, attachRazorpayOrderId, confirmOrderPayment, markOrderPaymentFailed } from "@/lib/orders";
+import { sendOrderConfirmationEmails } from "@/lib/email.server";
 import { createRazorpayOrder, verifyRazorpayPayment, getRazorpayKeyId } from "@/lib/razorpay.server";
 import { toast } from "@/lib/toast";
 import { ArtspireBreadcrumb } from "@/components/ArtspireBreadcrumb";
@@ -170,9 +171,28 @@ function CheckoutPage() {
               return;
             }
 
-            await confirmOrderPayment(order.id, response.razorpay_payment_id, response.razorpay_signature);
+            const confirmedOrder = await confirmOrderPayment(order.id, response.razorpay_payment_id, response.razorpay_signature);
             await clearCart(getOrCreateSessionId());
             window.dispatchEvent(new CustomEvent("artspire:cart-updated"));
+
+            // Fire-and-forget — email failure should never block the
+            // user from reaching their confirmation page.
+            sendOrderConfirmationEmails({
+              data: {
+                order: confirmedOrder,
+                items: items.map((item) => ({
+                  id: item.id,
+                  order_id: order.id,
+                  product_id: item.product_id,
+                  title_snapshot: item.product?.title ?? "Unknown Product",
+                  image_snapshot: item.product?.image_url ?? null,
+                  price_snapshot: item.price_at_add,
+                  quantity: item.quantity,
+                  line_total: item.price_at_add * item.quantity,
+                  created_at: new Date().toISOString(),
+                })),
+              },
+            }).catch((err) => console.error("Email notification failed:", err));
 
             router.navigate({ to: "/order-confirmation/$orderId", params: { orderId: order.id } });
           } catch (err) {

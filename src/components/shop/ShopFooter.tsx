@@ -24,6 +24,7 @@ const footerColumns = [
       { label: "Returns", to: "/faq" },
       { label: "Care Guide", to: "/faq" },
       { label: "FAQs", to: "/faq" },
+      { label: "Track Order", to: "/track-order" },
     ],
   },
 ];

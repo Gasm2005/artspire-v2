@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TrackOrderRouteImport } from './routes/track-order'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PortfolioRouteImport } from './routes/portfolio'
@@ -55,6 +56,11 @@ import { Route as AdminProductsEditIdRouteImport } from './routes/admin/products
 import { Route as AdminCategoriesEditIdRouteImport } from './routes/admin/categories/edit.$id'
 import { Route as AdminArtworksEditIdRouteImport } from './routes/admin/artworks/edit.$id'
 
+const TrackOrderRoute = TrackOrderRouteImport.update({
+  id: '/track-order',
+  path: '/track-order',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
   path: '/services',
@@ -300,6 +306,7 @@ export interface FileRoutesByFullPath {
   '/portfolio': typeof PortfolioRoute
   '/pricing': typeof PricingRoute
   '/services': typeof ServicesRoute
+  '/track-order': typeof TrackOrderRoute
   '/admin/login': typeof AdminLoginRoute
   '/artwork/$slug': typeof ArtworkSlugRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
@@ -346,6 +353,7 @@ export interface FileRoutesByTo {
   '/portfolio': typeof PortfolioRoute
   '/pricing': typeof PricingRoute
   '/services': typeof ServicesRoute
+  '/track-order': typeof TrackOrderRoute
   '/admin/login': typeof AdminLoginRoute
   '/artwork/$slug': typeof ArtworkSlugRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
@@ -394,6 +402,7 @@ export interface FileRoutesById {
   '/portfolio': typeof PortfolioRoute
   '/pricing': typeof PricingRoute
   '/services': typeof ServicesRoute
+  '/track-order': typeof TrackOrderRoute
   '/admin/login': typeof AdminLoginRoute
   '/artwork/$slug': typeof ArtworkSlugRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
@@ -443,6 +452,7 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/pricing'
     | '/services'
+    | '/track-order'
     | '/admin/login'
     | '/artwork/$slug'
     | '/order-confirmation/$orderId'
@@ -489,6 +499,7 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/pricing'
     | '/services'
+    | '/track-order'
     | '/admin/login'
     | '/artwork/$slug'
     | '/order-confirmation/$orderId'
@@ -536,6 +547,7 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/pricing'
     | '/services'
+    | '/track-order'
     | '/admin/login'
     | '/artwork/$slug'
     | '/order-confirmation/$orderId'
@@ -584,6 +596,7 @@ export interface RootRouteChildren {
   PortfolioRoute: typeof PortfolioRoute
   PricingRoute: typeof PricingRoute
   ServicesRoute: typeof ServicesRoute
+  TrackOrderRoute: typeof TrackOrderRoute
   ArtworkSlugRoute: typeof ArtworkSlugRoute
   OrderConfirmationOrderIdRoute: typeof OrderConfirmationOrderIdRoute
   ShopCategoryRoute: typeof ShopCategoryRoute
@@ -594,6 +607,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/track-order': {
+      id: '/track-order'
+      path: '/track-order'
+      fullPath: '/track-order'
+      preLoaderRoute: typeof TrackOrderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/services': {
       id: '/services'
       path: '/services'
@@ -991,6 +1011,7 @@ const rootRouteChildren: RootRouteChildren = {
   PortfolioRoute: PortfolioRoute,
   PricingRoute: PricingRoute,
   ServicesRoute: ServicesRoute,
+  TrackOrderRoute: TrackOrderRoute,
   ArtworkSlugRoute: ArtworkSlugRoute,
   OrderConfirmationOrderIdRoute: OrderConfirmationOrderIdRoute,
   ShopCategoryRoute: ShopCategoryRoute,
