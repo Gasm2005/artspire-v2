@@ -128,67 +128,117 @@ function ProductGallery({ mainImage, gallery, title }: { mainImage: string; gall
   ].slice(0, 10);
 
   const [index, setIndex] = useState(0);
-  const [loaded, setLoaded] = useState(false);
-  const touchStartX = useRef<number | null>(null);
-  const active = items[index];
+  const [loadedMap, setLoadedMap] = useState<Record<number, boolean>>({});
+  const [dragOffset, setDragOffset] = useState(0);
+  const [dragging, setDragging] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const dragStartX = useRef<number | null>(null);
+  const dragStartY = useRef<number | null>(null);
+  const isHorizontalDrag = useRef<boolean | null>(null);
 
-  useEffect(() => {
-    setLoaded(false);
-  }, [index]);
+  const markLoaded = (i: number) => setLoadedMap((prev) => ({ ...prev, [i]: true }));
 
   function goTo(i: number) {
     setIndex(((i % items.length) + items.length) % items.length);
   }
 
-  function handleTouchStart(e: React.TouchEvent) {
-    touchStartX.current = e.touches[0].clientX;
+  function handlePointerDown(clientX: number, clientY: number) {
+    dragStartX.current = clientX;
+    dragStartY.current = clientY;
+    isHorizontalDrag.current = null;
+    setDragging(true);
   }
 
-  function handleTouchEnd(e: React.TouchEvent) {
-    if (touchStartX.current === null) return;
-    const delta = e.changedTouches[0].clientX - touchStartX.current;
-    if (delta > 50) goTo(index - 1);
-    else if (delta < -50) goTo(index + 1);
-    touchStartX.current = null;
+  function handlePointerMove(clientX: number, clientY: number, e?: React.TouchEvent) {
+    if (dragStartX.current === null || dragStartY.current === null) return;
+    const dx = clientX - dragStartX.current;
+    const dy = clientY - dragStartY.current;
+
+    if (isHorizontalDrag.current === null && (Math.abs(dx) > 6 || Math.abs(dy) > 6)) {
+      isHorizontalDrag.current = Math.abs(dx) > Math.abs(dy);
+    }
+    if (isHorizontalDrag.current) {
+      e?.preventDefault();
+      setDragOffset(dx);
+    }
   }
+
+  function handlePointerUp() {
+    const width = containerRef.current?.offsetWidth || 1;
+    const threshold = width * 0.18;
+    if (isHorizontalDrag.current) {
+      if (dragOffset < -threshold) goTo(index + 1);
+      else if (dragOffset > threshold) goTo(index - 1);
+    }
+    setDragOffset(0);
+    setDragging(false);
+    dragStartX.current = null;
+    dragStartY.current = null;
+    isHorizontalDrag.current = null;
+  }
+
+  const width = containerRef.current?.offsetWidth || 1;
+  const dragPercent = (dragOffset / width) * 100;
+  const trackTransform = `translateX(calc(${-index * 100}% + ${dragPercent}%))`;
 
   return (
     <div>
       <div
-        className="relative w-full overflow-hidden rounded-2xl border border-border/30 shadow-lg bg-[#E8E0D5] group"
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
+        ref={containerRef}
+        className="relative w-full overflow-hidden rounded-2xl border border-border/30 shadow-lg bg-[#E8E0D5] group select-none"
+        onTouchStart={(e) => handlePointerDown(e.touches[0].clientX, e.touches[0].clientY)}
+        onTouchMove={(e) => handlePointerMove(e.touches[0].clientX, e.touches[0].clientY, e)}
+        onTouchEnd={handlePointerUp}
+        onMouseDown={(e) => handlePointerDown(e.clientX, e.clientY)}
+        onMouseMove={(e) => {
+          if (dragStartX.current !== null) handlePointerMove(e.clientX, e.clientY);
+        }}
+        onMouseUp={handlePointerUp}
+        onMouseLeave={() => {
+          if (dragStartX.current !== null) handlePointerUp();
+        }}
       >
         <div
-          className={`absolute inset-0 transition-opacity duration-500 ${loaded ? "opacity-0 pointer-events-none" : "opacity-100"}`}
+          className="flex"
           style={{
-            background: "linear-gradient(135deg, #E8E0D5 0%, #D4C9B8 50%, #E8E0D5 100%)",
-            backgroundSize: "200% 200%",
-            animation: loaded ? "none" : "shimmer 1.8s ease-in-out infinite",
+            transform: trackTransform,
+            transition: dragging ? "none" : "transform 350ms cubic-bezier(0.22, 1, 0.36, 1)",
           }}
-        />
-
-        {active.isVideo ? (
-          <video
-            key={active.url}
-            src={active.url}
-            controls
-            playsInline
-            onLoadedData={() => setLoaded(true)}
-            className={`w-full h-auto max-h-[75vh] transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}
-          />
-        ) : (
-          <img
-            key={active.url}
-            src={active.url}
-            alt={title}
-            onLoad={() => setLoaded(true)}
-            className={`w-full h-auto object-contain max-h-[75vh] transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}
-            loading="eager"
-            fetchPriority="high"
-            decoding="async"
-          />
-        )}
+        >
+          {items.map((item, i) => (
+            <div key={item.url + i} className="w-full shrink-0 relative">
+              <div
+                className={`absolute inset-0 transition-opacity duration-500 ${loadedMap[i] ? "opacity-0 pointer-events-none" : "opacity-100"}`}
+                style={{
+                  background: "linear-gradient(135deg, #E8E0D5 0%, #D4C9B8 50%, #E8E0D5 100%)",
+                  backgroundSize: "200% 200%",
+                  animation: loadedMap[i] ? "none" : "shimmer 1.8s ease-in-out infinite",
+                }}
+              />
+              {item.isVideo ? (
+                <video
+                  src={item.url}
+                  controls
+                  playsInline
+                  onLoadedData={() => markLoaded(i)}
+                  draggable={false}
+                  className={`w-full h-auto max-h-[75vh] transition-opacity duration-500 ${loadedMap[i] ? "opacity-100" : "opacity-0"}`}
+                />
+              ) : (
+                <img
+                  src={item.url}
+                  alt={title}
+                  onLoad={() => markLoaded(i)}
+                  draggable={false}
+                  className={`w-full h-auto object-contain max-h-[75vh] transition-opacity duration-500 ${loadedMap[i] ? "opacity-100" : "opacity-0"}`}
+                  loading={i === 0 ? "eager" : "lazy"}
+                  fetchPriority={i === 0 ? "high" : "auto"}
+                  decoding="async"
+                />
+              )}
+            </div>
+          ))}
+        </div>
 
         {items.length > 1 && (
           <>
