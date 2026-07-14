@@ -91,8 +91,15 @@ export function ProductForm({ product, onSuccess }: ProductFormProps) {
   function handleGalleryFilesChange(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files ?? []);
     if (files.length === 0) return;
-    setGalleryFiles((prev) => [...prev, ...files]);
-    setGalleryPreviews((prev) => [...prev, ...files.map((f) => URL.createObjectURL(f))]);
+    const currentTotal = existingGalleryUrls.length + galleryFiles.length;
+    const room = Math.max(0, 10 - currentTotal);
+    if (files.length > room) {
+      toast.error(`Only ${room} more file(s) allowed — max 10 per product.`);
+    }
+    const accepted = files.slice(0, room);
+    if (accepted.length === 0) return;
+    setGalleryFiles((prev) => [...prev, ...accepted]);
+    setGalleryPreviews((prev) => [...prev, ...accepted.map((f) => URL.createObjectURL(f))]);
   }
 
   function removeGalleryFile(index: number) {
@@ -221,16 +228,24 @@ export function ProductForm({ product, onSuccess }: ProductFormProps) {
 
       {/* Gallery images */}
       <div className="bg-white rounded-2xl border border-border p-5 shadow-sm space-y-3">
-        <label className={labelClass}>Gallery Images (optional, for zoom/detail views)</label>
+        <label className={labelClass}>Gallery — Images & Videos (up to 10 total)</label>
         <div className="flex flex-wrap gap-3">
           {existingGalleryUrls.map((url, i) => (
-            <div key={`existing-${i}`} className="w-20 h-20 rounded-lg overflow-hidden border border-border">
-              <img src={url} alt="" className="w-full h-full object-cover" />
+            <div key={`existing-${i}`} className="w-20 h-20 rounded-lg overflow-hidden border border-border bg-cream">
+              {/\.(mp4|webm|mov)$/i.test(url) ? (
+                <video src={url} className="w-full h-full object-cover" muted />
+              ) : (
+                <img src={url} alt="" className="w-full h-full object-cover" />
+              )}
             </div>
           ))}
           {galleryPreviews.map((url, i) => (
-            <div key={`new-${i}`} className="relative w-20 h-20 rounded-lg overflow-hidden border border-border">
-              <img src={url} alt="" className="w-full h-full object-cover" />
+            <div key={`new-${i}`} className="relative w-20 h-20 rounded-lg overflow-hidden border border-border bg-cream">
+              {galleryFiles[i]?.type.startsWith("video/") ? (
+                <video src={url} className="w-full h-full object-cover" muted />
+              ) : (
+                <img src={url} alt="" className="w-full h-full object-cover" />
+              )}
               <button
                 onClick={() => removeGalleryFile(i)}
                 className="absolute top-0.5 right-0.5 p-0.5 bg-white/90 rounded-full shadow"
@@ -239,11 +254,22 @@ export function ProductForm({ product, onSuccess }: ProductFormProps) {
               </button>
             </div>
           ))}
-          <label className="w-20 h-20 rounded-lg border-2 border-dashed border-border bg-cream hover:border-gold transition-colors cursor-pointer flex items-center justify-center">
-            <Plus size={18} className="text-stone/40" />
-            <input type="file" accept="image/*" multiple className="hidden" onChange={handleGalleryFilesChange} />
-          </label>
+          {existingGalleryUrls.length + galleryPreviews.length < 10 && (
+            <label className="w-20 h-20 rounded-lg border-2 border-dashed border-border bg-cream hover:border-gold transition-colors cursor-pointer flex items-center justify-center">
+              <Plus size={18} className="text-stone/40" />
+              <input
+                type="file"
+                accept="image/*,video/mp4,video/webm,video/quicktime"
+                multiple
+                className="hidden"
+                onChange={handleGalleryFilesChange}
+              />
+            </label>
+          )}
         </div>
+        <p className="font-body text-[11px] text-stone/50">
+          {existingGalleryUrls.length + galleryPreviews.length}/10 uploaded · videos: mp4, webm, mov
+        </p>
       </div>
 
       {/* Basic info */}

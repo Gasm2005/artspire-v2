@@ -10,7 +10,7 @@ import {
 } from "@/lib/products";
 import { getMediumCraftContent, type MediumCraftContent } from "@/lib/collections";
 import { buildBreadcrumbStructuredData } from "@/lib/seo";
-import { MessageCircle, Package, Ruler, Sparkles, ShoppingBag, Minus, Plus, Loader2 } from "lucide-react";
+import { MessageCircle, Package, Ruler, Sparkles, ShoppingBag, Minus, Plus, Loader2, ChevronLeft, ChevronRight, Play } from "lucide-react";
 import { ArtspireBreadcrumb } from "@/components/ArtspireBreadcrumb";
 import { ArtworkDetailSkeleton } from "@/components/ui/skeleton";
 import { addToCart, getOrCreateSessionId } from "@/lib/cart";
@@ -18,7 +18,7 @@ import { toast } from "@/lib/toast";
 
 interface LoaderData {
   product: ProductWithCategory;
-  gallery: { media?: { public_url: string } | null }[];
+  gallery: { media?: { public_url: string; mime_type?: string | null } | null }[];
   related: ProductWithCategory[];
   craftContent: MediumCraftContent | null;
 }
@@ -115,22 +115,50 @@ function ProductPendingSkeleton() {
   );
 }
 
-// ─── Progressive image gallery ───────────────────────────────
-function ProductGallery({ mainImage, gallery, title }: { mainImage: string; gallery: string[]; title: string }) {
-  const [active, setActive] = useState(mainImage);
+// ─── Product gallery carousel (images + videos, up to 10) ────
+interface GalleryItem {
+  url: string;
+  isVideo: boolean;
+}
+
+function ProductGallery({ mainImage, gallery, title }: { mainImage: string; gallery: GalleryItem[]; title: string }) {
+  const items: GalleryItem[] = [
+    { url: mainImage, isVideo: false },
+    ...gallery.filter((g) => g.url !== mainImage),
+  ].slice(0, 10);
+
+  const [index, setIndex] = useState(0);
   const [loaded, setLoaded] = useState(false);
-  const imgRef = useRef<HTMLImageElement>(null);
+  const touchStartX = useRef<number | null>(null);
+  const active = items[index];
 
   useEffect(() => {
     setLoaded(false);
-    if (imgRef.current?.complete) setLoaded(true);
-  }, [active]);
+  }, [index]);
 
-  const allImages = [mainImage, ...gallery.filter((g) => g !== mainImage)];
+  function goTo(i: number) {
+    setIndex(((i % items.length) + items.length) % items.length);
+  }
+
+  function handleTouchStart(e: React.TouchEvent) {
+    touchStartX.current = e.touches[0].clientX;
+  }
+
+  function handleTouchEnd(e: React.TouchEvent) {
+    if (touchStartX.current === null) return;
+    const delta = e.changedTouches[0].clientX - touchStartX.current;
+    if (delta > 50) goTo(index - 1);
+    else if (delta < -50) goTo(index + 1);
+    touchStartX.current = null;
+  }
 
   return (
     <div>
-      <div className="relative w-full overflow-hidden rounded-2xl border border-border/30 shadow-lg bg-[#E8E0D5]">
+      <div
+        className="relative w-full overflow-hidden rounded-2xl border border-border/30 shadow-lg bg-[#E8E0D5] group"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
         <div
           className={`absolute inset-0 transition-opacity duration-500 ${loaded ? "opacity-0 pointer-events-none" : "opacity-100"}`}
           style={{
@@ -139,29 +167,83 @@ function ProductGallery({ mainImage, gallery, title }: { mainImage: string; gall
             animation: loaded ? "none" : "shimmer 1.8s ease-in-out infinite",
           }}
         />
-        <img
-          ref={imgRef}
-          src={active}
-          alt={title}
-          onLoad={() => setLoaded(true)}
-          className={`w-full h-auto object-contain max-h-[75vh] transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}
-          loading="eager"
-          fetchPriority="high"
-          decoding="async"
-        />
+
+        {active.isVideo ? (
+          <video
+            key={active.url}
+            src={active.url}
+            controls
+            playsInline
+            onLoadedData={() => setLoaded(true)}
+            className={`w-full h-auto max-h-[75vh] transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}
+          />
+        ) : (
+          <img
+            key={active.url}
+            src={active.url}
+            alt={title}
+            onLoad={() => setLoaded(true)}
+            className={`w-full h-auto object-contain max-h-[75vh] transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
+          />
+        )}
+
+        {items.length > 1 && (
+          <>
+            <button
+              onClick={() => goTo(index - 1)}
+              aria-label="Previous"
+              className="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/80 hover:bg-white shadow flex items-center justify-center text-forest opacity-0 group-hover:opacity-100 transition-opacity"
+            >
+              <ChevronLeft size={18} />
+            </button>
+            <button
+              onClick={() => goTo(index + 1)}
+              aria-label="Next"
+              className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/80 hover:bg-white shadow flex items-center justify-center text-forest opacity-0 group-hover:opacity-100 transition-opacity"
+            >
+              <ChevronRight size={18} />
+            </button>
+
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+              {items.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => goTo(i)}
+                  aria-label={`Go to slide ${i + 1}`}
+                  className={`h-1.5 rounded-full transition-all ${
+                    i === index ? "w-5 bg-gold" : "w-1.5 bg-white/70"
+                  }`}
+                />
+              ))}
+            </div>
+          </>
+        )}
       </div>
-      {allImages.length > 1 && (
+
+      {items.length > 1 && (
         <div className="flex gap-2 mt-3 overflow-x-auto no-scrollbar">
-          {allImages.map((img, i) => (
+          {items.map((item, i) => (
             <button
               key={i}
-              onClick={() => setActive(img)}
-              className={`shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-colors ${
-                active === img ? "border-gold" : "border-border/40 hover:border-forest/30"
+              onClick={() => goTo(i)}
+              className={`relative shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-colors ${
+                i === index ? "border-gold" : "border-border/40 hover:border-forest/30"
               }`}
-              aria-label={`View image ${i + 1}`}
+              aria-label={`View item ${i + 1}`}
             >
-              <img src={img} alt="" className="w-full h-full object-cover" loading="lazy" />
+              {item.isVideo ? (
+                <>
+                  <video src={item.url} className="w-full h-full object-cover" muted />
+                  <div className="absolute inset-0 bg-black/25 flex items-center justify-center">
+                    <Play size={16} className="text-white fill-white" />
+                  </div>
+                </>
+              ) : (
+                <img src={item.url} alt="" className="w-full h-full object-cover" loading="lazy" />
+              )}
             </button>
           ))}
         </div>
@@ -176,7 +258,12 @@ function ProductPage() {
   const [quantity, setQuantity] = useState(1);
   const [addingToCart, setAddingToCart] = useState(false);
 
-  const galleryUrls = gallery.map((g) => g.media?.public_url).filter(Boolean) as string[];
+  const galleryItems = gallery
+    .filter((g) => g.media?.public_url)
+    .map((g) => ({
+      url: g.media!.public_url,
+      isVideo: !!g.media?.mime_type?.startsWith("video/") || /\.(mp4|webm|mov)$/i.test(g.media!.public_url),
+    }));
   const waMessage = waLink(
     `Hi Artspire! I'm interested in "${product.title}" from the shop (₹${product.price.toLocaleString("en-IN")}). Is it still available?`
   );
@@ -220,7 +307,7 @@ function ProductPage() {
             <div className="w-full lg:w-1/2 lg:sticky lg:top-8">
               <ProductGallery
                 mainImage={product.image_url ?? "/placeholder-artwork.svg"}
-                gallery={galleryUrls}
+                gallery={galleryItems}
                 title={product.title}
               />
             </div>

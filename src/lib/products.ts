@@ -60,7 +60,7 @@ export interface ProductGalleryImage {
   media_id: string;
   display_order: number;
   created_at: string;
-  media?: { public_url: string; original_name: string } | null;
+  media?: { public_url: string; original_name: string; mime_type?: string | null } | null;
 }
 
 export type ProductWithImages = ProductWithCategory & {
@@ -171,7 +171,7 @@ export async function getRelatedProducts(productId: string, categoryId: string |
 export async function getProductGalleryImages(productId: string): Promise<ProductGalleryImage[]> {
   const { data, error } = await supabase
     .from("product_gallery_images")
-    .select("*, media:media_library(public_url, original_name)")
+    .select("*, media:media_library(public_url, original_name, mime_type)")
     .eq("product_id", productId)
     .order("display_order", { ascending: true });
 
