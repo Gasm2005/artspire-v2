@@ -46,12 +46,26 @@ function ShopPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortBy, setSortBy] = useState<"newest" | "price_low" | "price_high">("newest");
+  const [oneOfAKindOnly, setOneOfAKindOnly] = useState(false);
+  const [priceRange, setPriceRange] = useState<{ min: string; max: string }>({ min: "", max: "" });
+  const [showFilters, setShowFilters] = useState(false);
 
-  const filtered = products.filter((p) => {
-    const matchCategory = activeCategory === "all" || p.categories?.slug === activeCategory;
-    const matchSearch = !searchQuery || p.title.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchCategory && matchSearch;
-  });
+  const filtered = products
+    .filter((p) => {
+      const matchCategory = activeCategory === "all" || p.categories?.slug === activeCategory;
+      const matchSearch = !searchQuery || p.title.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchOOAK = !oneOfAKindOnly || p.is_one_of_a_kind;
+      const min = priceRange.min ? Number(priceRange.min) : 0;
+      const max = priceRange.max ? Number(priceRange.max) : Infinity;
+      const matchPrice = p.price >= min && p.price <= max;
+      return matchCategory && matchSearch && matchOOAK && matchPrice;
+    })
+    .sort((a, b) => {
+      if (sortBy === "price_low") return a.price - b.price;
+      if (sortBy === "price_high") return b.price - a.price;
+      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+    });
 
   const startIdx = (currentPage - 1) * PAGE_SIZE;
   const visible = filtered.slice(startIdx, startIdx + PAGE_SIZE);
@@ -201,12 +215,75 @@ function ShopPage() {
         <div className="container-main">
           <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
             <h2 className="font-display text-[24px] md:text-[28px] text-forest font-medium">All Pieces</h2>
-            <ExpandableSearch
-              onSearch={(q) => { setSearchQuery(q); setCurrentPage(1); }}
-              placeholder="Search the shop…"
-              debounceMs={250}
-            />
+            <div className="flex items-center gap-2 flex-wrap">
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
+                className="h-[38px] px-3 rounded-full border border-border bg-white font-body text-[12px] font-semibold text-stone focus:outline-none focus:border-forest/40"
+              >
+                <option value="newest">Newest</option>
+                <option value="price_low">Price: Low to High</option>
+                <option value="price_high">Price: High to Low</option>
+              </select>
+              <button
+                onClick={() => setShowFilters((s) => !s)}
+                className={`h-[38px] px-4 rounded-full border font-body text-[12px] font-semibold transition-colors ${
+                  showFilters || oneOfAKindOnly || priceRange.min || priceRange.max
+                    ? "bg-forest text-white border-forest"
+                    : "bg-white text-stone border-border hover:border-forest/40"
+                }`}
+              >
+                Filters
+              </button>
+              <ExpandableSearch
+                onSearch={(q) => { setSearchQuery(q); setCurrentPage(1); }}
+                placeholder="Search the shop…"
+                debounceMs={250}
+              />
+            </div>
           </div>
+
+          {showFilters && (
+            <div className="bg-cream rounded-2xl border border-border p-4 mb-6 flex flex-wrap items-end gap-4">
+              <div>
+                <label className="block font-body text-[10px] font-bold text-stone uppercase tracking-wider mb-1.5">Min Price</label>
+                <input
+                  type="number"
+                  value={priceRange.min}
+                  onChange={(e) => { setPriceRange((p) => ({ ...p, min: e.target.value })); setCurrentPage(1); }}
+                  placeholder="₹0"
+                  className="w-28 h-[38px] px-3 rounded-lg border border-border bg-white font-body text-[13px] text-forest focus:outline-none focus:border-gold"
+                />
+              </div>
+              <div>
+                <label className="block font-body text-[10px] font-bold text-stone uppercase tracking-wider mb-1.5">Max Price</label>
+                <input
+                  type="number"
+                  value={priceRange.max}
+                  onChange={(e) => { setPriceRange((p) => ({ ...p, max: e.target.value })); setCurrentPage(1); }}
+                  placeholder="No limit"
+                  className="w-28 h-[38px] px-3 rounded-lg border border-border bg-white font-body text-[13px] text-forest focus:outline-none focus:border-gold"
+                />
+              </div>
+              <label className="flex items-center gap-2 h-[38px] cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={oneOfAKindOnly}
+                  onChange={(e) => { setOneOfAKindOnly(e.target.checked); setCurrentPage(1); }}
+                  className="w-4 h-4 accent-forest"
+                />
+                <span className="font-body text-[13px] text-forest font-medium">One of a Kind only</span>
+              </label>
+              {(oneOfAKindOnly || priceRange.min || priceRange.max) && (
+                <button
+                  onClick={() => { setOneOfAKindOnly(false); setPriceRange({ min: "", max: "" }); setCurrentPage(1); }}
+                  className="font-body text-[12px] text-stone/60 hover:text-forest underline"
+                >
+                  Clear filters
+                </button>
+              )}
+            </div>
+          )}
 
           <div className="flex gap-2 overflow-x-auto no-scrollbar mb-8 pb-1">
             <button
