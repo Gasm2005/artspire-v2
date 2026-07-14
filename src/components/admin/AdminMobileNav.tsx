@@ -1,10 +1,11 @@
-import { LayoutDashboard, Palette, FolderOpen, ShoppingBag, Tag, FileText, Search } from "lucide-react";
+import { LayoutDashboard, Palette, FolderOpen, ShoppingBag, Tag, FileText, Search, ClipboardList } from "lucide-react";
 import { useRouter } from "@tanstack/react-router";
 
 const mobileTabs = [
   { label: "Home", to: "/admin", icon: LayoutDashboard, exact: true },
   { label: "Artworks", to: "/admin/artworks", icon: Palette },
   { label: "Products", to: "/admin/products", icon: ShoppingBag },
+  { label: "Orders", to: "/admin/orders", icon: ClipboardList },
   { label: "Categories", to: "/admin/categories", icon: FolderOpen },
   { label: "Shop Cats", to: "/admin/shop-categories", icon: Tag },
   { label: "Pages", to: "/admin/website-content", icon: FileText },

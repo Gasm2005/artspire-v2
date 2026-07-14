@@ -10,6 +10,7 @@ export function AdminHeader() {
     if (path.startsWith("/admin/artworks")) return "Artworks";
     if (path.startsWith("/admin/categories")) return "Categories";
     if (path.startsWith("/admin/products")) return "Shop Products";
+    if (path.startsWith("/admin/orders")) return "Orders";
     if (path.startsWith("/admin/shop-categories")) return "Shop Categories";
     if (path.startsWith("/admin/faqs")) return "FAQs";
     if (path.startsWith("/admin/media")) return "Media Library";
