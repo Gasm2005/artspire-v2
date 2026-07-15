@@ -10,7 +10,7 @@ import {
 } from "@/lib/products";
 import { getMediumCraftContent, type MediumCraftContent } from "@/lib/collections";
 import { buildBreadcrumbStructuredData } from "@/lib/seo";
-import { MessageCircle, Package, Ruler, Sparkles, ShoppingBag, Minus, Plus, Loader2, ChevronLeft, ChevronRight, Play, Flame, ShieldCheck, Truck, Star } from "lucide-react";
+import { MessageCircle, Package, Sparkles, ShoppingBag, Minus, Plus, Loader2, ChevronLeft, ChevronRight, Play, Flame, ShieldCheck, Truck, Star } from "lucide-react";
 import { ArtspireBreadcrumb } from "@/components/ArtspireBreadcrumb";
 import { ArtworkDetailSkeleton } from "@/components/ui/skeleton";
 import { addToCart, getOrCreateSessionId } from "@/lib/cart";
@@ -375,7 +375,7 @@ function ProductPage() {
 
   return (
     <ShopLayout>
-      <section className="artwork-page-enter bg-cream min-h-screen">
+      <section className="artwork-page-enter hero-texture bg-cream min-h-screen">
         <div className="container-main py-8 md:py-14">
           <ArtspireBreadcrumb
             crumbs={[
@@ -387,32 +387,41 @@ function ProductPage() {
             className="mb-8"
           />
 
-          <div className="flex flex-col lg:flex-row gap-8 lg:gap-14 items-start">
+          <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 items-start">
             {/* LEFT: Gallery */}
-            <div className="w-full lg:w-1/2 lg:sticky lg:top-8">
+            <div className="w-full lg:w-1/2 lg:sticky lg:top-8 relative">
               <ProductGallery
                 mainImage={product.image_url ?? "/placeholder-artwork.svg"}
                 gallery={galleryItems}
                 title={product.title}
               />
+              {product.is_one_of_a_kind && (
+                <div
+                  className="absolute -top-3 -left-3 w-[86px] h-[86px] rounded-full bg-forest text-cream flex flex-col items-center justify-center text-center shadow-lg z-10 -rotate-12 border-2 border-gold/70"
+                  aria-hidden="true"
+                >
+                  <span className="font-display text-[10px] tracking-[0.15em] leading-tight px-1">ONE OF A</span>
+                  <span className="font-display text-[15px] tracking-[0.05em] leading-tight -mt-0.5">KIND</span>
+                  <span className="font-body text-[7px] tracking-[0.2em] text-gold mt-0.5">HAND · FINISHED</span>
+                </div>
+              )}
             </div>
 
             {/* RIGHT: Story + Details + CTA */}
             <div className="w-full lg:w-1/2 flex flex-col gap-6">
-              <div className="flex items-center gap-2 flex-wrap">
+              <div className="flex items-center gap-3">
                 {product.categories?.name && (
-                  <span className="inline-block px-3 py-1 bg-gold/15 text-gold font-body text-[11px] font-bold uppercase tracking-wider rounded-full">
+                  <Link
+                    to="/shop/$category"
+                    params={{ category: product.categories.slug }}
+                    className="font-body text-[11px] font-bold uppercase tracking-[0.18em] text-gold hover:text-forest transition-colors pb-1 border-b-2 border-gold/40"
+                  >
                     {product.categories.name}
-                  </span>
-                )}
-                {product.is_one_of_a_kind && (
-                  <span className="inline-flex items-center gap-1 px-3 py-1 bg-forest/10 text-forest font-body text-[11px] font-bold uppercase tracking-wider rounded-full">
-                    <Sparkles size={11} /> One of a Kind
-                  </span>
+                  </Link>
                 )}
               </div>
 
-              <h1 className="artwork-content-enter font-display text-[28px] md:text-[38px] text-forest font-medium leading-tight" style={{ animationDelay: "40ms" }}>
+              <h1 className="artwork-content-enter font-display text-[32px] md:text-[44px] text-forest font-medium leading-[1.08] -mt-1" style={{ animationDelay: "40ms" }}>
                 {product.title}
               </h1>
 
@@ -437,19 +446,29 @@ function ProductPage() {
                 </button>
               )}
 
-              <p className="artwork-content-enter font-body text-[22px] text-forest font-semibold" style={{ animationDelay: "60ms" }}>
-                ₹{product.price.toLocaleString("en-IN")}
+              <div className="artwork-content-enter flex items-baseline gap-3 pt-1" style={{ animationDelay: "60ms" }}>
+                <p className="font-display text-[30px] text-forest font-semibold">
+                  ₹{product.price.toLocaleString("en-IN")}
+                </p>
                 {product.compare_at_price && product.compare_at_price > product.price && (
-                  <span className="ml-2 text-[15px] text-stone/40 line-through">
-                    ₹{product.compare_at_price.toLocaleString("en-IN")}
-                  </span>
+                  <>
+                    <span className="text-[16px] text-stone/40 line-through font-body">
+                      ₹{product.compare_at_price.toLocaleString("en-IN")}
+                    </span>
+                    <span className="font-body text-[11px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded-full">
+                      {Math.round((1 - product.price / product.compare_at_price) * 100)}% OFF
+                    </span>
+                  </>
                 )}
+              </div>
+              <p className="artwork-content-enter -mt-4 font-body text-[11px] text-stone/50" style={{ animationDelay: "65ms" }}>
+                Inclusive of all taxes
               </p>
 
               {lowStock && (
                 <p className="artwork-content-enter flex items-center gap-1.5 font-body text-[12px] font-semibold text-red-600" style={{ animationDelay: "70ms" }}>
                   <Flame size={13} />
-                  Only {product.inventory_count} left{product.inventory_count === 1 ? "" : ""} — this one won't be remade
+                  Only {product.inventory_count} left — this one won't be remade
                 </p>
               )}
 
@@ -464,29 +483,40 @@ function ProductPage() {
                 </div>
               )}
 
-              {/* Materials & Craft — Hermès pattern */}
-              {(craftContent || product.materials_used) && (
-                <div className="artwork-content-enter bg-white rounded-2xl border border-border p-5 shadow-sm space-y-3" style={{ animationDelay: "120ms" }}>
-                  <h3 className="font-display text-[15px] text-forest font-medium flex items-center gap-2">
-                    <Package size={15} className="text-gold" />
-                    {craftContent?.title ?? "Materials & Craft"}
-                  </h3>
-                  {craftContent?.content && (
-                    <p className="font-body text-[13px] text-stone leading-relaxed">{craftContent.content}</p>
-                  )}
-                  {product.materials_used && (
-                    <p className="font-body text-[13px] text-stone">
-                      <span className="font-semibold text-forest">Materials: </span>{product.materials_used}
-                    </p>
-                  )}
-                </div>
-              )}
-
-              {/* Dimensions */}
-              {(product.dimensions || product.weight) && (
-                <div className="artwork-content-enter flex items-center gap-2 font-body text-[13px] text-stone" style={{ animationDelay: "130ms" }}>
-                  <Ruler size={14} className="text-gold shrink-0" />
-                  {[product.dimensions, product.weight].filter(Boolean).join(" · ")}
+              {/* The Piece — museum-placard style spec sheet */}
+              {(craftContent || product.materials_used || product.dimensions || product.weight) && (
+                <div className="artwork-content-enter bg-white rounded-2xl border border-border shadow-sm overflow-hidden" style={{ animationDelay: "120ms" }}>
+                  <div className="flex items-center gap-2 px-5 pt-4 pb-3 border-b border-border/60">
+                    <Package size={14} className="text-gold" />
+                    <h3 className="font-display text-[14px] text-forest font-medium tracking-wide">
+                      {craftContent?.title ?? "The Piece"}
+                    </h3>
+                  </div>
+                  <div className="px-5 py-3 divide-y divide-border/50">
+                    {craftContent?.content && (
+                      <p className="font-body text-[13px] text-stone leading-relaxed py-3 first:pt-0">
+                        {craftContent.content}
+                      </p>
+                    )}
+                    {product.materials_used && (
+                      <div className="flex items-baseline justify-between gap-4 py-2.5 first:pt-0">
+                        <span className="font-body text-[11px] uppercase tracking-wider text-stone/50 shrink-0">Materials</span>
+                        <span className="font-body text-[13px] text-forest text-right">{product.materials_used}</span>
+                      </div>
+                    )}
+                    {product.dimensions && (
+                      <div className="flex items-baseline justify-between gap-4 py-2.5">
+                        <span className="font-body text-[11px] uppercase tracking-wider text-stone/50 shrink-0">Dimensions</span>
+                        <span className="font-body text-[13px] text-forest text-right">{product.dimensions}</span>
+                      </div>
+                    )}
+                    {product.weight && (
+                      <div className="flex items-baseline justify-between gap-4 py-2.5">
+                        <span className="font-body text-[11px] uppercase tracking-wider text-stone/50 shrink-0">Weight</span>
+                        <span className="font-body text-[13px] text-forest text-right">{product.weight}</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
 
