@@ -25,6 +25,7 @@ import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as ShopCategoryRouteImport } from './routes/shop.$category'
 import { Route as OrderConfirmationOrderIdRouteImport } from './routes/order-confirmation.$orderId'
 import { Route as ArtworkSlugRouteImport } from './routes/artwork.$slug'
+import { Route as AdminReviewsRouteImport } from './routes/admin/reviews'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminWhatsappIndexRouteImport } from './routes/admin/whatsapp/index'
 import { Route as AdminWebsiteContentIndexRouteImport } from './routes/admin/website-content/index'
@@ -136,6 +137,11 @@ const ArtworkSlugRoute = ArtworkSlugRouteImport.update({
   id: '/artwork/$slug',
   path: '/artwork/$slug',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AdminReviewsRoute = AdminReviewsRouteImport.update({
+  id: '/reviews',
+  path: '/reviews',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
   id: '/login',
@@ -308,6 +314,7 @@ export interface FileRoutesByFullPath {
   '/services': typeof ServicesRoute
   '/track-order': typeof TrackOrderRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/reviews': typeof AdminReviewsRoute
   '/artwork/$slug': typeof ArtworkSlugRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
   '/shop/$category': typeof ShopCategoryRoute
@@ -355,6 +362,7 @@ export interface FileRoutesByTo {
   '/services': typeof ServicesRoute
   '/track-order': typeof TrackOrderRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/reviews': typeof AdminReviewsRoute
   '/artwork/$slug': typeof ArtworkSlugRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
   '/shop/$category': typeof ShopCategoryRoute
@@ -404,6 +412,7 @@ export interface FileRoutesById {
   '/services': typeof ServicesRoute
   '/track-order': typeof TrackOrderRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/reviews': typeof AdminReviewsRoute
   '/artwork/$slug': typeof ArtworkSlugRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
   '/shop/$category': typeof ShopCategoryRoute
@@ -454,6 +463,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/track-order'
     | '/admin/login'
+    | '/admin/reviews'
     | '/artwork/$slug'
     | '/order-confirmation/$orderId'
     | '/shop/$category'
@@ -501,6 +511,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/track-order'
     | '/admin/login'
+    | '/admin/reviews'
     | '/artwork/$slug'
     | '/order-confirmation/$orderId'
     | '/shop/$category'
@@ -549,6 +560,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/track-order'
     | '/admin/login'
+    | '/admin/reviews'
     | '/artwork/$slug'
     | '/order-confirmation/$orderId'
     | '/shop/$category'
@@ -718,6 +730,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/artwork/$slug'
       preLoaderRoute: typeof ArtworkSlugRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/admin/reviews': {
+      id: '/admin/reviews'
+      path: '/reviews'
+      fullPath: '/admin/reviews'
+      preLoaderRoute: typeof AdminReviewsRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/admin/login': {
       id: '/admin/login'
@@ -934,6 +953,7 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteRouteChildren {
   AdminLoginRoute: typeof AdminLoginRoute
+  AdminReviewsRoute: typeof AdminReviewsRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminArtworksNewRoute: typeof AdminArtworksNewRoute
   AdminMediaIdRoute: typeof AdminMediaIdRoute
@@ -966,6 +986,7 @@ interface AdminRouteRouteChildren {
 
 const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminLoginRoute: AdminLoginRoute,
+  AdminReviewsRoute: AdminReviewsRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminArtworksNewRoute: AdminArtworksNewRoute,
   AdminMediaIdRoute: AdminMediaIdRoute,

@@ -10,10 +10,11 @@ import {
 } from "@/lib/products";
 import { getMediumCraftContent, type MediumCraftContent } from "@/lib/collections";
 import { buildBreadcrumbStructuredData } from "@/lib/seo";
-import { MessageCircle, Package, Ruler, Sparkles, ShoppingBag, Minus, Plus, Loader2, ChevronLeft, ChevronRight, Play } from "lucide-react";
+import { MessageCircle, Package, Ruler, Sparkles, ShoppingBag, Minus, Plus, Loader2, ChevronLeft, ChevronRight, Play, Flame, ShieldCheck, Truck, Star } from "lucide-react";
 import { ArtspireBreadcrumb } from "@/components/ArtspireBreadcrumb";
 import { ArtworkDetailSkeleton } from "@/components/ui/skeleton";
 import { addToCart, getOrCreateSessionId } from "@/lib/cart";
+import { getApprovedReviews, getReviewSummary, submitReview, type ProductReview } from "@/lib/reviews";
 import { toast } from "@/lib/toast";
 
 interface LoaderData {
@@ -21,6 +22,7 @@ interface LoaderData {
   gallery: { media?: { public_url: string; mime_type?: string | null } | null }[];
   related: ProductWithCategory[];
   craftContent: MediumCraftContent | null;
+  reviews: ProductReview[];
 }
 
 export const Route = createFileRoute("/shop/product/$slug")({
@@ -32,16 +34,17 @@ export const Route = createFileRoute("/shop/product/$slug")({
     const product = await getPublishedProductBySlug(params.slug);
     if (!product) throw notFound();
 
-    const [gallery, related, craftContent] = await Promise.all([
+    const [gallery, related, craftContent, reviews] = await Promise.all([
       getProductGalleryImages(product.id).catch(() => []),
       getRelatedProducts(product.id, product.category_id, 4).catch((err) => {
         console.error("getRelatedProducts failed:", err);
         return [];
       }),
       product.medium ? getMediumCraftContent(product.medium) : Promise.resolve(null),
+      getApprovedReviews(product.id).catch(() => []),
     ]);
 
-    return { product, gallery, related, craftContent };
+    return { product, gallery, related, craftContent, reviews };
   },
 
   head: ({ loaderData }) => {
@@ -303,10 +306,41 @@ function ProductGallery({ mainImage, gallery, title }: { mainImage: string; gall
 }
 
 function ProductPage() {
-  const { product, gallery, related, craftContent } = Route.useLoaderData() as LoaderData;
+  const { product, gallery, related, craftContent, reviews: initialReviews } = Route.useLoaderData() as LoaderData;
 
   const [quantity, setQuantity] = useState(1);
   const [addingToCart, setAddingToCart] = useState(false);
+  const [reviews, setReviews] = useState<ProductReview[]>(initialReviews);
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [reviewForm, setReviewForm] = useState({ name: "", rating: 5, comment: "" });
+  const [submittingReview, setSubmittingReview] = useState(false);
+  const [reviewSubmitted, setReviewSubmitted] = useState(false);
+
+  const reviewSummary = getReviewSummary(reviews);
+
+  async function handleSubmitReview() {
+    if (!reviewForm.name.trim()) {
+      toast.error("Please enter your name.");
+      return;
+    }
+    setSubmittingReview(true);
+    try {
+      await submitReview({
+        productId: product.id,
+        customerName: reviewForm.name.trim(),
+        rating: reviewForm.rating,
+        comment: reviewForm.comment.trim() || undefined,
+      });
+      setReviewSubmitted(true);
+      setShowReviewForm(false);
+      setReviewForm({ name: "", rating: 5, comment: "" });
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to submit review.", "Please try again.");
+    } finally {
+      setSubmittingReview(false);
+    }
+  }
 
   const galleryItems = gallery
     .filter((g) => g.media?.public_url)
@@ -337,6 +371,7 @@ function ProductPage() {
   }
 
   const soldOut = product.status === "sold_out";
+  const lowStock = !soldOut && product.inventory_count > 0 && product.inventory_count <= 3;
 
   return (
     <ShopLayout>
@@ -381,6 +416,27 @@ function ProductPage() {
                 {product.title}
               </h1>
 
+              {reviewSummary.count > 0 && (
+                <button
+                  onClick={() => document.getElementById("reviews-section")?.scrollIntoView({ behavior: "smooth" })}
+                  className="artwork-content-enter flex items-center gap-1.5 -mt-3 w-fit"
+                  style={{ animationDelay: "50ms" }}
+                >
+                  <div className="flex items-center">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <Star
+                        key={i}
+                        size={14}
+                        className={i <= Math.round(reviewSummary.average) ? "fill-gold text-gold" : "text-border"}
+                      />
+                    ))}
+                  </div>
+                  <span className="font-body text-[12px] text-stone">
+                    {reviewSummary.average} ({reviewSummary.count} review{reviewSummary.count === 1 ? "" : "s"})
+                  </span>
+                </button>
+              )}
+
               <p className="artwork-content-enter font-body text-[22px] text-forest font-semibold" style={{ animationDelay: "60ms" }}>
                 ₹{product.price.toLocaleString("en-IN")}
                 {product.compare_at_price && product.compare_at_price > product.price && (
@@ -389,6 +445,13 @@ function ProductPage() {
                   </span>
                 )}
               </p>
+
+              {lowStock && (
+                <p className="artwork-content-enter flex items-center gap-1.5 font-body text-[12px] font-semibold text-red-600" style={{ animationDelay: "70ms" }}>
+                  <Flame size={13} />
+                  Only {product.inventory_count} left{product.inventory_count === 1 ? "" : ""} — this one won't be remade
+                </p>
+              )}
 
               {(product.summary || product.description) && (
                 <div className="artwork-content-enter space-y-4" style={{ animationDelay: "100ms" }}>
@@ -485,11 +548,133 @@ function ProductPage() {
                 )}
               </div>
 
-              <p className="artwork-content-enter font-body text-[12px] text-stone/50 text-center" style={{ animationDelay: "160ms" }}>
+              <div className="artwork-content-enter grid grid-cols-3 gap-2 pt-1" style={{ animationDelay: "160ms" }}>
+                <div className="flex flex-col items-center gap-1 text-center p-2.5 bg-white rounded-xl border border-border/40">
+                  <ShieldCheck size={16} className="text-gold" />
+                  <span className="font-body text-[10px] text-stone leading-tight">Secure Payment</span>
+                </div>
+                <div className="flex flex-col items-center gap-1 text-center p-2.5 bg-white rounded-xl border border-border/40">
+                  <Truck size={16} className="text-gold" />
+                  <span className="font-body text-[10px] text-stone leading-tight">Ships in 3–5 Days</span>
+                </div>
+                <div className="flex flex-col items-center gap-1 text-center p-2.5 bg-white rounded-xl border border-border/40">
+                  <Sparkles size={16} className="text-gold" />
+                  <span className="font-body text-[10px] text-stone leading-tight">Handmade by Himangi</span>
+                </div>
+              </div>
+
+              <p className="artwork-content-enter font-body text-[12px] text-stone/50 text-center" style={{ animationDelay: "170ms" }}>
                 🎨 100% handmade · Delivered across India · WhatsApp reply within 2 hours
               </p>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section id="reviews-section" className="section-padding bg-cream border-t border-border/40">
+        <div className="container-main max-w-3xl">
+          <div className="flex items-center justify-between flex-wrap gap-3 mb-6">
+            <h2 className="font-display text-[22px] md:text-[26px] text-forest font-medium">
+              Reviews {reviewSummary.count > 0 && `(${reviewSummary.count})`}
+            </h2>
+            {!showReviewForm && !reviewSubmitted && (
+              <button
+                onClick={() => setShowReviewForm(true)}
+                className="px-4 py-2 rounded-full border border-forest/30 font-body text-[12px] font-semibold text-forest hover:bg-forest/5 transition-colors"
+              >
+                Write a Review
+              </button>
+            )}
+          </div>
+
+          {reviewSubmitted && (
+            <div className="bg-white rounded-xl border border-gold/30 p-4 mb-6 text-center">
+              <p className="font-body text-[13px] text-forest font-medium">
+                Thank you! Your review has been submitted and will appear here once approved.
+              </p>
+            </div>
+          )}
+
+          {showReviewForm && (
+            <div className="bg-white rounded-2xl border border-border p-5 mb-6 space-y-3">
+              <div>
+                <label className="block font-body text-[11px] font-bold text-stone uppercase tracking-wider mb-1.5">
+                  Your Name
+                </label>
+                <input
+                  value={reviewForm.name}
+                  onChange={(e) => setReviewForm((f) => ({ ...f, name: e.target.value }))}
+                  placeholder="e.g. Priya Sharma"
+                  className="w-full h-[42px] px-3 rounded-lg border border-border font-body text-[13px] focus:outline-none focus:border-gold"
+                />
+              </div>
+              <div>
+                <label className="block font-body text-[11px] font-bold text-stone uppercase tracking-wider mb-1.5">
+                  Rating
+                </label>
+                <div className="flex items-center gap-1">
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <button key={i} onClick={() => setReviewForm((f) => ({ ...f, rating: i }))} type="button">
+                      <Star size={22} className={i <= reviewForm.rating ? "fill-gold text-gold" : "text-border"} />
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label className="block font-body text-[11px] font-bold text-stone uppercase tracking-wider mb-1.5">
+                  Your Review (optional)
+                </label>
+                <textarea
+                  value={reviewForm.comment}
+                  onChange={(e) => setReviewForm((f) => ({ ...f, comment: e.target.value }))}
+                  rows={3}
+                  placeholder="What did you like about this piece?"
+                  className="w-full px-3 py-2 rounded-lg border border-border font-body text-[13px] focus:outline-none focus:border-gold resize-none"
+                />
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={handleSubmitReview}
+                  disabled={submittingReview}
+                  className="flex-1 h-[42px] bg-forest text-white font-body font-semibold text-[13px] rounded-lg hover:bg-forest/90 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+                >
+                  {submittingReview && <Loader2 size={14} className="animate-spin" />}
+                  Submit Review
+                </button>
+                <button
+                  onClick={() => setShowReviewForm(false)}
+                  className="px-4 h-[42px] font-body text-[13px] text-stone hover:text-forest transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
+
+          {reviews.length === 0 ? (
+            <p className="font-body text-[13px] text-stone/60 text-center py-6">
+              No reviews yet — be the first to share your experience with this piece.
+            </p>
+          ) : (
+            <div className="space-y-4">
+              {reviews.map((r) => (
+                <div key={r.id} className="bg-white rounded-xl border border-border p-4">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="font-body text-[13px] font-semibold text-forest">{r.customer_name}</span>
+                    <span className="font-body text-[11px] text-stone/50">
+                      {new Date(r.created_at).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-0.5 mb-2">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <Star key={i} size={12} className={i <= r.rating ? "fill-gold text-gold" : "text-border"} />
+                    ))}
+                  </div>
+                  {r.comment && <p className="font-body text-[13px] text-stone leading-relaxed">{r.comment}</p>}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
