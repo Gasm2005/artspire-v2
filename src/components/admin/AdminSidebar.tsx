@@ -11,6 +11,7 @@ import {
   Tag,
   ClipboardList,
   MessageSquareText,
+  Mail,
 } from "lucide-react";
 import { signOut } from "@/lib/admin";
 
@@ -22,6 +23,7 @@ const navItems = [
   { label: "Shop Categories", to: "/admin/shop-categories", icon: Tag },
   { label: "Orders", to: "/admin/orders", icon: ClipboardList },
   { label: "Reviews", to: "/admin/reviews", icon: MessageSquareText },
+  { label: "Subscribers", to: "/admin/subscribers", icon: Mail },
   { label: "Pages", to: "/admin/website-content", icon: FileText },
   { label: "SEO", to: "/admin/seo", icon: Search },
   { label: "View Site", to: "/", icon: Globe, external: true },

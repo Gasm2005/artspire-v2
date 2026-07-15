@@ -9,6 +9,7 @@ import {
   type CartItem,
 } from "@/lib/cart";
 import { toast } from "@/lib/toast";
+import { getRelatedProducts, type ProductWithCategory } from "@/lib/products";
 import { ArtspireBreadcrumb } from "@/components/ArtspireBreadcrumb";
 import { PortfolioGridSkeleton } from "@/components/ui/skeleton";
 import { Minus, Plus, X, ShoppingBag, ArrowRight } from "lucide-react";
@@ -28,6 +29,7 @@ function CartPage() {
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [giftMessage, setGiftMessage] = useState("");
+  const [upsell, setUpsell] = useState<ProductWithCategory[]>([]);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -44,6 +46,18 @@ function CartPage() {
   }, []);
 
   useEffect(() => { load(); }, [load]);
+
+  useEffect(() => {
+    const firstItem = items[0];
+    if (!firstItem?.product) {
+      setUpsell([]);
+      return;
+    }
+    const inCartIds = new Set(items.map((i) => i.product_id));
+    getRelatedProducts(firstItem.product.id, firstItem.product.category_id, 8)
+      .then((results) => setUpsell(results.filter((p) => !inCartIds.has(p.id)).slice(0, 4)))
+      .catch(() => setUpsell([]));
+  }, [items]);
 
   async function handleQuantityChange(item: CartItem, newQty: number) {
     setUpdatingId(item.id);
@@ -199,6 +213,38 @@ function CartPage() {
                     ← Continue Shopping
                   </Link>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {items.length > 0 && upsell.length > 0 && (
+            <div className="mt-12">
+              <h2 className="font-display text-[20px] md:text-[24px] text-forest font-medium mb-5">
+                You Might Also Like
+              </h2>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+                {upsell.map((item) => (
+                  <Link
+                    key={item.id}
+                    to="/shop/product/$slug"
+                    params={{ slug: item.slug }}
+                    preload="intent"
+                    className="group block rounded-xl overflow-hidden shadow-sm bg-white hover-lift border border-border/40"
+                  >
+                    <div className="relative aspect-square overflow-hidden">
+                      <img
+                        src={item.image_url ?? "/placeholder-artwork.svg"}
+                        alt={item.title}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                    </div>
+                    <div className="p-3">
+                      <p className="font-display text-[13px] text-forest font-medium leading-snug line-clamp-2">{item.title}</p>
+                      <p className="font-body text-[12px] text-forest font-semibold mt-1">₹{item.price.toLocaleString("en-IN")}</p>
+                    </div>
+                  </Link>
+                ))}
               </div>
             </div>
           )}

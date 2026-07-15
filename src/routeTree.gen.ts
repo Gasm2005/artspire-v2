@@ -25,6 +25,7 @@ import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as ShopCategoryRouteImport } from './routes/shop.$category'
 import { Route as OrderConfirmationOrderIdRouteImport } from './routes/order-confirmation.$orderId'
 import { Route as ArtworkSlugRouteImport } from './routes/artwork.$slug'
+import { Route as AdminSubscribersRouteImport } from './routes/admin/subscribers'
 import { Route as AdminReviewsRouteImport } from './routes/admin/reviews'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminWhatsappIndexRouteImport } from './routes/admin/whatsapp/index'
@@ -137,6 +138,11 @@ const ArtworkSlugRoute = ArtworkSlugRouteImport.update({
   id: '/artwork/$slug',
   path: '/artwork/$slug',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AdminSubscribersRoute = AdminSubscribersRouteImport.update({
+  id: '/subscribers',
+  path: '/subscribers',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminReviewsRoute = AdminReviewsRouteImport.update({
   id: '/reviews',
@@ -315,6 +321,7 @@ export interface FileRoutesByFullPath {
   '/track-order': typeof TrackOrderRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/reviews': typeof AdminReviewsRoute
+  '/admin/subscribers': typeof AdminSubscribersRoute
   '/artwork/$slug': typeof ArtworkSlugRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
   '/shop/$category': typeof ShopCategoryRoute
@@ -363,6 +370,7 @@ export interface FileRoutesByTo {
   '/track-order': typeof TrackOrderRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/reviews': typeof AdminReviewsRoute
+  '/admin/subscribers': typeof AdminSubscribersRoute
   '/artwork/$slug': typeof ArtworkSlugRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
   '/shop/$category': typeof ShopCategoryRoute
@@ -413,6 +421,7 @@ export interface FileRoutesById {
   '/track-order': typeof TrackOrderRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/reviews': typeof AdminReviewsRoute
+  '/admin/subscribers': typeof AdminSubscribersRoute
   '/artwork/$slug': typeof ArtworkSlugRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
   '/shop/$category': typeof ShopCategoryRoute
@@ -464,6 +473,7 @@ export interface FileRouteTypes {
     | '/track-order'
     | '/admin/login'
     | '/admin/reviews'
+    | '/admin/subscribers'
     | '/artwork/$slug'
     | '/order-confirmation/$orderId'
     | '/shop/$category'
@@ -512,6 +522,7 @@ export interface FileRouteTypes {
     | '/track-order'
     | '/admin/login'
     | '/admin/reviews'
+    | '/admin/subscribers'
     | '/artwork/$slug'
     | '/order-confirmation/$orderId'
     | '/shop/$category'
@@ -561,6 +572,7 @@ export interface FileRouteTypes {
     | '/track-order'
     | '/admin/login'
     | '/admin/reviews'
+    | '/admin/subscribers'
     | '/artwork/$slug'
     | '/order-confirmation/$orderId'
     | '/shop/$category'
@@ -730,6 +742,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/artwork/$slug'
       preLoaderRoute: typeof ArtworkSlugRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/admin/subscribers': {
+      id: '/admin/subscribers'
+      path: '/subscribers'
+      fullPath: '/admin/subscribers'
+      preLoaderRoute: typeof AdminSubscribersRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/admin/reviews': {
       id: '/admin/reviews'
@@ -954,6 +973,7 @@ declare module '@tanstack/react-router' {
 interface AdminRouteRouteChildren {
   AdminLoginRoute: typeof AdminLoginRoute
   AdminReviewsRoute: typeof AdminReviewsRoute
+  AdminSubscribersRoute: typeof AdminSubscribersRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminArtworksNewRoute: typeof AdminArtworksNewRoute
   AdminMediaIdRoute: typeof AdminMediaIdRoute
@@ -987,6 +1007,7 @@ interface AdminRouteRouteChildren {
 const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminLoginRoute: AdminLoginRoute,
   AdminReviewsRoute: AdminReviewsRoute,
+  AdminSubscribersRoute: AdminSubscribersRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminArtworksNewRoute: AdminArtworksNewRoute,
   AdminMediaIdRoute: AdminMediaIdRoute,
