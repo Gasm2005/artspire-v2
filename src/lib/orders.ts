@@ -162,6 +162,11 @@ export async function getOrderById(id: string): Promise<OrderWithItems | null> {
   return data as OrderWithItems;
 }
 
+// NOTE: unauthenticated callers get nothing from this now — orders has
+// no public SELECT policy anymore (see the PII-exposure fix migration).
+// This only returns data for a logged-in admin session. Public lookups
+// (track-order page) use getOrderByNumberVerified in
+// orders-access.server.ts instead, which checks phone ownership.
 export async function getOrderByNumber(orderNumber: string): Promise<OrderWithItems | null> {
   const { data, error } = await supabase
     .from("orders")

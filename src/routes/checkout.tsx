@@ -163,6 +163,11 @@ function CheckoutPage() {
         shippingCost: SHIPPING_COST,
       });
 
+      // Lets the order-confirmation page verify ownership without an
+      // extra prompt when it's the same browser session that just
+      // checked out (see src/lib/orders-access.server.ts).
+      sessionStorage.setItem(`artspire_order_phone_${order.id}`, form.phone.trim());
+
       // 2. Load Razorpay checkout script
       const scriptLoaded = await loadRazorpayScript();
       if (!scriptLoaded) {

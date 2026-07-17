@@ -1,14 +1,11 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { ShopLayout } from "@/components/shop/ShopLayout";
-import { getOrderById } from "@/lib/orders";
-import { CheckCircle2, ArrowRight } from "lucide-react";
+import { getOrderForConfirmation } from "@/lib/orders-access.server";
+import type { OrderWithItems } from "@/lib/orders";
+import { CheckCircle2, ArrowRight, Loader2, Lock } from "lucide-react";
 
 export const Route = createFileRoute("/order-confirmation/$orderId")({
-  loader: async ({ params }) => {
-    const order = await getOrderById(params.orderId);
-    if (!order) throw notFound();
-    return { order };
-  },
   head: () => ({
     meta: [
       { title: "Order Confirmed | Artspire" },
@@ -16,22 +13,110 @@ export const Route = createFileRoute("/order-confirmation/$orderId")({
     ],
   }),
   component: OrderConfirmationPage,
-  notFoundComponent: () => (
-    <ShopLayout>
-      <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="font-display text-[36px] text-forest">Order not found</h1>
-          <Link to="/shop" className="font-body text-[13px] text-forest border-b border-forest/30 mt-4 inline-block">
-            Return to Shop
-          </Link>
-        </div>
-      </div>
-    </ShopLayout>
-  ),
 });
 
+// This page used to load the order by ID alone, which meant anyone
+// who obtained the URL (shared, screenshotted, browser history) could
+// see the customer's full name, email, phone, and address forever. It
+// now requires the phone number to match too — read automatically
+// from sessionStorage if this is the same browser that just checked
+// out, or typed in manually otherwise.
+
 function OrderConfirmationPage() {
-  const { order } = Route.useLoaderData();
+  const { orderId } = Route.useParams();
+  const [order, setOrder] = useState<OrderWithItems | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [needsPhone, setNeedsPhone] = useState(false);
+  const [phoneInput, setPhoneInput] = useState("");
+  const [verifying, setVerifying] = useState(false);
+  const [notFoundOrMismatch, setNotFoundOrMismatch] = useState(false);
+
+  async function attemptLoad(phone: string) {
+    try {
+      const result = await getOrderForConfirmation({ data: { orderId, phone } });
+      if (result) {
+        setOrder(result);
+        setNeedsPhone(false);
+        setNotFoundOrMismatch(false);
+      } else {
+        setNeedsPhone(true);
+        setNotFoundOrMismatch(true);
+      }
+    } catch (err) {
+      console.error(err);
+      setNeedsPhone(true);
+      setNotFoundOrMismatch(true);
+    } finally {
+      setLoading(false);
+      setVerifying(false);
+    }
+  }
+
+  useEffect(() => {
+    const savedPhone = sessionStorage.getItem(`artspire_order_phone_${orderId}`);
+    if (savedPhone) {
+      attemptLoad(savedPhone);
+    } else {
+      setLoading(false);
+      setNeedsPhone(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [orderId]);
+
+  function handleVerify() {
+    if (!phoneInput.trim()) return;
+    setVerifying(true);
+    setNotFoundOrMismatch(false);
+    attemptLoad(phoneInput.trim());
+  }
+
+  if (loading) {
+    return (
+      <ShopLayout>
+        <div className="min-h-[60vh] flex items-center justify-center">
+          <Loader2 size={24} className="animate-spin text-forest" />
+        </div>
+      </ShopLayout>
+    );
+  }
+
+  if (needsPhone && !order) {
+    return (
+      <ShopLayout>
+        <section className="section-padding bg-cream min-h-[70vh] flex items-center">
+          <div className="container-main max-w-sm text-center">
+            <Lock size={28} className="text-forest/40 mx-auto mb-4" />
+            <h1 className="font-display text-[22px] text-forest font-medium mb-2">Verify it's you</h1>
+            <p className="font-body text-[13px] text-stone mb-5">
+              Enter the phone number you used at checkout to view this order.
+            </p>
+            <input
+              value={phoneInput}
+              onChange={(e) => setPhoneInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleVerify()}
+              placeholder="98765 43210"
+              className="w-full h-[46px] px-4 rounded-xl border border-border bg-white font-body text-[14px] text-forest text-center focus:outline-none focus:border-gold mb-3"
+            />
+            {notFoundOrMismatch && (
+              <p className="font-body text-[12px] text-red-600 mb-3">
+                That doesn't match — check the number and try again, or WhatsApp us for help.
+              </p>
+            )}
+            <button
+              onClick={handleVerify}
+              disabled={verifying}
+              className="flex items-center justify-center gap-2 w-full h-[46px] bg-forest text-white font-body font-bold text-[13px] rounded-xl hover:bg-forest/90 transition-colors disabled:opacity-60"
+            >
+              {verifying && <Loader2 size={14} className="animate-spin" />}
+              View Order
+            </button>
+          </div>
+        </section>
+      </ShopLayout>
+    );
+  }
+
+  if (!order) return null;
 
   return (
     <ShopLayout>

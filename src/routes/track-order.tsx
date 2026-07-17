@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { ShopLayout } from "@/components/shop/ShopLayout";
-import { getOrderByNumber, type OrderWithItems, type OrderStatus } from "@/lib/orders";
+import { getOrderByNumberVerified } from "@/lib/orders-access.server";
+import type { OrderWithItems, OrderStatus } from "@/lib/orders";
 import { ArtspireBreadcrumb } from "@/components/ArtspireBreadcrumb";
 import { Search, Loader2, PackageCheck, Package, Truck, Clock, XCircle } from "lucide-react";
 import { toast } from "@/lib/toast";
@@ -43,13 +44,10 @@ function TrackOrderPage() {
     setLoading(true);
     setSearched(true);
     try {
-      const result = await getOrderByNumber(orderNumber.trim().toUpperCase());
-      // Verify phone matches — simple ownership check without requiring login
-      if (result && result.phone.replace(/\D/g, "").endsWith(phone.replace(/\D/g, "").slice(-10))) {
-        setOrder(result);
-      } else {
-        setOrder(null);
-      }
+      const result = await getOrderByNumberVerified({
+        data: { orderNumber: orderNumber.trim().toUpperCase(), phone: phone.trim() },
+      });
+      setOrder(result);
     } catch (err) {
       console.error(err);
       setOrder(null);
