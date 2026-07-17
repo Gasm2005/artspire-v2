@@ -4,6 +4,7 @@ import { MessageCircle, Instagram, MapPin, Clock, Star, Mail, Send } from "lucid
 import { Layout } from "../components/Layout";
 import { waLink } from "../lib/whatsapp";
 import { getPageSEO } from "@/lib/website-content";
+import { submitContactLead } from "@/lib/leads.server";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({ meta: [{ title: "Contact | Artspire" }, { name: "description", content: "Reach Himangi on WhatsApp within 2 hours to start your custom commission." }] }),
@@ -13,8 +14,26 @@ export const Route = createFileRoute("/contact")({
 function ContactPage() {
   const [form, setForm] = useState({ name: "", phone: "", email: "", idea: "" });
 
-  const onSubmit = (e: FormEvent) => {
+  const [submitting, setSubmitting] = useState(false);
+
+  const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    if (submitting) return;
+    setSubmitting(true);
+
+    // Save to the CRM so this inquiry has a record even if the visitor
+    // never sends the WhatsApp message or it gets lost in chat — this
+    // used to go nowhere at all.
+    try {
+      await submitContactLead({
+        data: { name: form.name, phone: form.phone, email: form.email, requirement: form.idea },
+      });
+    } catch (err) {
+      console.error("Failed to save lead:", err);
+      // Don't block the WhatsApp redirect on this — the person's message
+      // still needs to go through even if the CRM write failed.
+    }
+
     const msg = `Hi Himangi, I'm ${form.name} (${form.phone}). Email: ${form.email}. ${form.idea}`;
     window.location.href = waLink(msg);
   };
@@ -116,10 +135,11 @@ function ContactPage() {
             <div className="text-center pt-2">
               <button
                 type="submit"
-                className="inline-flex items-center gap-2 h-[52px] px-10 bg-forest text-white font-body font-bold text-[14px] tracking-wide rounded-xl active-scale btn-primary hover:bg-forest-dark transition-colors"
+                disabled={submitting}
+                className="inline-flex items-center gap-2 h-[52px] px-10 bg-forest text-white font-body font-bold text-[14px] tracking-wide rounded-xl active-scale btn-primary hover:bg-forest-dark transition-colors disabled:opacity-60"
               >
                 <Send size={16} />
-                Send Message
+                {submitting ? "Sending…" : "Send Message"}
               </button>
             </div>
           </form>

@@ -86,7 +86,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       alternateName: "Artspire by Himangi Pandey",
       description: "Custom handmade pencil sketches, portraits, paintings, clay art, and mirror art made by Himangi Pandey. Delivered across India.",
       url: siteUrl,
-      logo: `${siteUrl}/artspire-Logo.svg`,
+      logo: `${siteUrl}/artspire-logo.png`,
       image: `${siteUrl}/og-image.jpg`,
       email: "Ajju_pandey@outlook.com",
       address: {

@@ -19,7 +19,19 @@ export function Header({ onMenuClick }: { onMenuClick: () => void }) {
       {/* Mobile */}
       <div className="h-full px-4 flex items-center justify-between md:hidden">
         <Link to="/" className="flex items-center shrink-0 active-scale" aria-label="Artspire home">
-          <img src="/artspire-Logo.svg" alt="Artspire" className="h-14 w-auto object-contain" />
+          <picture>
+            <source srcSet="/artspire-logo.webp" type="image/webp" />
+            <img
+              src="/artspire-logo.png"
+              alt="Artspire"
+              width={693}
+              height={160}
+              className="h-14 w-auto object-contain"
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+            />
+          </picture>
         </Link>
         <button
           aria-label="Open menu"
@@ -34,7 +46,19 @@ export function Header({ onMenuClick }: { onMenuClick: () => void }) {
       {/* Desktop */}
       <div className="hidden md:flex container-main h-full items-center justify-between">
         <Link to="/" className="flex items-center shrink-0">
-          <img src="/artspire-Logo.svg" alt="Artspire" className="h-14 w-auto object-contain" />
+          <picture>
+            <source srcSet="/artspire-logo.webp" type="image/webp" />
+            <img
+              src="/artspire-logo.png"
+              alt="Artspire"
+              width={693}
+              height={160}
+              className="h-14 w-auto object-contain"
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+            />
+          </picture>
         </Link>
 
         <nav aria-label="Main navigation" className="flex items-center gap-8 font-body text-[13px] font-medium text-stone/70">
