@@ -131,47 +131,15 @@ export async function attachRazorpayOrderId(orderId: string, razorpayOrderId: st
 }
 
 // ─── CONFIRM PAYMENT (after Razorpay success) ─────────────────
-// Called from the client after Razorpay checkout succeeds, with the
-// payment_id + signature returned by Razorpay. Server-side signature
-// verification happens in the API route (see razorpay-verify.ts),
-// this function just updates the order record after verification passes.
-
-export async function confirmOrderPayment(
-  orderId: string,
-  razorpayPaymentId: string,
-  razorpaySignature: string
-): Promise<Order> {
-  const { data, error } = await supabase
-    .from("orders")
-    .update({
-      status: "confirmed",
-      payment_status: "paid",
-      razorpay_payment_id: razorpayPaymentId,
-      razorpay_signature: razorpaySignature,
-      confirmed_at: new Date().toISOString(),
-    })
-    .eq("id", orderId)
-    .select()
-    .single();
-
-  if (error) throw error;
-
-  // Deduct inventory for each item
-  const { data: items } = await supabase
-    .from("order_items")
-    .select("product_id, quantity")
-    .eq("order_id", orderId);
-
-  if (items) {
-    await Promise.all(
-      items
-        .filter((i) => i.product_id)
-        .map((i) => supabase.rpc("deduct_product_inventory", { p_product_id: i.product_id, p_quantity: i.quantity }))
-    );
-  }
-
-  return data as Order;
-}
+// Payment confirmation moved to src/lib/razorpay.server.ts
+// (confirmPaymentServerSide / confirmPaymentAfterCheckout) so it runs
+// with the service_role key AFTER the Razorpay signature has been
+// verified server-side. The old version of this function ran from the
+// browser with the anon key, which either silently failed (no public
+// UPDATE policy exists on `orders`) or — if RLS were ever loosened —
+// would have let anyone mark any order as paid from the console.
+// Do not add a client-callable version of this back without routing
+// it through signature verification first.
 
 export async function markOrderPaymentFailed(orderId: string): Promise<void> {
   const { error } = await supabase

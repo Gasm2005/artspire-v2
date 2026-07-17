@@ -2,9 +2,8 @@ import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useState, useEffect, useCallback } from "react";
 import { ShopLayout } from "@/components/shop/ShopLayout";
 import { getCartItems, getOrCreateSessionId, clearCart, type CartItem } from "@/lib/cart";
-import { createPendingOrder, attachRazorpayOrderId, confirmOrderPayment, markOrderPaymentFailed } from "@/lib/orders";
-import { sendOrderConfirmationEmails } from "@/lib/email.server";
-import { createRazorpayOrder, verifyRazorpayPayment, getRazorpayKeyId } from "@/lib/razorpay.server";
+import { createPendingOrder, attachRazorpayOrderId, markOrderPaymentFailed } from "@/lib/orders";
+import { createRazorpayOrder, confirmPaymentAfterCheckout, getRazorpayKeyId } from "@/lib/razorpay.server";
 import { toast } from "@/lib/toast";
 import { ArtspireBreadcrumb } from "@/components/ArtspireBreadcrumb";
 import { Loader2, ShieldCheck } from "lucide-react";
@@ -173,7 +172,9 @@ function CheckoutPage() {
       }
 
       // 3. Create Razorpay order (server-side)
-      const razorpayOrder = await createRazorpayOrder({ data: { amount: total, receipt: order.order_number } });
+      const razorpayOrder = await createRazorpayOrder({
+        data: { amount: total, receipt: order.order_number, internalOrderId: order.id },
+      });
       await attachRazorpayOrderId(order.id, razorpayOrder.id);
 
       // 4. Get public key for checkout init
@@ -199,54 +200,44 @@ function CheckoutPage() {
           razorpay_signature: string;
         }) => {
           try {
-            const { valid } = await verifyRazorpayPayment({
+            // Single server-side call: verifies the signature AND
+            // confirms the order AND deducts inventory AND sends the
+            // confirmation email, all atomically with the service_role
+            // key. The browser never touches the order's payment_status
+            // directly anymore — this closes the RLS gap where that
+            // update used to silently fail (or worse, be forgeable).
+            await confirmPaymentAfterCheckout({
               data: {
-                orderId: response.razorpay_order_id,
-                paymentId: response.razorpay_payment_id,
-                signature: response.razorpay_signature,
+                orderId: order.id,
+                razorpayOrderId: response.razorpay_order_id,
+                razorpayPaymentId: response.razorpay_payment_id,
+                razorpaySignature: response.razorpay_signature,
               },
             });
 
-            if (!valid) {
-              await markOrderPaymentFailed(order.id);
-              toast.error("Payment verification failed.", "Please contact support if you were charged.");
-              setSubmitting(false);
-              return;
-            }
-
-            const confirmedOrder = await confirmOrderPayment(order.id, response.razorpay_payment_id, response.razorpay_signature);
             await clearCart(getOrCreateSessionId());
             window.dispatchEvent(new CustomEvent("artspire:cart-updated"));
             sessionStorage.removeItem("artspire_gift_message");
 
-            // Fire-and-forget — email failure should never block the
-            // user from reaching their confirmation page.
-            sendOrderConfirmationEmails({
-              data: {
-                order: confirmedOrder,
-                items: items.map((item) => ({
-                  id: item.id,
-                  order_id: order.id,
-                  product_id: item.product_id,
-                  title_snapshot: item.product?.title ?? "Unknown Product",
-                  image_snapshot: item.product?.image_url ?? null,
-                  price_snapshot: item.price_at_add,
-                  quantity: item.quantity,
-                  line_total: item.price_at_add * item.quantity,
-                  created_at: new Date().toISOString(),
-                })),
-              },
-            }).catch((err) => console.error("Email notification failed:", err));
-
             router.navigate({ to: "/order-confirmation/$orderId", params: { orderId: order.id } });
           } catch (err) {
             console.error(err);
-            toast.error("Something went wrong confirming your payment.", "Please contact support.");
+            // Don't call markOrderPaymentFailed here — the payment may
+            // have actually succeeded and this could be a transient
+            // network/verification error. A wrongly-failed order is worse
+            // than a pending one; the Razorpay webhook will reconcile the
+            // true state shortly regardless of what happens in this tab.
+            toast.error(
+              "We couldn't confirm your payment automatically.",
+              "If you were charged, your order will be confirmed shortly — check Track Order or contact us on WhatsApp."
+            );
             setSubmitting(false);
           }
         },
         modal: {
           ondismiss: async () => {
+            // The user closed the modal without paying — safe to mark
+            // failed since no payment_id exists yet to reconcile against.
             await markOrderPaymentFailed(order.id);
             setSubmitting(false);
           },

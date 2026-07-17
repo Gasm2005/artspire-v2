@@ -44,6 +44,7 @@ import { Route as AdminCategoriesIndexRouteImport } from './routes/admin/categor
 import { Route as AdminArtworksIndexRouteImport } from './routes/admin/artworks/index'
 import { Route as ShopProductSlugRouteImport } from './routes/shop.product.$slug'
 import { Route as ShopCollectionsSlugRouteImport } from './routes/shop.collections.$slug'
+import { Route as ApiWebhooksRazorpayRouteImport } from './routes/api/webhooks/razorpay'
 import { Route as AdminWebsiteContentHomepageRouteImport } from './routes/admin/website-content/homepage'
 import { Route as AdminWebsiteContentFooterRouteImport } from './routes/admin/website-content/footer'
 import { Route as AdminWebsiteContentContactRouteImport } from './routes/admin/website-content/contact'
@@ -236,6 +237,11 @@ const ShopCollectionsSlugRoute = ShopCollectionsSlugRouteImport.update({
   path: '/shop/collections/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiWebhooksRazorpayRoute = ApiWebhooksRazorpayRouteImport.update({
+  id: '/api/webhooks/razorpay',
+  path: '/api/webhooks/razorpay',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminWebsiteContentHomepageRoute =
   AdminWebsiteContentHomepageRouteImport.update({
     id: '/website-content/homepage',
@@ -335,6 +341,7 @@ export interface FileRoutesByFullPath {
   '/admin/website-content/contact': typeof AdminWebsiteContentContactRoute
   '/admin/website-content/footer': typeof AdminWebsiteContentFooterRoute
   '/admin/website-content/homepage': typeof AdminWebsiteContentHomepageRoute
+  '/api/webhooks/razorpay': typeof ApiWebhooksRazorpayRoute
   '/shop/collections/$slug': typeof ShopCollectionsSlugRoute
   '/shop/product/$slug': typeof ShopProductSlugRoute
   '/admin/artworks/': typeof AdminArtworksIndexRoute
@@ -384,6 +391,7 @@ export interface FileRoutesByTo {
   '/admin/website-content/contact': typeof AdminWebsiteContentContactRoute
   '/admin/website-content/footer': typeof AdminWebsiteContentFooterRoute
   '/admin/website-content/homepage': typeof AdminWebsiteContentHomepageRoute
+  '/api/webhooks/razorpay': typeof ApiWebhooksRazorpayRoute
   '/shop/collections/$slug': typeof ShopCollectionsSlugRoute
   '/shop/product/$slug': typeof ShopProductSlugRoute
   '/admin/artworks': typeof AdminArtworksIndexRoute
@@ -435,6 +443,7 @@ export interface FileRoutesById {
   '/admin/website-content/contact': typeof AdminWebsiteContentContactRoute
   '/admin/website-content/footer': typeof AdminWebsiteContentFooterRoute
   '/admin/website-content/homepage': typeof AdminWebsiteContentHomepageRoute
+  '/api/webhooks/razorpay': typeof ApiWebhooksRazorpayRoute
   '/shop/collections/$slug': typeof ShopCollectionsSlugRoute
   '/shop/product/$slug': typeof ShopProductSlugRoute
   '/admin/artworks/': typeof AdminArtworksIndexRoute
@@ -487,6 +496,7 @@ export interface FileRouteTypes {
     | '/admin/website-content/contact'
     | '/admin/website-content/footer'
     | '/admin/website-content/homepage'
+    | '/api/webhooks/razorpay'
     | '/shop/collections/$slug'
     | '/shop/product/$slug'
     | '/admin/artworks/'
@@ -536,6 +546,7 @@ export interface FileRouteTypes {
     | '/admin/website-content/contact'
     | '/admin/website-content/footer'
     | '/admin/website-content/homepage'
+    | '/api/webhooks/razorpay'
     | '/shop/collections/$slug'
     | '/shop/product/$slug'
     | '/admin/artworks'
@@ -586,6 +597,7 @@ export interface FileRouteTypes {
     | '/admin/website-content/contact'
     | '/admin/website-content/footer'
     | '/admin/website-content/homepage'
+    | '/api/webhooks/razorpay'
     | '/shop/collections/$slug'
     | '/shop/product/$slug'
     | '/admin/artworks/'
@@ -625,6 +637,7 @@ export interface RootRouteChildren {
   OrderConfirmationOrderIdRoute: typeof OrderConfirmationOrderIdRoute
   ShopCategoryRoute: typeof ShopCategoryRoute
   ShopIndexRoute: typeof ShopIndexRoute
+  ApiWebhooksRazorpayRoute: typeof ApiWebhooksRazorpayRoute
   ShopCollectionsSlugRoute: typeof ShopCollectionsSlugRoute
   ShopProductSlugRoute: typeof ShopProductSlugRoute
 }
@@ -876,6 +889,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShopCollectionsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/webhooks/razorpay': {
+      id: '/api/webhooks/razorpay'
+      path: '/api/webhooks/razorpay'
+      fullPath: '/api/webhooks/razorpay'
+      preLoaderRoute: typeof ApiWebhooksRazorpayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/website-content/homepage': {
       id: '/admin/website-content/homepage'
       path: '/website-content/homepage'
@@ -1058,6 +1078,7 @@ const rootRouteChildren: RootRouteChildren = {
   OrderConfirmationOrderIdRoute: OrderConfirmationOrderIdRoute,
   ShopCategoryRoute: ShopCategoryRoute,
   ShopIndexRoute: ShopIndexRoute,
+  ApiWebhooksRazorpayRoute: ApiWebhooksRazorpayRoute,
   ShopCollectionsSlugRoute: ShopCollectionsSlugRoute,
   ShopProductSlugRoute: ShopProductSlugRoute,
 }
