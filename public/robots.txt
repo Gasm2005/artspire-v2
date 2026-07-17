@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin
 Disallow: /admin/
 
-Sitemap: https://artspire.in/sitemap.xml
+Sitemap: https://theartspire.com/sitemap.xml

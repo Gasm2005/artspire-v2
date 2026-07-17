@@ -9,6 +9,7 @@ import {
   type ArtworkWithCategory,
 } from "@/lib";
 import { buildArtworkStructuredData, buildBreadcrumbStructuredData } from "@/lib/seo";
+import { absoluteUrl, OG_IMAGE } from "@/lib/site";
 import { MessageCircle, Tag } from "lucide-react";
 import { ArtspireBreadcrumb, breadcrumbs } from "@/components/ArtspireBreadcrumb";
 import { ArtworkDetailSkeleton } from "@/components/ui/skeleton";
@@ -56,11 +57,11 @@ export const Route = createFileRoute("/artwork/$slug")({
     });
 
     const breadcrumbData = buildBreadcrumbStructuredData([
-      { name: "Home", item: "https://artspire.in/" },
+      { name: "Home", item: absoluteUrl("/") },
       ...(artwork.categories
-        ? [{ name: artwork.categories.name, item: `https://artspire.in/categories/${artwork.categories.slug}` }]
+        ? [{ name: artwork.categories.name, item: absoluteUrl(`/categories/${artwork.categories.slug}`) }]
         : []),
-      { name: artwork.title, item: `https://artspire.in/artwork/${artwork.slug}` },
+      { name: artwork.title, item: absoluteUrl(`/artwork/${artwork.slug}`) },
     ]);
 
     return {
@@ -69,7 +70,7 @@ export const Route = createFileRoute("/artwork/$slug")({
         { name: "description", content: artwork.summary ?? `View ${artwork.title} by Artspire — handcrafted custom art.` },
         { property: "og:title", content: `${artwork.title} | Artspire` },
         { property: "og:description", content: artwork.summary ?? `View ${artwork.title} by Artspire — handcrafted custom art.` },
-        { property: "og:image", content: artwork.image_url ?? "https://artspire.in/og-image.jpg" },
+        { property: "og:image", content: artwork.image_url ?? OG_IMAGE },
         { property: "og:type", content: "website" },
       ],
       scripts: [

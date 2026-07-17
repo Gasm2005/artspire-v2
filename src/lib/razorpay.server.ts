@@ -4,6 +4,7 @@ import crypto from "node:crypto";
 import { getSupabaseAdmin } from "@/integrations/supabase/admin.server";
 import { sendOrderConfirmationEmails } from "./email.server";
 import type { Order, OrderItem } from "./orders";
+import { ACTIVE_CURRENCY, toSubunits, type CurrencyCode } from "./currency";
 
 // Server-only Razorpay config. Never import this file's Razorpay
 // instance or key_secret into client code — the .server.ts suffix
@@ -28,13 +29,16 @@ function getRazorpayInstance() {
  * Called from the checkout page before opening the Razorpay Checkout modal.
  */
 export const createRazorpayOrder = createServerFn({ method: "POST" })
-  .validator((data: { amount: number; receipt: string; internalOrderId: string }) => data)
+  .validator(
+    (data: { amount: number; receipt: string; internalOrderId: string; currency?: CurrencyCode }) => data
+  )
   .handler(async ({ data }) => {
     const razorpay = getRazorpayInstance();
+    const currency = data.currency ?? ACTIVE_CURRENCY;
 
     const order = await razorpay.orders.create({
-      amount: Math.round(data.amount * 100), // rupees → paise
-      currency: "INR",
+      amount: toSubunits(data.amount, currency), // major units → minor units
+      currency,
       receipt: data.receipt,
       payment_capture: true,
       // Lets the webhook map Razorpay's payment event back to our own

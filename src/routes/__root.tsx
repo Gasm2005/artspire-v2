@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { TopLoader } from "@/components/TopLoader";
 import { Toaster } from "@/components/ui/sonner";
+import { SITE_URL, OG_IMAGE, BRAND } from "@/lib/site";
 
 function NotFoundComponent() {
   return (
@@ -76,7 +77,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => {
-    const siteUrl = "https://artspire.in";
+    const siteUrl = SITE_URL;
 
     const localBusinessSchema = {
       "@context": "https://schema.org",
@@ -87,7 +88,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       description: "Custom handmade pencil sketches, portraits, paintings, clay art, and mirror art made by Himangi Pandey. Delivered across India.",
       url: siteUrl,
       logo: `${siteUrl}/artspire-logo.png`,
-      image: `${siteUrl}/og-image.jpg`,
+      image: OG_IMAGE,
       email: "Ajju_pandey@outlook.com",
       address: {
         "@type": "PostalAddress",
@@ -111,7 +112,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           { "@type": "Offer", itemOffered: { "@type": "Service", name: "Mirror Art", description: "Custom handmade mirror art from your photo" }, price: "2499", priceCurrency: "INR" },
         ],
       },
-      sameAs: ["https://instagram.com/artspire_in"],
+      sameAs: [BRAND.instagram],
     };
 
     const personSchema = {
@@ -124,7 +125,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       jobTitle: "Visual Artist",
       description: "Professional visual artist with 11+ years of experience specializing in handmade pencil sketches, portraits, clay art, and mirror art. Based in Kanpur, India.",
       url: `${siteUrl}/about`,
-      image: `${siteUrl}/og-image.jpg`,
+      image: OG_IMAGE,
       address: {
         "@type": "PostalAddress",
         addressLocality: "Kanpur",
@@ -133,7 +134,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       knowsAbout: ["Pencil Sketching", "Portrait Art", "Clay Sculpture", "Mirror Art", "Custom Portraiture", "Handmade Art", "Colour Portraits", "Personalized Gifts"],
       worksFor: { "@type": "Organization", "@id": `${siteUrl}/#business`, name: "Artspire" },
-      sameAs: ["https://instagram.com/artspire_in"],
+      sameAs: [BRAND.instagram],
     };
 
     const websiteSchema = {
@@ -162,14 +163,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         { property: "og:title", content: "Artspire | Handcrafted Custom Art" },
         { property: "og:description", content: "Commission handcrafted pencil sketches, portraits, clay art and personalized gifts. Ships across India." },
         { property: "og:type", content: "website" },
-        { property: "og:image", content: "https://artspire.in/og-image.jpg" },
-        { property: "og:url", content: "https://artspire.in" },
+        { property: "og:image", content: OG_IMAGE },
+        { property: "og:url", content: siteUrl },
         { name: "theme-color", content: "#3E4D3A" },
         { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:site", content: "@artspire_in" },
+        { name: "twitter:site", content: BRAND.twitterHandle },
         { name: "twitter:title", content: "Artspire | Handcrafted Custom Art by Himangi Pandey" },
         { name: "twitter:description", content: "Custom handmade pencil sketches, portraits, clay art. Made by Himangi Pandey. Ships across India." },
-        { name: "twitter:image", content: "https://artspire.in/og-image.jpg" },
+        { name: "twitter:image", content: OG_IMAGE },
       ],
       scripts: [
         { type: "application/ld+json", children: JSON.stringify(localBusinessSchema) },

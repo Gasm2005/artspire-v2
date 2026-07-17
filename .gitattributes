@@ -1,0 +1,30 @@
+# Normalize line endings so Windows/macOS/Linux and CI all agree.
+# Fixes the "every file shows as modified" churn and the mixed-CRLF
+# parse errors that were tripping tsc on local checkouts.
+
+# Default: treat as text, store LF in the repo, check out LF everywhere.
+* text=auto eol=lf
+
+# Explicit text files
+*.ts    text eol=lf
+*.tsx   text eol=lf
+*.js    text eol=lf
+*.mjs   text eol=lf
+*.json  text eol=lf
+*.css   text eol=lf
+*.html  text eol=lf
+*.md    text eol=lf
+*.sql   text eol=lf
+*.yml   text eol=lf
+*.yaml  text eol=lf
+*.svg   text eol=lf
+
+# Binary assets — never touch line endings
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.webp  binary
+*.ico   binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary

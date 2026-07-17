@@ -15,7 +15,7 @@ const LIBS_DIR = join(OUTPUT_DIR, "_libs");
 const STATIC_DIR = join(process.cwd(), ".vercel/output/static");
 const TSLIB_SRC_DIR = join(process.cwd(), "node_modules/tslib");
 const TSLIB_DEST_DIR = join(OUTPUT_DIR, "node_modules/tslib");
-const SITE_URL = process.env.VITE_SITE_URL || "https://artspire.in";
+const SITE_URL = process.env.VITE_SITE_URL || "https://theartspire.com";
 
 const TSLIB_IMPORT_PATTERNS = [
   { regex: /from "tslib"/g, replacement: (relPath) => `from "${relPath}"` },

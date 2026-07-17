@@ -10,6 +10,7 @@ import {
 } from "@/lib/products";
 import { getMediumCraftContent, type MediumCraftContent } from "@/lib/collections";
 import { buildBreadcrumbStructuredData } from "@/lib/seo";
+import { absoluteUrl, OG_IMAGE } from "@/lib/site";
 import { MessageCircle, Package, Sparkles, ShoppingBag, Minus, Plus, Loader2, ChevronLeft, ChevronRight, Play, Flame, ShieldCheck, Truck, Star } from "lucide-react";
 import { ArtspireBreadcrumb } from "@/components/ArtspireBreadcrumb";
 import { ArtworkDetailSkeleton } from "@/components/ui/skeleton";
@@ -67,17 +68,17 @@ export const Route = createFileRoute("/shop/product/$slug")({
           product.status === "sold_out"
             ? "https://schema.org/SoldOut"
             : "https://schema.org/InStock",
-        url: `https://artspire.in/shop/product/${product.slug}`,
+        url: absoluteUrl(`/shop/product/${product.slug}`),
       },
     };
 
     const breadcrumbData = buildBreadcrumbStructuredData([
-      { name: "Home", item: "https://artspire.in/" },
-      { name: "Shop", item: "https://artspire.in/shop" },
+      { name: "Home", item: absoluteUrl("/") },
+      { name: "Shop", item: absoluteUrl("/shop") },
       ...(product.categories
-        ? [{ name: product.categories.name, item: `https://artspire.in/shop/${product.categories.slug}` }]
+        ? [{ name: product.categories.name, item: absoluteUrl(`/shop/${product.categories.slug}`) }]
         : []),
-      { name: product.title, item: `https://artspire.in/shop/product/${product.slug}` },
+      { name: product.title, item: absoluteUrl(`/shop/product/${product.slug}`) },
     ]);
 
     return {
@@ -85,7 +86,7 @@ export const Route = createFileRoute("/shop/product/$slug")({
         { title: product.meta_title ?? `${product.title} | Artspire Shop` },
         { name: "description", content: product.meta_description ?? product.summary ?? `${product.title} — handmade, one of a kind, by Artspire.` },
         { property: "og:title", content: product.meta_title ?? `${product.title} | Artspire Shop` },
-        { property: "og:image", content: product.image_url ?? "https://artspire.in/og-image.jpg" },
+        { property: "og:image", content: product.image_url ?? OG_IMAGE },
         { property: "og:type", content: "product" },
       ],
       scripts: [
