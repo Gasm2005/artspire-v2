@@ -39,7 +39,7 @@ function Index() {
         <div className="wrap hero-grid">
           <div>
             <span className="eyebrow rv">Handcrafted · Limited Editions</span>
-            <h1 className="reveal-words">Objects made to be <em>lived with</em>, and left behind.</h1>
+            <h1 className="reveal-words">Objects made to be <em>lived with,</em> and left behind.</h1>
             <p className="rv d2">Each piece is shaped by hand, one at a time — clay, cement, wood and light, with no promise it will ever be made again.</p>
             <div className="hero-cta rv d3">
               <Link className="btn btn-solid" to="/shop"><span>Explore the Collection</span></Link>

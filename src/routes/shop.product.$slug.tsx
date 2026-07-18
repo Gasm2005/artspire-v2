@@ -1,5 +1,5 @@
 import { createFileRoute, notFound, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import {
   getPublishedProductBySlug,
   getProductGalleryImages,
@@ -61,7 +61,8 @@ function ProductPage() {
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
   const [adding, setAdding] = useState(false);
-  const [activeImg, setActiveImg] = useState(product.image_url ?? "");
+  const [idx, setIdx] = useState(0);
+  const startX = useRef(0);
 
   const soldOut = product.status === "sold_out";
   const lowStock = !soldOut && product.inventory_count > 0 && product.inventory_count <= 3;
@@ -70,6 +71,7 @@ function ProductPage() {
     product.image_url,
     ...gallery.map((g) => g.media?.public_url).filter(Boolean),
   ].filter((v, i, a) => v && a.indexOf(v) === i) as string[];
+  const activeImg = images[idx] ?? images[0] ?? "";
 
   async function handleAddToCart() {
     setAdding(true);
@@ -111,14 +113,26 @@ function ProductPage() {
         <div className="gallery">
           <div className="thumbs">
             {images.map((src, i) => (
-              <div key={i} className={"frame" + (src === activeImg ? " active" : "")} onClick={() => setActiveImg(src)} data-label={`View ${i + 1}`}>
+              <div key={i} className={"frame" + (i === idx ? " active" : "")} onClick={() => setIdx(i)} data-label={`View ${i + 1}`}>
                 <img src={src} alt={product.title} loading="lazy" />
               </div>
             ))}
           </div>
-          <div className="frame main-img tilt" data-label="Product photo">
+          <div
+            className="frame main-img tilt" data-label="Product photo"
+            onTouchStart={(e) => { startX.current = e.touches[0].clientX; }}
+            onTouchEnd={(e) => {
+              const dx = e.changedTouches[0].clientX - startX.current;
+              if (Math.abs(dx) > 40 && images.length > 1) {
+                setIdx((i) => (dx < 0 ? (i + 1) % images.length : (i - 1 + images.length) % images.length));
+              }
+            }}
+          >
             {activeImg ? <img src={activeImg} alt={product.title} /> : null}
           </div>
+          {images.length > 1 && (
+            <div className="gdots">{images.map((_, i) => <span key={i} className={i === idx ? "on" : ""} onClick={() => setIdx(i)} />)}</div>
+          )}
         </div>
 
         <div className="info">

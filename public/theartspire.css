@@ -412,3 +412,32 @@ html.lenis,html.lenis body{height:auto}
 @media(hover:none){
   .tas .tilt:hover{box-shadow:none}
 }
+
+/* ============ MOBILE CAROUSELS + POLISH ============ */
+@media(max-width:600px){
+  /* Homepage product / category / gift rows → swipeable carousel */
+  .tas .prod-grid,.tas .grid,.tas .grid.g4,.tas .cat-grid,.tas .gift-grid{
+    display:flex;grid-template-columns:none;gap:14px;
+    overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
+    padding:2px 18px 10px;margin:0 -18px;scrollbar-width:none;
+  }
+  .tas .prod-grid::-webkit-scrollbar,.tas .grid::-webkit-scrollbar,.tas .grid.g4::-webkit-scrollbar,.tas .cat-grid::-webkit-scrollbar,.tas .gift-grid::-webkit-scrollbar{display:none}
+  .tas .prod-grid>*,.tas .grid>*,.tas .grid.g4>*,.tas .gift-grid>*{flex:0 0 66%;scroll-snap-align:start}
+  .tas .cat-grid>*{flex:0 0 78%;scroll-snap-align:start}
+  .tas .editorial{flex:0 0 90%}
+  /* keep hero heading from orphaning */
+  .tas .hero h1{line-height:1.06}
+  /* hero images a touch bigger on phone */
+  .tas .hero-art{grid-template-rows:180px 150px}
+}
+/* PDP: swipeable main image + dots on mobile */
+.tas .main-img{touch-action:pan-y}
+.tas .gdots{display:none}
+@media(max-width:900px){
+  .tas .gallery{display:block}
+  .tas .thumbs{display:none}
+  .tas .main-img{aspect-ratio:4/4.4;border-radius:3px}
+  .tas .gdots{display:flex;justify-content:center;gap:7px;margin-top:12px}
+  .tas .gdots span{width:7px;height:7px;border-radius:50%;background:var(--line);transition:.3s}
+  .tas .gdots span.on{background:var(--gold);width:20px;border-radius:4px}
+}
