@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import { getCartCount, getOrCreateSessionId } from "@/lib/cart";
 
 // Shared "The Artspire" premium chrome (charcoal design system, scoped under .tas)
 // Wrap any page: <SiteChrome>...sections...</SiteChrome>
@@ -93,6 +94,21 @@ export function useSiteMotion() {
 }
 
 export function SiteHeader() {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    let alive = true;
+    const refresh = () => {
+      getCartCount(getOrCreateSessionId()).then((c) => { if (alive) setCount(c); }).catch(() => {});
+    };
+    refresh();
+    window.addEventListener("artspire:cart-updated", refresh);
+    window.addEventListener("focus", refresh);
+    return () => {
+      alive = false;
+      window.removeEventListener("artspire:cart-updated", refresh);
+      window.removeEventListener("focus", refresh);
+    };
+  }, []);
   return (
     <>
       <div className="announce"><div className="wrap arow"><span>Handmade in India</span><b>◆</b><span>Complimentary pan-India shipping</span><b>◆</b><span>Now shipping worldwide soon</span></div></div>
@@ -110,7 +126,7 @@ export function SiteHeader() {
             <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.6"><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" /></svg>
             <Link to="/cart" className="cart-dot" aria-label="Cart">
               <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.6"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" /><path d="M3 6h18" /><path d="M16 10a4 4 0 0 1-8 0" /></svg>
-              <b>0</b>
+              {count > 0 && <b>{count}</b>}
             </Link>
           </div>
         </nav>
