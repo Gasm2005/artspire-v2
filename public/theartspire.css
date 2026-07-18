@@ -344,3 +344,71 @@ html.lenis,html.lenis body{height:auto}
 .tas .frame:has(img)::before,.tas .frame:has(img)::after{display:none}
 .tas .card:hover .imgwrap img{transform:scale(1.06)}
 .tas .cat-tile:hover img,.tas .gift:hover img{transform:scale(1.07)}
+
+/* ============ RESPONSIVE PASS (world-class) ============ */
+/* Fluid typography — smooth scaling across every screen */
+.tas .hero h1{font-size:clamp(38px,7.2vw,82px)}
+.tas .page-hero h1,.tas .banner h1{font-size:clamp(32px,5.2vw,64px)}
+.tas .sec-head h2,.tas .artist h2,.tas .news h2{font-size:clamp(30px,4.6vw,54px)}
+.tas .exclusive h2{font-size:clamp(32px,5vw,58px)}
+.tas .info h1{font-size:clamp(28px,3.6vw,44px)}
+
+/* Mobile menu */
+.tas .menu-btn{display:none;background:none;border:none;cursor:pointer;padding:4px;color:var(--forest)}
+.tas .menu-btn svg{width:24px;height:24px;stroke:var(--forest)}
+.tas .mobnav{position:fixed;inset:0;z-index:100;background:var(--cream);transform:translateX(100%);transition:transform .5s cubic-bezier(.7,0,.2,1);display:flex;flex-direction:column;padding:24px 28px;overflow-y:auto}
+.tas .mobnav.open{transform:translateX(0)}
+.tas .mobnav .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:26px}
+.tas .mobnav a{font-family:"Cormorant Garamond",serif;font-size:30px;color:var(--forest);padding:15px 0;border-bottom:1px solid var(--line);text-decoration:none}
+.tas .mobnav a:last-child{color:var(--gold)}
+.tas .mobnav .close{background:none;border:none;cursor:pointer;padding:4px}
+.tas .mobnav .close svg{width:26px;height:26px;stroke:var(--forest)}
+
+/* Tablet */
+@media(max-width:1024px){
+  .tas .wrap{padding:0 30px}
+  .tas .navlinks{gap:22px;font-size:12px}
+  .tas .prod-grid,.tas .grid.g4{grid-template-columns:repeat(3,1fr)}
+  .tas .hero-grid{gap:44px}
+}
+
+/* Below 900: show hamburger, collapse two-col layouts (beats inline styles) */
+@media(max-width:900px){
+  .tas .menu-btn{display:block}
+  .tas .exc-grid,.tas .cart-cols,.tas .pdp,.tas .hero-grid,.tas .artist-grid{grid-template-columns:1fr!important;gap:36px}
+  .tas .summary{position:static}
+  .tas .gallery{position:static}
+}
+
+/* Phones */
+@media(max-width:600px){
+  .tas .wrap{padding:0 18px}
+  .tas section{padding:44px 0}
+  .tas .page-hero{padding:44px 0 30px}
+  .tas .banner{min-height:250px}
+  .tas .prod-grid,.tas .grid,.tas .grid.g4,.tas .gift-grid{grid-template-columns:repeat(2,1fr);gap:14px}
+  .tas .cat-grid,.tas .q-grid,.tas .price-grid,.tas .steps{grid-template-columns:1fr}
+  .tas .hero-art{grid-template-rows:150px 128px;gap:12px}
+  .tas .hero-meta{gap:22px;flex-wrap:wrap}
+  .tas .chips{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:6px}
+  .tas .toolbar .row{gap:10px}
+  .tas .tools-right{width:100%;justify-content:space-between}
+  .tas .foot-grid{grid-template-columns:1fr 1fr;gap:26px}
+  .tas .btn{padding:15px 24px;font-size:11px}
+  .tas .card h3{font-size:19px}
+  .tas .floating{display:none}
+  .tas .thumbs{flex-direction:row;overflow-x:auto}
+  .tas .thumbs .frame{width:64px;flex:0 0 64px}
+}
+
+/* Very small phones */
+@media(max-width:380px){
+  .tas .prod-grid,.tas .grid,.tas .grid.g4,.tas .gift-grid{grid-template-columns:1fr}
+  .tas .hero-art{grid-template-columns:1fr;grid-template-rows:auto}
+  .tas .hero-art .frame:first-child{grid-row:auto}
+}
+
+/* Touch: no tilt jump / cursor ring */
+@media(hover:none){
+  .tas .tilt:hover{box-shadow:none}
+}

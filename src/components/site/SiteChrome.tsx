@@ -95,6 +95,7 @@ export function useSiteMotion() {
 
 export function SiteHeader() {
   const [count, setCount] = useState(0);
+  const [menuOpen, setMenuOpen] = useState(false);
   useEffect(() => {
     let alive = true;
     const refresh = () => {
@@ -109,12 +110,17 @@ export function SiteHeader() {
       window.removeEventListener("focus", refresh);
     };
   }, []);
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
+  const close = () => setMenuOpen(false);
   return (
     <>
       <div className="announce"><div className="wrap arow"><span>Handmade in India</span><b>◆</b><span>Complimentary pan-India shipping</span><b>◆</b><span>Now shipping worldwide soon</span></div></div>
       <header id="hdr">
         <nav className="wrap">
-          <Link to="/" className="logo"><img src="/artspire-logo.png" alt="The Artspire" className="logo-img" /></Link>
+          <Link to="/" className="logo" onClick={close}><img src="/artspire-logo.png" alt="The Artspire" className="logo-img" /></Link>
           <div className="navlinks">
             <Link to="/shop">Shop</Link>
             <Link to="/portfolio">Portfolio</Link>
@@ -124,14 +130,32 @@ export function SiteHeader() {
             <Link to="/contact">Contact</Link>
           </div>
           <div className="navicons">
-            <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.6"><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" /></svg>
             <Link to="/cart" className="cart-dot" aria-label="Cart">
               <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.6"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" /><path d="M3 6h18" /><path d="M16 10a4 4 0 0 1-8 0" /></svg>
               {count > 0 && <b>{count}</b>}
             </Link>
+            <button className="menu-btn" aria-label="Menu" onClick={() => setMenuOpen(true)}>
+              <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.7"><path d="M3 6h18M3 12h18M3 18h18" /></svg>
+            </button>
           </div>
         </nav>
       </header>
+
+      <div className={"mobnav" + (menuOpen ? " open" : "")}>
+        <div className="top">
+          <div className="foot-logo" style={{ color: "var(--forest)" }}><i>The</i>Artspire</div>
+          <button className="close" aria-label="Close menu" onClick={close}>
+            <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.7"><path d="M18 6 6 18M6 6l12 12" /></svg>
+          </button>
+        </div>
+        <Link to="/shop" onClick={close}>Shop</Link>
+        <Link to="/portfolio" onClick={close}>Portfolio</Link>
+        <Link to="/services" onClick={close}>Commissions</Link>
+        <Link to="/blog" onClick={close}>Journal</Link>
+        <Link to="/about" onClick={close}>Our Story</Link>
+        <Link to="/contact" onClick={close}>Contact</Link>
+        <Link to="/cart" onClick={close}>Cart{count > 0 ? ` (${count})` : ""}</Link>
+      </div>
     </>
   );
 }
