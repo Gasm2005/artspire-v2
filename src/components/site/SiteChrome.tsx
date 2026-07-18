@@ -117,8 +117,9 @@ export function SiteHeader() {
           <Link to="/" className="logo"><img src="/artspire-logo.png" alt="The Artspire" className="logo-img" /></Link>
           <div className="navlinks">
             <Link to="/shop">Shop</Link>
-            <Link to="/shop">Collections</Link>
+            <Link to="/portfolio">Portfolio</Link>
             <Link to="/services">Commissions</Link>
+            <Link to="/blog">Journal</Link>
             <Link to="/about">Our Story</Link>
             <Link to="/contact">Contact</Link>
           </div>
@@ -145,10 +146,10 @@ export function SiteFooter() {
             <p className="foot-tag">Handmade objects for the home — made slowly, kept for a lifetime.</p>
           </div>
           <div><h4>Shop</h4><ul><li><Link to="/shop">All Pieces</Link></li><li><Link to="/shop">Collections</Link></li><li><Link to="/shop">New Arrivals</Link></li><li><Link to="/cart">Cart</Link></li></ul></div>
-          <div><h4>Studio</h4><ul><li><Link to="/services">Commissions</Link></li><li><Link to="/portfolio">Portfolio</Link></li><li><Link to="/about">Our Story</Link></li><li><Link to="/contact">Contact</Link></li></ul></div>
+          <div><h4>Studio</h4><ul><li><Link to="/services">Commissions</Link></li><li><Link to="/portfolio">Portfolio</Link></li><li><Link to="/about">Our Story</Link></li><li><Link to="/blog">Journal</Link></li><li><Link to="/contact">Contact</Link></li></ul></div>
           <div><h4>Support</h4><ul><li><Link to="/track-order">Track Order</Link></li><li><Link to="/faq">Shipping &amp; Returns</Link></li><li><Link to="/faq">Care Guide</Link></li><li><Link to="/faq">FAQs</Link></li></ul></div>
         </div>
-        <div className="foot-bottom"><span>© 2026 The Artspire Studio · Kanpur, India</span><span>Crafting Your Vision</span></div>
+        <div className="foot-bottom"><span>© 2026 The Artspire Studio · Lucknow, India</span><span>Crafting Your Vision</span></div>
       </div>
     </footer>
   );

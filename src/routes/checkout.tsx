@@ -262,7 +262,7 @@ function CheckoutPage() {
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
                     <div className="field">
                       <label>Postal code *</label>
-                      <input type="text" inputMode="numeric" maxLength={6} value={form.postal_code} onChange={(e) => updateField("postal_code", e.target.value.replace(/\D/g, ""))} placeholder="e.g. 208001" />
+                      <input type="text" inputMode="numeric" maxLength={6} value={form.postal_code} onChange={(e) => updateField("postal_code", e.target.value.replace(/\D/g, ""))} placeholder="e.g. 226001" />
                       {pincodeLookupState === "loading" && <p style={{ fontSize: 11, color: "var(--stone)", marginTop: 4 }}>Looking up city/state…</p>}
                       {pincodeLookupState === "error" && <p style={{ fontSize: 11, color: "var(--stone)", marginTop: 4 }}>Couldn't auto-fill — please enter manually.</p>}
                     </div>

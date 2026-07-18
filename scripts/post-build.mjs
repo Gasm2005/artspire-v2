@@ -156,6 +156,8 @@ async function generateSitemap() {
 
   const staticEntries = [
     urlEntry(`${SITE_URL}/`, null, "weekly", "1.0"),
+    urlEntry(`${SITE_URL}/shop`, null, "daily", "0.9"),
+    urlEntry(`${SITE_URL}/blog`, null, "weekly", "0.7"),
     urlEntry(`${SITE_URL}/about`, null, "monthly", "0.6"),
     urlEntry(`${SITE_URL}/portfolio`, null, "weekly", "0.8"),
     urlEntry(`${SITE_URL}/services`, null, "monthly", "0.7"),
@@ -189,6 +191,16 @@ async function generateSitemap() {
 
       if (categoriesError) throw categoriesError;
 
+      const { data: products } = await supabase
+        .from("products")
+        .select("slug, updated_at")
+        .eq("status", "published");
+
+      const { data: posts } = await supabase
+        .from("blog_posts")
+        .select("slug, updated_at, published_at")
+        .eq("status", "published");
+
       dynamicEntries = [
         ...(artworks ?? []).map((a) =>
           urlEntry(
@@ -201,10 +213,16 @@ async function generateSitemap() {
         ...(categories ?? []).map((c) =>
           urlEntry(`${SITE_URL}/categories/${c.slug}`, c.updated_at, "weekly", "0.9")
         ),
+        ...(products ?? []).map((p) =>
+          urlEntry(`${SITE_URL}/shop/product/${p.slug}`, p.updated_at, "weekly", "0.9")
+        ),
+        ...(posts ?? []).map((p) =>
+          urlEntry(`${SITE_URL}/blog/${p.slug}`, p.updated_at || p.published_at, "monthly", "0.7")
+        ),
       ];
 
       console.log(
-        `[post-build] Sitemap: ${artworks?.length ?? 0} artworks, ${categories?.length ?? 0} categories`
+        `[post-build] Sitemap: ${artworks?.length ?? 0} artworks, ${categories?.length ?? 0} categories, ${products?.length ?? 0} products, ${posts?.length ?? 0} posts`
       );
     } catch (err) {
       console.error("[post-build] Failed to fetch dynamic sitemap entries:", err.message);

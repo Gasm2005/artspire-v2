@@ -21,9 +21,11 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ShopIndexRouteImport } from './routes/shop.index'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as ShopCategoryRouteImport } from './routes/shop.$category'
 import { Route as OrderConfirmationOrderIdRouteImport } from './routes/order-confirmation.$orderId'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as ArtworkSlugRouteImport } from './routes/artwork.$slug'
 import { Route as AdminSubscribersRouteImport } from './routes/admin/subscribers'
 import { Route as AdminReviewsRouteImport } from './routes/admin/reviews'
@@ -41,6 +43,7 @@ import { Route as AdminMediaIndexRouteImport } from './routes/admin/media/index'
 import { Route as AdminLeadsIndexRouteImport } from './routes/admin/leads/index'
 import { Route as AdminFaqsIndexRouteImport } from './routes/admin/faqs/index'
 import { Route as AdminCategoriesIndexRouteImport } from './routes/admin/categories/index'
+import { Route as AdminBlogIndexRouteImport } from './routes/admin/blog/index'
 import { Route as AdminArtworksIndexRouteImport } from './routes/admin/artworks/index'
 import { Route as ShopProductSlugRouteImport } from './routes/shop.product.$slug'
 import { Route as ShopCollectionsSlugRouteImport } from './routes/shop.collections.$slug'
@@ -52,11 +55,13 @@ import { Route as AdminWebsiteContentAboutRouteImport } from './routes/admin/web
 import { Route as AdminProductsNewRouteImport } from './routes/admin/products/new'
 import { Route as AdminOrdersIdRouteImport } from './routes/admin/orders/$id'
 import { Route as AdminMediaIdRouteImport } from './routes/admin/media/$id'
+import { Route as AdminBlogNewRouteImport } from './routes/admin/blog/new'
 import { Route as AdminArtworksNewRouteImport } from './routes/admin/artworks/new'
 import { Route as AdminVisualAssetsEditIdRouteImport } from './routes/admin/visual-assets/edit.$id'
 import { Route as AdminShopCategoriesEditIdRouteImport } from './routes/admin/shop-categories/edit.$id'
 import { Route as AdminProductsEditIdRouteImport } from './routes/admin/products/edit.$id'
 import { Route as AdminCategoriesEditIdRouteImport } from './routes/admin/categories/edit.$id'
+import { Route as AdminBlogEditIdRouteImport } from './routes/admin/blog/edit.$id'
 import { Route as AdminArtworksEditIdRouteImport } from './routes/admin/artworks/edit.$id'
 
 const TrackOrderRoute = TrackOrderRouteImport.update({
@@ -119,6 +124,11 @@ const ShopIndexRoute = ShopIndexRouteImport.update({
   path: '/shop/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -135,6 +145,11 @@ const OrderConfirmationOrderIdRoute =
     path: '/order-confirmation/$orderId',
     getParentRoute: () => rootRouteImport,
   } as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ArtworkSlugRoute = ArtworkSlugRouteImport.update({
   id: '/artwork/$slug',
   path: '/artwork/$slug',
@@ -222,6 +237,11 @@ const AdminCategoriesIndexRoute = AdminCategoriesIndexRouteImport.update({
   path: '/categories/',
   getParentRoute: () => AdminRouteRoute,
 } as any)
+const AdminBlogIndexRoute = AdminBlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
 const AdminArtworksIndexRoute = AdminArtworksIndexRouteImport.update({
   id: '/artworks/',
   path: '/artworks/',
@@ -281,6 +301,11 @@ const AdminMediaIdRoute = AdminMediaIdRouteImport.update({
   path: '/media/$id',
   getParentRoute: () => AdminRouteRoute,
 } as any)
+const AdminBlogNewRoute = AdminBlogNewRouteImport.update({
+  id: '/blog/new',
+  path: '/blog/new',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
 const AdminArtworksNewRoute = AdminArtworksNewRouteImport.update({
   id: '/artworks/new',
   path: '/artworks/new',
@@ -307,6 +332,11 @@ const AdminCategoriesEditIdRoute = AdminCategoriesEditIdRouteImport.update({
   path: '/categories/edit/$id',
   getParentRoute: () => AdminRouteRoute,
 } as any)
+const AdminBlogEditIdRoute = AdminBlogEditIdRouteImport.update({
+  id: '/blog/edit/$id',
+  path: '/blog/edit/$id',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
 const AdminArtworksEditIdRoute = AdminArtworksEditIdRouteImport.update({
   id: '/artworks/edit/$id',
   path: '/artworks/edit/$id',
@@ -329,11 +359,14 @@ export interface FileRoutesByFullPath {
   '/admin/reviews': typeof AdminReviewsRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
   '/artwork/$slug': typeof ArtworkSlugRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
   '/shop/$category': typeof ShopCategoryRoute
   '/admin/': typeof AdminIndexRoute
+  '/blog/': typeof BlogIndexRoute
   '/shop/': typeof ShopIndexRoute
   '/admin/artworks/new': typeof AdminArtworksNewRoute
+  '/admin/blog/new': typeof AdminBlogNewRoute
   '/admin/media/$id': typeof AdminMediaIdRoute
   '/admin/orders/$id': typeof AdminOrdersIdRoute
   '/admin/products/new': typeof AdminProductsNewRoute
@@ -345,6 +378,7 @@ export interface FileRoutesByFullPath {
   '/shop/collections/$slug': typeof ShopCollectionsSlugRoute
   '/shop/product/$slug': typeof ShopProductSlugRoute
   '/admin/artworks/': typeof AdminArtworksIndexRoute
+  '/admin/blog/': typeof AdminBlogIndexRoute
   '/admin/categories/': typeof AdminCategoriesIndexRoute
   '/admin/faqs/': typeof AdminFaqsIndexRoute
   '/admin/leads/': typeof AdminLeadsIndexRoute
@@ -359,6 +393,7 @@ export interface FileRoutesByFullPath {
   '/admin/website-content/': typeof AdminWebsiteContentIndexRoute
   '/admin/whatsapp/': typeof AdminWhatsappIndexRoute
   '/admin/artworks/edit/$id': typeof AdminArtworksEditIdRoute
+  '/admin/blog/edit/$id': typeof AdminBlogEditIdRoute
   '/admin/categories/edit/$id': typeof AdminCategoriesEditIdRoute
   '/admin/products/edit/$id': typeof AdminProductsEditIdRoute
   '/admin/shop-categories/edit/$id': typeof AdminShopCategoriesEditIdRoute
@@ -379,11 +414,14 @@ export interface FileRoutesByTo {
   '/admin/reviews': typeof AdminReviewsRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
   '/artwork/$slug': typeof ArtworkSlugRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
   '/shop/$category': typeof ShopCategoryRoute
   '/admin': typeof AdminIndexRoute
+  '/blog': typeof BlogIndexRoute
   '/shop': typeof ShopIndexRoute
   '/admin/artworks/new': typeof AdminArtworksNewRoute
+  '/admin/blog/new': typeof AdminBlogNewRoute
   '/admin/media/$id': typeof AdminMediaIdRoute
   '/admin/orders/$id': typeof AdminOrdersIdRoute
   '/admin/products/new': typeof AdminProductsNewRoute
@@ -395,6 +433,7 @@ export interface FileRoutesByTo {
   '/shop/collections/$slug': typeof ShopCollectionsSlugRoute
   '/shop/product/$slug': typeof ShopProductSlugRoute
   '/admin/artworks': typeof AdminArtworksIndexRoute
+  '/admin/blog': typeof AdminBlogIndexRoute
   '/admin/categories': typeof AdminCategoriesIndexRoute
   '/admin/faqs': typeof AdminFaqsIndexRoute
   '/admin/leads': typeof AdminLeadsIndexRoute
@@ -409,6 +448,7 @@ export interface FileRoutesByTo {
   '/admin/website-content': typeof AdminWebsiteContentIndexRoute
   '/admin/whatsapp': typeof AdminWhatsappIndexRoute
   '/admin/artworks/edit/$id': typeof AdminArtworksEditIdRoute
+  '/admin/blog/edit/$id': typeof AdminBlogEditIdRoute
   '/admin/categories/edit/$id': typeof AdminCategoriesEditIdRoute
   '/admin/products/edit/$id': typeof AdminProductsEditIdRoute
   '/admin/shop-categories/edit/$id': typeof AdminShopCategoriesEditIdRoute
@@ -431,11 +471,14 @@ export interface FileRoutesById {
   '/admin/reviews': typeof AdminReviewsRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
   '/artwork/$slug': typeof ArtworkSlugRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
   '/shop/$category': typeof ShopCategoryRoute
   '/admin/': typeof AdminIndexRoute
+  '/blog/': typeof BlogIndexRoute
   '/shop/': typeof ShopIndexRoute
   '/admin/artworks/new': typeof AdminArtworksNewRoute
+  '/admin/blog/new': typeof AdminBlogNewRoute
   '/admin/media/$id': typeof AdminMediaIdRoute
   '/admin/orders/$id': typeof AdminOrdersIdRoute
   '/admin/products/new': typeof AdminProductsNewRoute
@@ -447,6 +490,7 @@ export interface FileRoutesById {
   '/shop/collections/$slug': typeof ShopCollectionsSlugRoute
   '/shop/product/$slug': typeof ShopProductSlugRoute
   '/admin/artworks/': typeof AdminArtworksIndexRoute
+  '/admin/blog/': typeof AdminBlogIndexRoute
   '/admin/categories/': typeof AdminCategoriesIndexRoute
   '/admin/faqs/': typeof AdminFaqsIndexRoute
   '/admin/leads/': typeof AdminLeadsIndexRoute
@@ -461,6 +505,7 @@ export interface FileRoutesById {
   '/admin/website-content/': typeof AdminWebsiteContentIndexRoute
   '/admin/whatsapp/': typeof AdminWhatsappIndexRoute
   '/admin/artworks/edit/$id': typeof AdminArtworksEditIdRoute
+  '/admin/blog/edit/$id': typeof AdminBlogEditIdRoute
   '/admin/categories/edit/$id': typeof AdminCategoriesEditIdRoute
   '/admin/products/edit/$id': typeof AdminProductsEditIdRoute
   '/admin/shop-categories/edit/$id': typeof AdminShopCategoriesEditIdRoute
@@ -484,11 +529,14 @@ export interface FileRouteTypes {
     | '/admin/reviews'
     | '/admin/subscribers'
     | '/artwork/$slug'
+    | '/blog/$slug'
     | '/order-confirmation/$orderId'
     | '/shop/$category'
     | '/admin/'
+    | '/blog/'
     | '/shop/'
     | '/admin/artworks/new'
+    | '/admin/blog/new'
     | '/admin/media/$id'
     | '/admin/orders/$id'
     | '/admin/products/new'
@@ -500,6 +548,7 @@ export interface FileRouteTypes {
     | '/shop/collections/$slug'
     | '/shop/product/$slug'
     | '/admin/artworks/'
+    | '/admin/blog/'
     | '/admin/categories/'
     | '/admin/faqs/'
     | '/admin/leads/'
@@ -514,6 +563,7 @@ export interface FileRouteTypes {
     | '/admin/website-content/'
     | '/admin/whatsapp/'
     | '/admin/artworks/edit/$id'
+    | '/admin/blog/edit/$id'
     | '/admin/categories/edit/$id'
     | '/admin/products/edit/$id'
     | '/admin/shop-categories/edit/$id'
@@ -534,11 +584,14 @@ export interface FileRouteTypes {
     | '/admin/reviews'
     | '/admin/subscribers'
     | '/artwork/$slug'
+    | '/blog/$slug'
     | '/order-confirmation/$orderId'
     | '/shop/$category'
     | '/admin'
+    | '/blog'
     | '/shop'
     | '/admin/artworks/new'
+    | '/admin/blog/new'
     | '/admin/media/$id'
     | '/admin/orders/$id'
     | '/admin/products/new'
@@ -550,6 +603,7 @@ export interface FileRouteTypes {
     | '/shop/collections/$slug'
     | '/shop/product/$slug'
     | '/admin/artworks'
+    | '/admin/blog'
     | '/admin/categories'
     | '/admin/faqs'
     | '/admin/leads'
@@ -564,6 +618,7 @@ export interface FileRouteTypes {
     | '/admin/website-content'
     | '/admin/whatsapp'
     | '/admin/artworks/edit/$id'
+    | '/admin/blog/edit/$id'
     | '/admin/categories/edit/$id'
     | '/admin/products/edit/$id'
     | '/admin/shop-categories/edit/$id'
@@ -585,11 +640,14 @@ export interface FileRouteTypes {
     | '/admin/reviews'
     | '/admin/subscribers'
     | '/artwork/$slug'
+    | '/blog/$slug'
     | '/order-confirmation/$orderId'
     | '/shop/$category'
     | '/admin/'
+    | '/blog/'
     | '/shop/'
     | '/admin/artworks/new'
+    | '/admin/blog/new'
     | '/admin/media/$id'
     | '/admin/orders/$id'
     | '/admin/products/new'
@@ -601,6 +659,7 @@ export interface FileRouteTypes {
     | '/shop/collections/$slug'
     | '/shop/product/$slug'
     | '/admin/artworks/'
+    | '/admin/blog/'
     | '/admin/categories/'
     | '/admin/faqs/'
     | '/admin/leads/'
@@ -615,6 +674,7 @@ export interface FileRouteTypes {
     | '/admin/website-content/'
     | '/admin/whatsapp/'
     | '/admin/artworks/edit/$id'
+    | '/admin/blog/edit/$id'
     | '/admin/categories/edit/$id'
     | '/admin/products/edit/$id'
     | '/admin/shop-categories/edit/$id'
@@ -634,8 +694,10 @@ export interface RootRouteChildren {
   ServicesRoute: typeof ServicesRoute
   TrackOrderRoute: typeof TrackOrderRoute
   ArtworkSlugRoute: typeof ArtworkSlugRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   OrderConfirmationOrderIdRoute: typeof OrderConfirmationOrderIdRoute
   ShopCategoryRoute: typeof ShopCategoryRoute
+  BlogIndexRoute: typeof BlogIndexRoute
   ShopIndexRoute: typeof ShopIndexRoute
   ApiWebhooksRazorpayRoute: typeof ApiWebhooksRazorpayRoute
   ShopCollectionsSlugRoute: typeof ShopCollectionsSlugRoute
@@ -728,6 +790,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShopIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/': {
       id: '/admin/'
       path: '/'
@@ -747,6 +816,13 @@ declare module '@tanstack/react-router' {
       path: '/order-confirmation/$orderId'
       fullPath: '/order-confirmation/$orderId'
       preLoaderRoute: typeof OrderConfirmationOrderIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/artwork/$slug': {
@@ -868,6 +944,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCategoriesIndexRouteImport
       parentRoute: typeof AdminRouteRoute
     }
+    '/admin/blog/': {
+      id: '/admin/blog/'
+      path: '/blog'
+      fullPath: '/admin/blog/'
+      preLoaderRoute: typeof AdminBlogIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
     '/admin/artworks/': {
       id: '/admin/artworks/'
       path: '/artworks'
@@ -945,6 +1028,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminMediaIdRouteImport
       parentRoute: typeof AdminRouteRoute
     }
+    '/admin/blog/new': {
+      id: '/admin/blog/new'
+      path: '/blog/new'
+      fullPath: '/admin/blog/new'
+      preLoaderRoute: typeof AdminBlogNewRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
     '/admin/artworks/new': {
       id: '/admin/artworks/new'
       path: '/artworks/new'
@@ -980,6 +1070,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCategoriesEditIdRouteImport
       parentRoute: typeof AdminRouteRoute
     }
+    '/admin/blog/edit/$id': {
+      id: '/admin/blog/edit/$id'
+      path: '/blog/edit/$id'
+      fullPath: '/admin/blog/edit/$id'
+      preLoaderRoute: typeof AdminBlogEditIdRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
     '/admin/artworks/edit/$id': {
       id: '/admin/artworks/edit/$id'
       path: '/artworks/edit/$id'
@@ -996,6 +1093,7 @@ interface AdminRouteRouteChildren {
   AdminSubscribersRoute: typeof AdminSubscribersRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminArtworksNewRoute: typeof AdminArtworksNewRoute
+  AdminBlogNewRoute: typeof AdminBlogNewRoute
   AdminMediaIdRoute: typeof AdminMediaIdRoute
   AdminOrdersIdRoute: typeof AdminOrdersIdRoute
   AdminProductsNewRoute: typeof AdminProductsNewRoute
@@ -1004,6 +1102,7 @@ interface AdminRouteRouteChildren {
   AdminWebsiteContentFooterRoute: typeof AdminWebsiteContentFooterRoute
   AdminWebsiteContentHomepageRoute: typeof AdminWebsiteContentHomepageRoute
   AdminArtworksIndexRoute: typeof AdminArtworksIndexRoute
+  AdminBlogIndexRoute: typeof AdminBlogIndexRoute
   AdminCategoriesIndexRoute: typeof AdminCategoriesIndexRoute
   AdminFaqsIndexRoute: typeof AdminFaqsIndexRoute
   AdminLeadsIndexRoute: typeof AdminLeadsIndexRoute
@@ -1018,6 +1117,7 @@ interface AdminRouteRouteChildren {
   AdminWebsiteContentIndexRoute: typeof AdminWebsiteContentIndexRoute
   AdminWhatsappIndexRoute: typeof AdminWhatsappIndexRoute
   AdminArtworksEditIdRoute: typeof AdminArtworksEditIdRoute
+  AdminBlogEditIdRoute: typeof AdminBlogEditIdRoute
   AdminCategoriesEditIdRoute: typeof AdminCategoriesEditIdRoute
   AdminProductsEditIdRoute: typeof AdminProductsEditIdRoute
   AdminShopCategoriesEditIdRoute: typeof AdminShopCategoriesEditIdRoute
@@ -1030,6 +1130,7 @@ const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminSubscribersRoute: AdminSubscribersRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminArtworksNewRoute: AdminArtworksNewRoute,
+  AdminBlogNewRoute: AdminBlogNewRoute,
   AdminMediaIdRoute: AdminMediaIdRoute,
   AdminOrdersIdRoute: AdminOrdersIdRoute,
   AdminProductsNewRoute: AdminProductsNewRoute,
@@ -1038,6 +1139,7 @@ const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminWebsiteContentFooterRoute: AdminWebsiteContentFooterRoute,
   AdminWebsiteContentHomepageRoute: AdminWebsiteContentHomepageRoute,
   AdminArtworksIndexRoute: AdminArtworksIndexRoute,
+  AdminBlogIndexRoute: AdminBlogIndexRoute,
   AdminCategoriesIndexRoute: AdminCategoriesIndexRoute,
   AdminFaqsIndexRoute: AdminFaqsIndexRoute,
   AdminLeadsIndexRoute: AdminLeadsIndexRoute,
@@ -1052,6 +1154,7 @@ const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminWebsiteContentIndexRoute: AdminWebsiteContentIndexRoute,
   AdminWhatsappIndexRoute: AdminWhatsappIndexRoute,
   AdminArtworksEditIdRoute: AdminArtworksEditIdRoute,
+  AdminBlogEditIdRoute: AdminBlogEditIdRoute,
   AdminCategoriesEditIdRoute: AdminCategoriesEditIdRoute,
   AdminProductsEditIdRoute: AdminProductsEditIdRoute,
   AdminShopCategoriesEditIdRoute: AdminShopCategoriesEditIdRoute,
@@ -1075,8 +1178,10 @@ const rootRouteChildren: RootRouteChildren = {
   ServicesRoute: ServicesRoute,
   TrackOrderRoute: TrackOrderRoute,
   ArtworkSlugRoute: ArtworkSlugRoute,
+  BlogSlugRoute: BlogSlugRoute,
   OrderConfirmationOrderIdRoute: OrderConfirmationOrderIdRoute,
   ShopCategoryRoute: ShopCategoryRoute,
+  BlogIndexRoute: BlogIndexRoute,
   ShopIndexRoute: ShopIndexRoute,
   ApiWebhooksRazorpayRoute: ApiWebhooksRazorpayRoute,
   ShopCollectionsSlugRoute: ShopCollectionsSlugRoute,

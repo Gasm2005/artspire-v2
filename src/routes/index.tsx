@@ -24,7 +24,7 @@ export const Route = createFileRoute("/")({
     return {
       meta: [
         { title: seo?.title ?? "The Artspire | Handmade Objects & Bespoke Art by Himangi Pandey" },
-        { name: "description", content: seo?.description ?? "Handmade home décor and bespoke commissioned art by Himangi Pandey — clay, cement, wood, portraits. Made by hand in Kanpur, shipped across India." },
+        { name: "description", content: seo?.description ?? "Handmade home décor and bespoke commissioned art by Himangi Pandey — clay, cement, wood, portraits. Made by hand in Lucknow, shipped across India." },
         ...(seo?.ogImage ? [{ property: "og:image", content: seo.ogImage }] : []),
       ],
     };
@@ -119,7 +119,7 @@ function Index() {
           <div>
             <span className="eyebrow rv">The hands behind The Artspire</span>
             <h2 className="reveal-words">Hi, I'm Himangi.</h2>
-            <p className="rv d2">For over eleven years, I've shaped objects and portraits by hand from my studio in Kanpur. Every piece — whether it leaves the shop or begins as your idea — is drawn, thrown, or carved by me alone.</p>
+            <p className="rv d2">For over eleven years, I've shaped objects and portraits by hand from my studio in Lucknow. Every piece — whether it leaves the shop or begins as your idea — is drawn, thrown, or carved by me alone.</p>
             <p className="rv d3">I keep the numbers small on purpose. It's the only way each piece gets the attention it deserves.</p>
             <Link className="btn-ghost rv d3" to="/about">Read my story <span className="arw">→</span></Link>
             <div className="sign rv d3">— Himangi Pandey</div>

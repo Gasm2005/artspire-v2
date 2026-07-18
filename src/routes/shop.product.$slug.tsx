@@ -143,7 +143,7 @@ function ProductPage() {
 
           <div className="maker">
             <div className="av"></div>
-            <div className="t"><b>Made by Himangi Pandey</b><br /><span>Kanpur, India · 11+ years of craft</span></div>
+            <div className="t"><b>Made by Himangi Pandey</b><br /><span>Lucknow, India · 11+ years of craft</span></div>
           </div>
 
           {soldOut ? (
@@ -187,7 +187,7 @@ function ProductPage() {
           <div>
             <span className="eyebrow rv">The story of this piece</span>
             <h2 className="reveal-words">Shaped slowly, by one pair of hands.</h2>
-            <p className="rv d2">This piece begins as raw material in Himangi's Kanpur studio, worked and finished by hand over several days — no moulds, no assembly line.</p>
+            <p className="rv d2">This piece begins as raw material in Himangi's Lucknow studio, worked and finished by hand over several days — no moulds, no assembly line.</p>
             <p className="rv d3">When you buy an Artspire object, you're taking home a small, deliberate act of craft, made to be lived with and passed on.</p>
           </div>
         </div>

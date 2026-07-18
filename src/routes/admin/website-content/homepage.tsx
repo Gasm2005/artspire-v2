@@ -49,7 +49,7 @@ function HomepageContentPage() {
   };
 
   const heroFields = [
-    { key: "homepage.hero.tagline", label: "Tagline (provenance line — who & where)", type: "text" as const, placeholder: "Himangi Pandey · Kanpur, India" },
+    { key: "homepage.hero.tagline", label: "Tagline (provenance line — who & where)", type: "text" as const, placeholder: "Himangi Pandey · Lucknow, India" },
     { key: "homepage.hero.heading", label: "Main Heading (H1) — include keywords", type: "text" as const, placeholder: "Handmade Pencil Sketches & Custom Art from Your Photos" },
     { key: "homepage.hero.subheading", label: "Subheading", type: "textarea" as const, placeholder: "Each piece drawn by hand — one stroke at a time..." },
     { key: "homepage.hero.cta_text", label: "Primary Button Text", type: "text" as const, placeholder: "Commission a Piece" },
@@ -159,7 +159,7 @@ function HomepageContentPage() {
   const aboutFields = [
     { key: "homepage.about.tagline", label: "Tagline (small label above heading)", type: "text" as const, placeholder: "The Artist" },
     { key: "homepage.about.heading", label: "Heading", type: "text" as const, placeholder: "Hi, I'm Himangi." },
-    { key: "homepage.about.description", label: "Description paragraph 1 (GEO entity — be specific)", type: "textarea" as const, placeholder: "I am a visual artist based in Kanpur, India, working in pencil, graphite, colour, clay, and mirror..." },
+    { key: "homepage.about.description", label: "Description paragraph 1 (GEO entity — be specific)", type: "textarea" as const, placeholder: "I am a visual artist based in Lucknow, India, working in pencil, graphite, colour, clay, and mirror..." },
     { key: "homepage.about.description_2", label: "Description paragraph 2", type: "textarea" as const, placeholder: "Every piece I make is drawn or sculpted by my hands alone..." },
     { key: "homepage.about.cta_text", label: "Link Text", type: "text" as const, placeholder: "Read my story →" },
     { key: "homepage.about.image", label: "Artist Photo URL", type: "text" as const, placeholder: "https://..." },
