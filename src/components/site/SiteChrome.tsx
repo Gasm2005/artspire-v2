@@ -141,20 +141,22 @@ export function SiteHeader() {
         </nav>
       </header>
 
-      <div className={"mobnav" + (menuOpen ? " open" : "")}>
-        <div className="top">
-          <div className="foot-logo" style={{ color: "var(--forest)" }}><i>The</i>Artspire</div>
-          <button className="close" aria-label="Close menu" onClick={close}>
-            <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.7"><path d="M18 6 6 18M6 6l12 12" /></svg>
-          </button>
+      <div className={"mobnav-overlay" + (menuOpen ? " open" : "")} onClick={close}>
+        <div className="mobnav-panel" onClick={(e) => e.stopPropagation()}>
+          <div className="top">
+            <div className="foot-logo" style={{ color: "var(--forest)" }}><i>The</i>Artspire</div>
+            <button className="close" aria-label="Close menu" onClick={close}>
+              <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.7"><path d="M18 6 6 18M6 6l12 12" /></svg>
+            </button>
+          </div>
+          <Link to="/shop" onClick={close}>Shop</Link>
+          <Link to="/portfolio" onClick={close}>Portfolio</Link>
+          <Link to="/services" onClick={close}>Commissions</Link>
+          <Link to="/blog" onClick={close}>Journal</Link>
+          <Link to="/about" onClick={close}>Our Story</Link>
+          <Link to="/contact" onClick={close}>Contact</Link>
+          <Link to="/cart" onClick={close} className="mn-cart">Cart{count > 0 ? ` (${count})` : ""}</Link>
         </div>
-        <Link to="/shop" onClick={close}>Shop</Link>
-        <Link to="/portfolio" onClick={close}>Portfolio</Link>
-        <Link to="/services" onClick={close}>Commissions</Link>
-        <Link to="/blog" onClick={close}>Journal</Link>
-        <Link to="/about" onClick={close}>Our Story</Link>
-        <Link to="/contact" onClick={close}>Contact</Link>
-        <Link to="/cart" onClick={close}>Cart{count > 0 ? ` (${count})` : ""}</Link>
       </div>
     </>
   );
@@ -164,16 +166,31 @@ export function SiteFooter() {
   return (
     <footer>
       <div className="wrap">
-        <div className="foot-grid">
-          <div>
-            <div className="foot-logo"><i>The</i>Artspire</div>
-            <p className="foot-tag">Handmade objects for the home — made slowly, kept for a lifetime.</p>
+        {/* Desktop / tablet — refined, app-like */}
+        <div className="foot-desktop">
+          <div className="foot-grid">
+            <div>
+              <div className="foot-logo"><i>The</i>Artspire</div>
+              <p className="foot-tag">Handmade objects for the home — made slowly, kept for a lifetime.</p>
+            </div>
+            <div><h4>Shop</h4><ul><li><Link to="/shop">All Pieces</Link></li><li><Link to="/shop">Collections</Link></li><li><Link to="/cart">Cart</Link></li></ul></div>
+            <div><h4>Studio</h4><ul><li><Link to="/services">Commissions</Link></li><li><Link to="/portfolio">Portfolio</Link></li><li><Link to="/blog">Journal</Link></li><li><Link to="/about">Our Story</Link></li></ul></div>
+            <div><h4>Support</h4><ul><li><Link to="/track-order">Track Order</Link></li><li><Link to="/faq">Shipping &amp; Returns</Link></li><li><Link to="/faq">FAQs</Link></li><li><Link to="/contact">Contact</Link></li></ul></div>
           </div>
-          <div><h4>Shop</h4><ul><li><Link to="/shop">All Pieces</Link></li><li><Link to="/shop">Collections</Link></li><li><Link to="/shop">New Arrivals</Link></li><li><Link to="/cart">Cart</Link></li></ul></div>
-          <div><h4>Studio</h4><ul><li><Link to="/services">Commissions</Link></li><li><Link to="/portfolio">Portfolio</Link></li><li><Link to="/about">Our Story</Link></li><li><Link to="/blog">Journal</Link></li><li><Link to="/contact">Contact</Link></li></ul></div>
-          <div><h4>Support</h4><ul><li><Link to="/track-order">Track Order</Link></li><li><Link to="/faq">Shipping &amp; Returns</Link></li><li><Link to="/faq">Care Guide</Link></li><li><Link to="/faq">FAQs</Link></li></ul></div>
+          <div className="foot-bottom"><span>© 2026 The Artspire Studio · Lucknow, India</span><span>Crafting Your Vision</span></div>
         </div>
-        <div className="foot-bottom"><span>© 2026 The Artspire Studio · Lucknow, India</span><span>Crafting Your Vision</span></div>
+
+        {/* Mobile — minimal */}
+        <div className="foot-mobile">
+          <div className="foot-logo" style={{ textAlign: "center" }}><i>The</i>Artspire</div>
+          <div className="fm-links">
+            <Link to="/shop">Shop</Link>
+            <Link to="/services">Commissions</Link>
+            <Link to="/track-order">Track Order</Link>
+            <Link to="/contact">Contact</Link>
+          </div>
+          <div className="fm-copy">© 2026 The Artspire · Lucknow, India</div>
+        </div>
       </div>
     </footer>
   );

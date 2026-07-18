@@ -356,13 +356,15 @@ html.lenis,html.lenis body{height:auto}
 /* Mobile menu */
 .tas .menu-btn{display:none;background:none;border:none;cursor:pointer;padding:4px;color:var(--forest)}
 .tas .menu-btn svg{width:24px;height:24px;stroke:var(--forest)}
-.tas .mobnav{position:fixed;inset:0;z-index:100;background:var(--cream);transform:translateX(100%);transition:transform .5s cubic-bezier(.7,0,.2,1);display:flex;flex-direction:column;padding:24px 28px;overflow-y:auto}
-.tas .mobnav.open{transform:translateX(0)}
-.tas .mobnav .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:26px}
-.tas .mobnav a{font-family:"Cormorant Garamond",serif;font-size:30px;color:var(--forest);padding:15px 0;border-bottom:1px solid var(--line);text-decoration:none}
-.tas .mobnav a:last-child{color:var(--gold)}
-.tas .mobnav .close{background:none;border:none;cursor:pointer;padding:4px}
-.tas .mobnav .close svg{width:26px;height:26px;stroke:var(--forest)}
+.tas .mobnav-overlay{position:fixed;inset:0;z-index:100;background:rgba(28,27,23,0);pointer-events:none;transition:background .45s ease}
+.tas .mobnav-overlay.open{background:rgba(28,27,23,.45);pointer-events:auto}
+.tas .mobnav-panel{position:absolute;top:0;right:0;bottom:0;width:82%;max-width:340px;background:rgba(244,241,234,.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);transform:translateX(100%);transition:transform .5s cubic-bezier(.7,0,.2,1);display:flex;flex-direction:column;padding:22px 26px;overflow-y:auto;box-shadow:-20px 0 50px -20px rgba(28,27,23,.4)}
+.tas .mobnav-overlay.open .mobnav-panel{transform:translateX(0)}
+.tas .mobnav-panel .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
+.tas .mobnav-panel a{font-family:"Cormorant Garamond",serif;font-size:26px;color:var(--forest);padding:13px 0;border-bottom:1px solid var(--line);text-decoration:none}
+.tas .mobnav-panel a.mn-cart{color:var(--gold);border-bottom:none;margin-top:6px}
+.tas .mobnav-panel .close{background:none;border:none;cursor:pointer;padding:4px}
+.tas .mobnav-panel .close svg{width:26px;height:26px;stroke:var(--forest)}
 
 /* Tablet */
 @media(max-width:1024px){
@@ -440,4 +442,19 @@ html.lenis,html.lenis body{height:auto}
   .tas .gdots{display:flex;justify-content:center;gap:7px;margin-top:12px}
   .tas .gdots span{width:7px;height:7px;border-radius:50%;background:var(--line);transition:.3s}
   .tas .gdots span.on{background:var(--gold);width:20px;border-radius:4px}
+}
+
+
+/* ============ FOOTER: desktop app-like + mobile minimal ============ */
+.tas .foot-mobile{display:none}
+.tas .foot-desktop{display:block}
+.tas .foot-mobile .foot-logo{font-size:26px;margin-bottom:14px;text-align:center}
+.tas .fm-links{display:flex;justify-content:center;flex-wrap:wrap;gap:10px 22px;margin-bottom:16px}
+.tas .fm-links a{font-size:13px;color:#CFC9BB;letter-spacing:.02em}
+.tas .fm-links a:hover{color:#fff}
+.tas .fm-copy{font-size:11px;color:#8f8a7c;text-align:center}
+@media(max-width:600px){
+  .tas footer{padding:40px 0 28px}
+  .tas .foot-desktop{display:none}
+  .tas .foot-mobile{display:block}
 }
