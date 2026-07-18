@@ -339,3 +339,8 @@ html.lenis,html.lenis body{height:auto}
   .tas .info h1{font-size:32px}
   .tas .cart-cols{grid-template-columns:1fr!important}
 }
+
+.tas .imgwrap img,.tas .main-img img,.tas .frame img,.tas .cat-tile img,.tas .gift img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .7s cubic-bezier(.2,.6,.2,1);z-index:0}
+.tas .frame:has(img)::before,.tas .frame:has(img)::after{display:none}
+.tas .card:hover .imgwrap img{transform:scale(1.06)}
+.tas .cat-tile:hover img,.tas .gift:hover img{transform:scale(1.07)}

@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect, useCallback } from "react";
-import { ShopLayout } from "@/components/shop/ShopLayout";
 import {
   getCartItems,
   updateCartItemQuantity,
@@ -9,15 +8,14 @@ import {
   type CartItem,
 } from "@/lib/cart";
 import { toast } from "@/lib/toast";
-import { getRelatedProducts, type ProductWithCategory } from "@/lib/products";
-import { ArtspireBreadcrumb } from "@/components/ArtspireBreadcrumb";
-import { PortfolioGridSkeleton } from "@/components/ui/skeleton";
-import { Minus, Plus, X, ShoppingBag, ArrowRight } from "lucide-react";
+import { SiteChrome } from "@/components/site/SiteChrome";
+
+const SHIPPING_COST = 150;
 
 export const Route = createFileRoute("/cart")({
   head: () => ({
     meta: [
-      { title: "Your Cart | Artspire" },
+      { title: "Your Cart | The Artspire" },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -28,14 +26,11 @@ function CartPage() {
   const [items, setItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
-  const [giftMessage, setGiftMessage] = useState("");
-  const [upsell, setUpsell] = useState<ProductWithCategory[]>([]);
 
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const sessionId = getOrCreateSessionId();
-      const data = await getCartItems(sessionId);
+      const data = await getCartItems(getOrCreateSessionId());
       setItems(data);
     } catch (err) {
       console.error(err);
@@ -47,19 +42,8 @@ function CartPage() {
 
   useEffect(() => { load(); }, [load]);
 
-  useEffect(() => {
-    const firstItem = items[0];
-    if (!firstItem?.product) {
-      setUpsell([]);
-      return;
-    }
-    const inCartIds = new Set(items.map((i) => i.product_id));
-    getRelatedProducts(firstItem.product.id, firstItem.product.category_id, 8)
-      .then((results) => setUpsell(results.filter((p) => !inCartIds.has(p.id)).slice(0, 4)))
-      .catch(() => setUpsell([]));
-  }, [items]);
-
   async function handleQuantityChange(item: CartItem, newQty: number) {
+    if (newQty < 1) return;
     setUpdatingId(item.id);
     try {
       await updateCartItemQuantity(item.id, newQty);
@@ -88,168 +72,63 @@ function CartPage() {
     }
   }
 
-  function handleProceedToCheckout() {
-    sessionStorage.setItem("artspire_gift_message", giftMessage);
-  }
-
-  const subtotal = items.reduce((sum, item) => sum + item.price_at_add * item.quantity, 0);
+  const subtotal = items.reduce((sum, i) => sum + i.price_at_add * i.quantity, 0);
+  const total = items.length ? subtotal + SHIPPING_COST : 0;
 
   return (
-    <ShopLayout>
-      <section className="section-padding bg-cream min-h-[70vh]">
-        <div className="container-main max-w-4xl">
-          <ArtspireBreadcrumb crumbs={[{ label: "Home", href: "/" }, { label: "Shop", href: "/shop" }, { label: "Cart" }]} className="mb-6" />
-          <h1 className="font-display text-[28px] md:text-[36px] text-forest font-medium mb-8">Your Cart</h1>
+    <SiteChrome>
+      <div className="wrap crumbs"><Link to="/">Home</Link> / <Link to="/shop">Shop</Link> / <span>Cart</span></div>
+
+      <section style={{ paddingTop: 16 }}>
+        <div className="wrap">
+          <h1 className="serif reveal-words" style={{ fontSize: 44, color: "var(--forest)", fontWeight: 500, marginBottom: 28 }}>Your Cart</h1>
 
           {loading ? (
-            <PortfolioGridSkeleton count={2} />
+            <p style={{ color: "var(--stone)" }}>Loading your cart…</p>
           ) : items.length === 0 ? (
-            <div className="bg-white rounded-2xl border border-border p-12 text-center">
-              <ShoppingBag size={40} className="text-stone/20 mx-auto mb-4" />
-              <p className="font-display text-[20px] text-forest/40 mb-2">Your cart is empty</p>
-              <p className="font-body text-[13px] text-stone/50 mb-6">Discover handcrafted pieces made to last a lifetime.</p>
-              <Link
-                to="/shop"
-                className="inline-flex items-center gap-2 h-[46px] px-6 bg-forest text-white font-body font-semibold text-[13px] uppercase tracking-wider rounded-sm hover:bg-forest/90 transition-colors"
-              >
-                Browse the Shop <ArrowRight size={14} />
-              </Link>
+            <div style={{ padding: "60px 0", textAlign: "center" }}>
+              <h2 className="serif" style={{ fontSize: 26, color: "var(--forest)", fontWeight: 500 }}>Your cart is empty</h2>
+              <p style={{ color: "var(--stone)", margin: "8px 0 22px" }}>Discover objects made to be lived with.</p>
+              <Link className="btn btn-solid" to="/shop"><span>Explore the Collection</span></Link>
             </div>
           ) : (
-            <div className="flex flex-col lg:flex-row gap-8">
-              {/* Line items */}
-              <div className="flex-1 space-y-4">
+            <div className="cart-cols" style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 48, alignItems: "start" }}>
+              <div>
                 {items.map((item) => (
-                  <div key={item.id} className="bg-white rounded-2xl border border-border p-4 flex gap-4">
-                    <div className="w-24 h-24 rounded-xl overflow-hidden bg-cream shrink-0">
-                      {item.product?.image_url && (
-                        <img src={item.product.image_url} alt={item.product.title} className="w-full h-full object-cover" />
-                      )}
+                  <div className="cart-line" key={item.id}>
+                    <div className="frame thumb" data-label="">
+                      {item.product?.image_url ? <img src={item.product.image_url} alt={item.product?.title ?? ""} /> : null}
                     </div>
-                    <div className="flex-1 min-w-0 flex flex-col justify-between">
-                      <div>
-                        <Link
-                          to="/shop/product/$slug"
-                          params={{ slug: item.product?.slug ?? "" }}
-                          className="font-display text-[16px] text-forest font-medium hover:text-gold transition-colors leading-snug"
-                        >
-                          {item.product?.title ?? "Product"}
-                        </Link>
-                        <p className="font-body text-[13px] text-stone/60 mt-1">₹{item.price_at_add.toLocaleString("en-IN")} each</p>
-                      </div>
-                      <div className="flex items-center justify-between mt-2">
-                        <div className="flex items-center border border-border rounded-lg">
-                          <button
-                            onClick={() => handleQuantityChange(item, item.quantity - 1)}
-                            disabled={updatingId === item.id}
-                            className="w-8 h-8 flex items-center justify-center text-forest hover:bg-cream transition-colors disabled:opacity-40"
-                            aria-label="Decrease quantity"
-                          >
-                            <Minus size={12} />
-                          </button>
-                          <span className="w-8 text-center font-body text-[13px] font-semibold text-forest">{item.quantity}</span>
-                          <button
-                            onClick={() => handleQuantityChange(item, item.quantity + 1)}
-                            disabled={updatingId === item.id}
-                            className="w-8 h-8 flex items-center justify-center text-forest hover:bg-cream transition-colors disabled:opacity-40"
-                            aria-label="Increase quantity"
-                          >
-                            <Plus size={12} />
-                          </button>
+                    <div style={{ flex: 1 }}>
+                      {item.product?.categories?.name && <div className="cat">{item.product.categories.name}</div>}
+                      <h4>{item.product?.title ?? "Item"}</h4>
+                      <button onClick={() => handleRemove(item)} disabled={updatingId === item.id} style={{ background: "none", border: "none", color: "var(--stone)", fontSize: 12, cursor: "pointer", marginTop: 4, padding: 0 }}>Remove</button>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 12 }}>
+                        <div className="qty">
+                          <button onClick={() => handleQuantityChange(item, item.quantity - 1)} disabled={updatingId === item.id}>−</button>
+                          <span>{item.quantity}</span>
+                          <button onClick={() => handleQuantityChange(item, item.quantity + 1)} disabled={updatingId === item.id}>+</button>
                         </div>
-                        <div className="flex items-center gap-3">
-                          <span className="font-body text-[14px] font-semibold text-forest">
-                            ₹{(item.price_at_add * item.quantity).toLocaleString("en-IN")}
-                          </span>
-                          <button
-                            onClick={() => handleRemove(item)}
-                            disabled={updatingId === item.id}
-                            aria-label="Remove item"
-                            className="text-stone/40 hover:text-red-500 transition-colors"
-                          >
-                            <X size={16} />
-                          </button>
-                        </div>
+                        <span style={{ fontFamily: '"Cormorant Garamond",serif', fontSize: 20, color: "var(--forest)" }}>₹{(item.price_at_add * item.quantity).toLocaleString("en-IN")}</span>
                       </div>
                     </div>
                   </div>
                 ))}
-
-                {/* Gift note — first-class gifting flow per architecture doc */}
-                <div className="bg-white rounded-2xl border border-border p-5">
-                  <label className="block font-body text-[11px] font-bold text-stone uppercase tracking-wider mb-2">
-                    Gift Note (optional)
-                  </label>
-                  <textarea
-                    value={giftMessage}
-                    onChange={(e) => setGiftMessage(e.target.value)}
-                    placeholder="Add a personal note to include with your order..."
-                    rows={3}
-                    className="w-full px-4 py-2.5 rounded-xl border border-border bg-white font-body text-[13px] text-forest focus:outline-none focus:border-gold transition-colors resize-none"
-                  />
-                </div>
+                <Link className="btn-ghost" to="/shop" style={{ marginTop: 20, display: "inline-block" }}>← Continue shopping</Link>
               </div>
 
-              {/* Order summary */}
-              <div className="lg:w-[320px] shrink-0">
-                <div className="bg-white rounded-2xl border border-border p-5 sticky top-24 space-y-4">
-                  <h2 className="font-display text-[16px] text-forest font-medium">Order Summary</h2>
-                  <div className="flex items-center justify-between font-body text-[13px]">
-                    <span className="text-stone">Subtotal</span>
-                    <span className="text-forest font-semibold">₹{subtotal.toLocaleString("en-IN")}</span>
-                  </div>
-                  <p className="font-body text-[11px] text-stone/50">Shipping calculated at checkout.</p>
-                  <Link
-                    to="/checkout"
-                    onClick={handleProceedToCheckout}
-                    className="flex items-center justify-center gap-2 w-full h-[50px] bg-forest text-white font-body font-bold text-[13px] uppercase tracking-wider rounded-xl hover:bg-forest/90 transition-colors"
-                  >
-                    Proceed to Checkout <ArrowRight size={14} />
-                  </Link>
-                  <Link
-                    to="/shop"
-                    className="flex items-center justify-center w-full h-[42px] font-body text-[12px] font-semibold text-forest/70 hover:text-forest transition-colors"
-                  >
-                    ← Continue Shopping
-                  </Link>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {items.length > 0 && upsell.length > 0 && (
-            <div className="mt-12">
-              <h2 className="font-display text-[20px] md:text-[24px] text-forest font-medium mb-5">
-                You Might Also Like
-              </h2>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-                {upsell.map((item) => (
-                  <Link
-                    key={item.id}
-                    to="/shop/product/$slug"
-                    params={{ slug: item.slug }}
-                    preload="intent"
-                    className="group block rounded-xl overflow-hidden shadow-sm bg-white hover-lift border border-border/40"
-                  >
-                    <div className="relative aspect-square overflow-hidden">
-                      <img
-                        src={item.image_url ?? "/placeholder-artwork.svg"}
-                        alt={item.title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        loading="lazy"
-                      />
-                    </div>
-                    <div className="p-3">
-                      <p className="font-display text-[13px] text-forest font-medium leading-snug line-clamp-2">{item.title}</p>
-                      <p className="font-body text-[12px] text-forest font-semibold mt-1">₹{item.price.toLocaleString("en-IN")}</p>
-                    </div>
-                  </Link>
-                ))}
+              <div className="summary">
+                <h3 className="serif" style={{ fontSize: 22, color: "var(--forest)", fontWeight: 500, marginBottom: 16 }}>Order Summary</h3>
+                <div className="row"><span>Subtotal</span><span>₹{subtotal.toLocaleString("en-IN")}</span></div>
+                <div className="row"><span>Shipping</span><span>₹{SHIPPING_COST.toLocaleString("en-IN")}</span></div>
+                <div className="row total"><span>Total</span><span>₹{total.toLocaleString("en-IN")}</span></div>
+                <Link className="btn btn-solid btn-block" to="/checkout" style={{ marginTop: 18 }}><span>Proceed to Checkout</span></Link>
+                <p style={{ fontSize: 11, color: "var(--stone)", textAlign: "center", marginTop: 12 }}>Secured by Razorpay · UPI, Cards, Netbanking</p>
               </div>
             </div>
           )}
         </div>
       </section>
-    </ShopLayout>
+    </SiteChrome>
   );
 }

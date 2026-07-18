@@ -1,26 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ShopLayout } from "@/components/shop/ShopLayout";
 import { getOrderForConfirmation } from "@/lib/orders-access.server";
 import type { OrderWithItems } from "@/lib/orders";
-import { CheckCircle2, ArrowRight, Loader2, Lock } from "lucide-react";
+import { SiteChrome } from "@/components/site/SiteChrome";
 
 export const Route = createFileRoute("/order-confirmation/$orderId")({
-  head: () => ({
-    meta: [
-      { title: "Order Confirmed | Artspire" },
-      { name: "robots", content: "noindex" },
-    ],
-  }),
+  head: () => ({ meta: [{ title: "Order Confirmed | The Artspire" }, { name: "robots", content: "noindex" }] }),
   component: OrderConfirmationPage,
 });
-
-// This page used to load the order by ID alone, which meant anyone
-// who obtained the URL (shared, screenshotted, browser history) could
-// see the customer's full name, email, phone, and address forever. It
-// now requires the phone number to match too — read automatically
-// from sessionStorage if this is the same browser that just checked
-// out, or typed in manually otherwise.
 
 function OrderConfirmationPage() {
   const { orderId } = Route.useParams();
@@ -54,12 +41,8 @@ function OrderConfirmationPage() {
 
   useEffect(() => {
     const savedPhone = sessionStorage.getItem(`artspire_order_phone_${orderId}`);
-    if (savedPhone) {
-      attemptLoad(savedPhone);
-    } else {
-      setLoading(false);
-      setNeedsPhone(true);
-    }
+    if (savedPhone) attemptLoad(savedPhone);
+    else { setLoading(false); setNeedsPhone(true); }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderId]);
 
@@ -71,94 +54,62 @@ function OrderConfirmationPage() {
   }
 
   if (loading) {
-    return (
-      <ShopLayout>
-        <div className="min-h-[60vh] flex items-center justify-center">
-          <Loader2 size={24} className="animate-spin text-forest" />
-        </div>
-      </ShopLayout>
-    );
+    return <SiteChrome><section><div className="wrap" style={{ textAlign: "center", padding: "80px 0", color: "var(--stone)" }}>Loading…</div></section></SiteChrome>;
   }
 
   if (needsPhone && !order) {
     return (
-      <ShopLayout>
-        <section className="section-padding bg-cream min-h-[70vh] flex items-center">
-          <div className="container-main max-w-sm text-center">
-            <Lock size={28} className="text-forest/40 mx-auto mb-4" />
-            <h1 className="font-display text-[22px] text-forest font-medium mb-2">Verify it's you</h1>
-            <p className="font-body text-[13px] text-stone mb-5">
-              Enter the phone number you used at checkout to view this order.
-            </p>
-            <input
-              value={phoneInput}
-              onChange={(e) => setPhoneInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleVerify()}
-              placeholder="98765 43210"
-              className="w-full h-[46px] px-4 rounded-xl border border-border bg-white font-body text-[14px] text-forest text-center focus:outline-none focus:border-gold mb-3"
-            />
-            {notFoundOrMismatch && (
-              <p className="font-body text-[12px] text-red-600 mb-3">
-                That doesn't match — check the number and try again, or WhatsApp us for help.
-              </p>
-            )}
-            <button
-              onClick={handleVerify}
-              disabled={verifying}
-              className="flex items-center justify-center gap-2 w-full h-[46px] bg-forest text-white font-body font-bold text-[13px] rounded-xl hover:bg-forest/90 transition-colors disabled:opacity-60"
-            >
-              {verifying && <Loader2 size={14} className="animate-spin" />}
-              View Order
-            </button>
+      <SiteChrome>
+        <section>
+          <div className="wrap" style={{ maxWidth: 520 }}>
+            <div className="card-box" style={{ textAlign: "center" }}>
+              <h1 className="serif" style={{ fontSize: 32, color: "var(--forest)", fontWeight: 500, marginBottom: 8 }}>Verify your order</h1>
+              <p style={{ color: "var(--stone)", marginBottom: 20 }}>Enter the phone number you used at checkout to view this order.</p>
+              <div className="field"><label>Phone number</label><input type="tel" value={phoneInput} onChange={(e) => setPhoneInput(e.target.value)} placeholder="+91" /></div>
+              {notFoundOrMismatch && <p style={{ color: "#A32D2D", fontSize: 13, marginBottom: 12 }}>We couldn't find an order matching that phone number.</p>}
+              <button className="btn btn-solid btn-block" disabled={verifying} onClick={handleVerify}><span>{verifying ? "Checking…" : "View my order"}</span></button>
+            </div>
           </div>
         </section>
-      </ShopLayout>
+      </SiteChrome>
     );
   }
 
   if (!order) return null;
 
+  const addr = order.shipping_address;
   return (
-    <ShopLayout>
-      <section className="section-padding bg-cream min-h-[70vh]">
-        <div className="container-main max-w-2xl text-center">
-          <CheckCircle2 size={52} className="text-forest mx-auto mb-5" />
-          <h1 className="font-display text-[28px] md:text-[36px] text-forest font-medium mb-3">
-            Thank you, {order.customer_name.split(" ")[0]}.
-          </h1>
-          <p className="font-body text-[14px] text-stone mb-1">
-            Your order <span className="font-semibold text-forest">{order.order_number}</span> has been confirmed.
-          </p>
-          <p className="font-body text-[13px] text-stone/60 mb-10">
-            A confirmation has been sent to {order.email}. We'll notify you as your piece is prepared and shipped.
-          </p>
+    <SiteChrome>
+      <section>
+        <div className="wrap">
+          <div className="centerbox">
+            <div className="tick"><svg viewBox="0 0 24 24" fill="none" strokeWidth="2"><path d="M20 6 9 17l-5-5" /></svg></div>
+            <span className="eyebrow">Thank you, {order.customer_name?.split(" ")[0]}</span>
+            <h1 className="serif" style={{ fontSize: 46, color: "var(--forest)", fontWeight: 500, margin: "14px 0 10px" }}>Your order is confirmed.</h1>
+            <p style={{ color: "var(--stone)", maxWidth: 480, margin: "0 auto 6px" }}>Order <b style={{ color: "var(--forest)" }}>{order.order_number}</b> — a confirmation has been sent to your email. We'll notify you the moment it ships.</p>
+          </div>
 
-          <div className="bg-white rounded-2xl border border-border p-6 text-left space-y-4 mb-8">
-            <h2 className="font-display text-[16px] text-forest font-medium">Order Details</h2>
-            <div className="space-y-2">
-              {order.order_items.map((item) => (
-                <div key={item.id} className="flex justify-between font-body text-[13px]">
-                  <span className="text-stone">{item.title_snapshot} × {item.quantity}</span>
-                  <span className="text-forest font-semibold">₹{item.line_total.toLocaleString("en-IN")}</span>
-                </div>
+          <div className="card-box" style={{ maxWidth: 640, margin: "0 auto" }}>
+            <div className="summary" style={{ position: "static", border: "none", padding: 0 }}>
+              {order.order_items.map((it) => (
+                <div className="row" key={it.id}><span>{it.title_snapshot} × {it.quantity}</span><span>₹{it.line_total.toLocaleString("en-IN")}</span></div>
               ))}
+              <div className="row"><span>Shipping</span><span>₹{order.shipping_cost.toLocaleString("en-IN")}</span></div>
+              <div className="row total"><span>Total paid</span><span>₹{order.total.toLocaleString("en-IN")}</span></div>
             </div>
-            <div className="border-t border-border pt-3 flex justify-between font-body text-[15px] font-semibold">
-              <span className="text-forest">Total Paid</span>
-              <span className="text-forest">₹{order.total.toLocaleString("en-IN")}</span>
+            <div style={{ borderTop: "1px solid var(--line)", marginTop: 18, paddingTop: 16, fontSize: 13, color: "#54514a" }}>
+              <b style={{ color: "var(--forest)" }}>Shipping to</b><br />{order.customer_name} · {addr.line1}{addr.line2 ? ", " + addr.line2 : ""}, {addr.city}, {addr.state} {addr.postal_code}, {addr.country}
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link
-              to="/shop"
-              className="inline-flex items-center justify-center gap-2 h-[46px] px-6 bg-forest text-white font-body font-semibold text-[13px] uppercase tracking-wider rounded-sm hover:bg-forest/90 transition-colors"
-            >
-              Continue Shopping <ArrowRight size={14} />
-            </Link>
+          <div className="centerbox" style={{ paddingTop: 24 }}>
+            <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
+              <Link className="btn btn-solid" to="/track-order"><span>Track your order</span></Link>
+              <Link className="btn-ghost" to="/shop">Continue shopping <span className="arw">→</span></Link>
+            </div>
           </div>
         </div>
       </section>
-    </ShopLayout>
+    </SiteChrome>
   );
 }

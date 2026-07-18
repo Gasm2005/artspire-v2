@@ -1,17 +1,15 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useState, useEffect, useCallback } from "react";
-import { ShopLayout } from "@/components/shop/ShopLayout";
 import { getCartItems, getOrCreateSessionId, clearCart, type CartItem } from "@/lib/cart";
 import { createPendingOrder, attachRazorpayOrderId, markOrderPaymentFailed } from "@/lib/orders";
 import { createRazorpayOrder, confirmPaymentAfterCheckout, getRazorpayKeyId } from "@/lib/razorpay.server";
 import { toast } from "@/lib/toast";
-import { ArtspireBreadcrumb } from "@/components/ArtspireBreadcrumb";
-import { Loader2, ShieldCheck } from "lucide-react";
+import { SiteChrome } from "@/components/site/SiteChrome";
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({
     meta: [
-      { title: "Checkout | Artspire" },
+      { title: "Checkout | The Artspire" },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -145,7 +143,6 @@ function CheckoutPage() {
     setSubmitting(true);
 
     try {
-      // 1. Create pending order in Supabase
       const order = await createPendingOrder({
         customerName: form.name.trim(),
         email: form.email.trim(),
@@ -163,12 +160,8 @@ function CheckoutPage() {
         shippingCost: SHIPPING_COST,
       });
 
-      // Lets the order-confirmation page verify ownership without an
-      // extra prompt when it's the same browser session that just
-      // checked out (see src/lib/orders-access.server.ts).
       sessionStorage.setItem(`artspire_order_phone_${order.id}`, form.phone.trim());
 
-      // 2. Load Razorpay checkout script
       const scriptLoaded = await loadRazorpayScript();
       if (!scriptLoaded) {
         toast.error("Payment gateway failed to load.", "Please check your connection and try again.");
@@ -176,21 +169,18 @@ function CheckoutPage() {
         return;
       }
 
-      // 3. Create Razorpay order (server-side)
       const razorpayOrder = await createRazorpayOrder({
         data: { amount: total, receipt: order.order_number, internalOrderId: order.id },
       });
       await attachRazorpayOrderId(order.id, razorpayOrder.id);
 
-      // 4. Get public key for checkout init
       const { keyId } = await getRazorpayKeyId();
 
-      // 5. Open Razorpay Checkout
       const rzp = new window.Razorpay({
         key: keyId,
         amount: razorpayOrder.amount,
         currency: razorpayOrder.currency,
-        name: "Artspire",
+        name: "The Artspire",
         description: `Order ${order.order_number}`,
         order_id: razorpayOrder.id,
         prefill: {
@@ -198,19 +188,13 @@ function CheckoutPage() {
           email: form.email.trim(),
           contact: form.phone.trim(),
         },
-        theme: { color: "#3E4D3A" },
+        theme: { color: "#20201C" },
         handler: async (response: {
           razorpay_payment_id: string;
           razorpay_order_id: string;
           razorpay_signature: string;
         }) => {
           try {
-            // Single server-side call: verifies the signature AND
-            // confirms the order AND deducts inventory AND sends the
-            // confirmation email, all atomically with the service_role
-            // key. The browser never touches the order's payment_status
-            // directly anymore — this closes the RLS gap where that
-            // update used to silently fail (or worse, be forgeable).
             await confirmPaymentAfterCheckout({
               data: {
                 orderId: order.id,
@@ -227,11 +211,6 @@ function CheckoutPage() {
             router.navigate({ to: "/order-confirmation/$orderId", params: { orderId: order.id } });
           } catch (err) {
             console.error(err);
-            // Don't call markOrderPaymentFailed here — the payment may
-            // have actually succeeded and this could be a transient
-            // network/verification error. A wrongly-failed order is worse
-            // than a pending one; the Razorpay webhook will reconcile the
-            // true state shortly regardless of what happens in this tab.
             toast.error(
               "We couldn't confirm your payment automatically.",
               "If you were charged, your order will be confirmed shortly — check Track Order or contact us on WhatsApp."
@@ -241,8 +220,6 @@ function CheckoutPage() {
         },
         modal: {
           ondismiss: async () => {
-            // The user closed the modal without paying — safe to mark
-            // failed since no payment_id exists yet to reconcile against.
             await markOrderPaymentFailed(order.id);
             setSubmitting(false);
           },
@@ -257,147 +234,62 @@ function CheckoutPage() {
     }
   }
 
-  const inputClass = "w-full h-[46px] px-4 rounded-xl border border-border bg-white font-body text-[14px] text-forest focus:outline-none focus:border-gold transition-colors";
-  const labelClass = "block font-body text-[11px] font-bold text-stone uppercase tracking-wider mb-1.5";
-
-  if (loading) {
-    return (
-      <ShopLayout>
-        <div className="min-h-[60vh] flex items-center justify-center">
-          <Loader2 size={24} className="animate-spin text-stone/40" />
-        </div>
-      </ShopLayout>
-    );
-  }
-
   return (
-    <ShopLayout>
-      <section className="section-padding bg-cream min-h-[70vh]">
-        <div className="container-main max-w-4xl">
-          <ArtspireBreadcrumb
-            crumbs={[{ label: "Home", href: "/" }, { label: "Shop", href: "/shop" }, { label: "Cart", href: "/cart" }, { label: "Checkout" }]}
-            className="mb-6"
-          />
-          <h1 className="font-display text-[28px] md:text-[36px] text-forest font-medium mb-8">Checkout</h1>
+    <SiteChrome>
+      <div className="wrap crumbs">Home / Shop / Cart / <span>Checkout</span></div>
+      <section style={{ paddingTop: 16 }}>
+        <div className="wrap">
+          <h1 className="serif" style={{ fontSize: 44, color: "var(--forest)", fontWeight: 500, marginBottom: 28 }}>Checkout</h1>
 
-          <div className="flex flex-col lg:flex-row gap-8">
-            {/* Form */}
-            <div className="flex-1 space-y-6">
-              <div className="bg-white rounded-2xl border border-border p-5 space-y-4">
-                <h2 className="font-display text-[16px] text-forest font-medium">Contact Details</h2>
-                <div>
-                  <label className={labelClass}>Full Name *</label>
-                  <input type="text" value={form.name} onChange={(e) => updateField("name", e.target.value)} className={inputClass} />
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className={labelClass}>Email *</label>
-                    <input type="email" value={form.email} onChange={(e) => updateField("email", e.target.value)} className={inputClass} />
-                  </div>
-                  <div>
-                    <label className={labelClass}>Phone *</label>
-                    <input type="tel" value={form.phone} onChange={(e) => updateField("phone", e.target.value)} className={inputClass} />
+          {loading ? (
+            <p style={{ color: "var(--stone)" }}>Loading…</p>
+          ) : (
+            <div className="cart-cols" style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 48, alignItems: "start" }}>
+              <div>
+                <div className="card-box" style={{ marginBottom: 20 }}>
+                  <h3 className="serif" style={{ fontSize: 20, color: "var(--forest)", fontWeight: 500, marginBottom: 16 }}>Contact details</h3>
+                  <div className="field"><label>Full name *</label><input type="text" value={form.name} onChange={(e) => updateField("name", e.target.value)} /></div>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+                    <div className="field"><label>Email *</label><input type="email" value={form.email} onChange={(e) => updateField("email", e.target.value)} /></div>
+                    <div className="field"><label>Phone *</label><input type="tel" value={form.phone} onChange={(e) => updateField("phone", e.target.value)} /></div>
                   </div>
                 </div>
-              </div>
 
-              <div className="bg-white rounded-2xl border border-border p-5 space-y-4">
-                <h2 className="font-display text-[16px] text-forest font-medium">Shipping Address</h2>
-                <div>
-                  <label className={labelClass}>Address Line 1 *</label>
-                  <input type="text" value={form.line1} onChange={(e) => updateField("line1", e.target.value)} className={inputClass} />
-                </div>
-                <div>
-                  <label className={labelClass}>Address Line 2</label>
-                  <input type="text" value={form.line2} onChange={(e) => updateField("line2", e.target.value)} className={inputClass} />
-                </div>
-                <div>
-                  <label className={labelClass}>Postal Code *</label>
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    maxLength={6}
-                    value={form.postal_code}
-                    onChange={(e) => updateField("postal_code", e.target.value.replace(/\D/g, ""))}
-                    className={inputClass}
-                    placeholder="e.g. 208001"
-                  />
-                  {pincodeLookupState === "loading" && (
-                    <p className="font-body text-[11px] text-stone/50 mt-1">Looking up city/state…</p>
-                  )}
-                  {pincodeLookupState === "error" && (
-                    <p className="font-body text-[11px] text-stone/50 mt-1">Couldn't auto-fill — please enter manually.</p>
-                  )}
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className={labelClass}>City *</label>
-                    <input type="text" value={form.city} onChange={(e) => updateField("city", e.target.value)} className={inputClass} />
-                  </div>
-                  <div>
-                    <label className={labelClass}>State *</label>
-                    <input type="text" value={form.state} onChange={(e) => updateField("state", e.target.value)} className={inputClass} />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className={labelClass}>Country</label>
-                    <input type="text" value={form.country} onChange={(e) => updateField("country", e.target.value)} className={inputClass} />
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-2xl border border-border p-5">
-                <label className={labelClass}>Gift Note (optional)</label>
-                <textarea
-                  value={form.giftMessage}
-                  onChange={(e) => updateField("giftMessage", e.target.value)}
-                  rows={2}
-                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-white font-body text-[13px] text-forest focus:outline-none focus:border-gold transition-colors resize-none"
-                />
-              </div>
-            </div>
-
-            {/* Order summary + pay */}
-            <div className="lg:w-[320px] shrink-0">
-              <div className="bg-white rounded-2xl border border-border p-5 sticky top-24 space-y-4">
-                <h2 className="font-display text-[16px] text-forest font-medium">Order Summary</h2>
-                <div className="space-y-2 max-h-[200px] overflow-y-auto">
-                  {items.map((item) => (
-                    <div key={item.id} className="flex justify-between font-body text-[12px]">
-                      <span className="text-stone truncate pr-2">{item.product?.title} × {item.quantity}</span>
-                      <span className="text-forest font-semibold shrink-0">₹{(item.price_at_add * item.quantity).toLocaleString("en-IN")}</span>
+                <div className="card-box">
+                  <h3 className="serif" style={{ fontSize: 20, color: "var(--forest)", fontWeight: 500, marginBottom: 16 }}>Shipping address</h3>
+                  <div className="field"><label>Address line 1 *</label><input type="text" value={form.line1} onChange={(e) => updateField("line1", e.target.value)} /></div>
+                  <div className="field"><label>Address line 2</label><input type="text" value={form.line2} onChange={(e) => updateField("line2", e.target.value)} /></div>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+                    <div className="field">
+                      <label>Postal code *</label>
+                      <input type="text" inputMode="numeric" maxLength={6} value={form.postal_code} onChange={(e) => updateField("postal_code", e.target.value.replace(/\D/g, ""))} placeholder="e.g. 208001" />
+                      {pincodeLookupState === "loading" && <p style={{ fontSize: 11, color: "var(--stone)", marginTop: 4 }}>Looking up city/state…</p>}
+                      {pincodeLookupState === "error" && <p style={{ fontSize: 11, color: "var(--stone)", marginTop: 4 }}>Couldn't auto-fill — please enter manually.</p>}
                     </div>
-                  ))}
+                    <div className="field"><label>City *</label><input type="text" value={form.city} onChange={(e) => updateField("city", e.target.value)} /></div>
+                  </div>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+                    <div className="field"><label>State *</label><input type="text" value={form.state} onChange={(e) => updateField("state", e.target.value)} /></div>
+                    <div className="field"><label>Country</label><input type="text" value={form.country} onChange={(e) => updateField("country", e.target.value)} /></div>
+                  </div>
+                  <div className="field" style={{ marginBottom: 0 }}><label>Gift note (optional)</label><textarea rows={2} value={form.giftMessage} onChange={(e) => updateField("giftMessage", e.target.value)} placeholder="Add a personal message…" /></div>
                 </div>
-                <div className="border-t border-border pt-3 space-y-1.5">
-                  <div className="flex justify-between font-body text-[13px]">
-                    <span className="text-stone">Subtotal</span>
-                    <span className="text-forest">₹{subtotal.toLocaleString("en-IN")}</span>
-                  </div>
-                  <div className="flex justify-between font-body text-[13px]">
-                    <span className="text-stone">Shipping</span>
-                    <span className="text-forest">₹{SHIPPING_COST.toLocaleString("en-IN")}</span>
-                  </div>
-                  <div className="flex justify-between font-body text-[15px] font-semibold pt-1.5 border-t border-border">
-                    <span className="text-forest">Total</span>
-                    <span className="text-forest">₹{total.toLocaleString("en-IN")}</span>
-                  </div>
-                </div>
-                <button
-                  onClick={handlePayment}
-                  disabled={submitting}
-                  className="flex items-center justify-center gap-2 w-full h-[50px] bg-forest text-white font-body font-bold text-[13px] uppercase tracking-wider rounded-xl hover:bg-forest/90 transition-colors disabled:opacity-60"
-                >
-                  {submitting ? <Loader2 size={16} className="animate-spin" /> : <ShieldCheck size={16} />}
-                  {submitting ? "Processing…" : "Pay Securely"}
-                </button>
-                <p className="font-body text-[10px] text-stone/40 text-center">Secured by Razorpay · UPI, Cards, Netbanking</p>
+              </div>
+
+              <div className="summary">
+                <h3 className="serif" style={{ fontSize: 22, color: "var(--forest)", fontWeight: 500, marginBottom: 16 }}>Order Summary</h3>
+                {items.map((item) => (
+                  <div className="row" key={item.id}><span>{item.product?.title} × {item.quantity}</span><span>₹{(item.price_at_add * item.quantity).toLocaleString("en-IN")}</span></div>
+                ))}
+                <div className="row"><span>Shipping</span><span>₹{SHIPPING_COST.toLocaleString("en-IN")}</span></div>
+                <div className="row total"><span>Total</span><span>₹{total.toLocaleString("en-IN")}</span></div>
+                <button className="btn btn-solid btn-block" style={{ marginTop: 18 }} disabled={submitting} onClick={handlePayment}><span>{submitting ? "Processing…" : "Pay Securely"}</span></button>
+                <p style={{ fontSize: 11, color: "var(--stone)", textAlign: "center", marginTop: 12 }}>Secured by Razorpay · UPI, Cards, Netbanking</p>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </section>
-    </ShopLayout>
+    </SiteChrome>
   );
 }
