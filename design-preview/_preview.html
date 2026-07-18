@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Artspire — Design Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Inter',sans-serif;background:#F4F1EA;color:#1A1917;padding:60px 24px}
+  .wrap{max-width:900px;margin:0 auto}
+  .eyebrow{font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:#A9884E;font-weight:600}
+  h1{font-family:"Cormorant Garamond",serif;font-size:52px;font-weight:500;color:#20201C;margin:12px 0 8px}
+  .sub{color:#847F77;margin-bottom:40px}
+  h2{font-family:"Cormorant Garamond",serif;font-size:24px;font-weight:500;color:#20201C;margin:34px 0 14px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+  a.card{display:block;background:#fff;border:1px solid #E0DACD;border-radius:6px;padding:20px 22px;color:#20201C;text-decoration:none;transition:.2s}
+  a.card:hover{border-color:#A9884E;transform:translateY(-3px);box-shadow:0 16px 30px -20px rgba(46,58,42,.4)}
+  a.card .n{font-family:"Cormorant Garamond",serif;font-size:20px;font-weight:500}
+  a.card .d{font-size:12px;color:#847F77;margin-top:3px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="eyebrow">Design preview</span>
+  <h1>The Artspire</h1>
+  <p class="sub">All pages · charcoal + brass · Cormorant Garamond + Inter · shared design system. Click any page to open.</p>
+
+  <h2>Shop (primary)</h2>
+  <div class="grid">
+    <a class="card" href="index.html"><div class="n">Home</div><div class="d">Shop-first landing</div></a>
+    <a class="card" href="shop.html"><div class="n">Shop</div><div class="d">Product listing + filters</div></a>
+    <a class="card" href="product.html"><div class="n">Product</div><div class="d">Detail + gallery + story</div></a>
+    <a class="card" href="cart.html"><div class="n">Cart</div><div class="d">Order summary</div></a>
+    <a class="card" href="checkout.html"><div class="n">Checkout</div><div class="d">Address + pay</div></a>
+    <a class="card" href="order-confirmation.html"><div class="n">Order confirmed</div><div class="d">Success</div></a>
+    <a class="card" href="track-order.html"><div class="n">Track order</div><div class="d">Status timeline</div></a>
+  </div>
+
+  <h2>Commissions (exclusive)</h2>
+  <div class="grid">
+    <a class="card" href="services.html"><div class="n">Commissions</div><div class="d">Process + request form</div></a>
+    <a class="card" href="pricing.html"><div class="n">Pricing</div><div class="d">By medium</div></a>
+    <a class="card" href="portfolio.html"><div class="n">Portfolio</div><div class="d">Commission gallery</div></a>
+    <a class="card" href="artwork.html"><div class="n">Artwork</div><div class="d">Single commission</div></a>
+  </div>
+
+  <h2>Brand</h2>
+  <div class="grid">
+    <a class="card" href="about.html"><div class="n">Our Story</div><div class="d">About / artist</div></a>
+    <a class="card" href="contact.html"><div class="n">Contact</div><div class="d">Form + WhatsApp</div></a>
+    <a class="card" href="faq.html"><div class="n">FAQ</div><div class="d">Shipping, returns, care</div></a>
+  </div>
+</div>
+</body>
+</html>

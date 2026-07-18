@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout — The Artspire</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-page="">
+<div id="site-header"></div>
+
+<div class="wrap crumbs"><a href="index.html">Home</a> / <a href="cart.html">Cart</a> / <span>Checkout</span></div>
+
+<section style="padding-top:16px">
+  <div class="wrap">
+    <h1 class="serif reveal-words" style="font-size:44px;color:var(--forest);font-weight:500;margin-bottom:28px">Checkout</h1>
+    <div class="cart-cols" style="display:grid;grid-template-columns:1.6fr 1fr;gap:48px;align-items:start">
+      <div class="rv">
+        <div class="card-box" style="margin-bottom:20px">
+          <h3 class="serif" style="font-size:20px;color:var(--forest);font-weight:500;margin-bottom:16px">Contact details</h3>
+          <div class="field"><label>Full name</label><input type="text" placeholder="Full name"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+            <div class="field"><label>Email</label><input type="email" placeholder="name@email.com"></div>
+            <div class="field"><label>Phone</label><input type="tel" placeholder="+91"></div>
+          </div>
+        </div>
+        <div class="card-box">
+          <h3 class="serif" style="font-size:20px;color:var(--forest);font-weight:500;margin-bottom:16px">Shipping address</h3>
+          <div class="field"><label>Address line 1</label><input type="text"></div>
+          <div class="field"><label>Address line 2</label><input type="text"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+            <div class="field"><label>Postal code</label><input type="text" placeholder="208001"></div>
+            <div class="field"><label>City</label><input type="text"></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+            <div class="field"><label>State</label><input type="text"></div>
+            <div class="field"><label>Country</label><input type="text" value="India"></div>
+          </div>
+          <div class="field" style="margin-bottom:0"><label>Gift note (optional)</label><textarea rows="2" placeholder="Add a personal message…"></textarea></div>
+        </div>
+      </div>
+
+      <div class="summary rv d1">
+        <h3 class="serif" style="font-size:22px;color:var(--forest);font-weight:500;margin-bottom:16px">Order Summary</h3>
+        <div class="row"><span>Handcrafted Metallic Lamp × 1</span><span>₹4,999</span></div>
+        <div class="row"><span>Hand-thrown Vessel × 1</span><span>₹2,400</span></div>
+        <div class="row"><span>Shipping</span><span>₹150</span></div>
+        <div class="row total"><span>Total</span><span>₹7,549</span></div>
+        <a class="btn btn-solid btn-block" href="order-confirmation.html" style="margin-top:18px"><span>Pay Securely</span></a>
+        <p style="font-size:11px;color:var(--stone);text-align:center;margin-top:12px">Secured by Razorpay · UPI, Cards, Netbanking</p>
+        <div class="trust" style="margin-top:18px"><div><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Secure</div><div><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M12 2 4 5v6c0 5 3.5 8 8 11 4.5-3 8-6 8-11V5z"/></svg>Handmade</div><div><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M16 3H1v13h15zM16 8h4l3 3v5h-7z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>Insured</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="assets/app.js"></script>
+</body>
+</html>

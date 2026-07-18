@@ -176,9 +176,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         { type: "application/ld+json", children: JSON.stringify(localBusinessSchema) },
         { type: "application/ld+json", children: JSON.stringify(personSchema) },
         { type: "application/ld+json", children: JSON.stringify(websiteSchema) },
+        { src: "https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js" },
       ],
       links: [
         { rel: "stylesheet", href: appCss },
+        { rel: "stylesheet", href: "/theartspire.css" },
+        { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" },
         { rel: "icon", href: "/favicon.ico" },
         { rel: "preconnect", href: "https://fonts.googleapis.com" },
         { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "" },
