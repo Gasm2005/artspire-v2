@@ -86,10 +86,10 @@
 .tas .link-more::after{content:"";position:absolute;left:0;bottom:0;width:100%;height:1px;background:var(--gold);transform:scaleX(1);transform-origin:right;transition:transform .4s}
 .tas .link-more:hover::after{transform:scaleX(0);transform-origin:left}
 
-.tas .band{background:var(--forest);color:#EFE9DD;padding:54px 0}
-.tas .brow{display:flex;justify-content:center;align-items:center;flex-wrap:wrap}
-.tas .brow span{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:28px;color:#EFE9DD;padding:0 38px}
-.tas .brow i{color:var(--gold-soft);font-style:normal;font-size:11px}
+.tas .band{background:var(--forest);color:#EFE9DD;padding:20px 0}
+.tas .brow{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:6px 0}
+.tas .brow span{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#CFC9BB;padding:0 20px;font-weight:500}
+.tas .brow i{color:var(--gold-soft);font-style:normal;font-size:7px}
 
 .tas .prod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:30px}
 .tas .card{cursor:pointer}
@@ -457,4 +457,21 @@ html.lenis,html.lenis body{height:auto}
   .tas footer{padding:40px 0 28px}
   .tas .foot-desktop{display:none}
   .tas .foot-mobile{display:block}
+}
+
+/* Minimal announce bar on mobile — single thin line, not a big black block */
+@media(max-width:600px){
+  .tas .announce{padding:8px 0}
+  .tas .arow{flex-wrap:nowrap;gap:0}
+  .tas .arow b{display:none}
+  .tas .arow span:nth-of-type(2),.tas .arow span:nth-of-type(3){display:none}
+  .tas .arow span{font-size:10px;letter-spacing:.2em}
+}
+
+@media(max-width:600px){
+  .tas .band{padding:14px 0}
+  .tas .brow{flex-wrap:nowrap}
+  .tas .brow i{display:none}
+  .tas .brow span{font-size:9px;letter-spacing:.12em;padding:0 9px}
+  .tas .brow span:nth-of-type(3),.tas .brow span:nth-of-type(4){display:none}
 }
