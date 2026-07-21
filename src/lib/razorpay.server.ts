@@ -23,22 +23,76 @@ function getRazorpayInstance() {
   return new Razorpay({ key_id: keyId, key_secret: keySecret });
 }
 
+// Flat shipping rate — server-authoritative. Must match the value shown on
+// the checkout page (src/routes/checkout.tsx SHIPPING_COST). Kept here so a
+// tampered client cannot alter what is actually charged.
+const SHIPPING_COST = 150;
+
 /**
- * Creates a Razorpay Order for the given amount (in INR rupees — this
- * function handles the paise conversion internally).
+ * Creates a Razorpay Order for the given internal order.
+ *
+ * SECURITY: the amount is recomputed here from the *current* product prices
+ * using the service_role client — the client-sent total, the order row's
+ * stored total, and the order_items price snapshots are all
+ * public-writable (cart_items / orders INSERT have permissive RLS) and must
+ * never be trusted. The authoritative figures are written back onto the
+ * order + items before the Razorpay order is created, and the Razorpay
+ * order id is bound to our order server-side.
  * Called from the checkout page before opening the Razorpay Checkout modal.
  */
 export const createRazorpayOrder = createServerFn({ method: "POST" })
-  .validator(
-    (data: { amount: number; receipt: string; internalOrderId: string; currency?: CurrencyCode }) =>
-      data,
-  )
+  .validator((data: { receipt: string; internalOrderId: string; currency?: CurrencyCode }) => data)
   .handler(async ({ data }) => {
     const razorpay = getRazorpayInstance();
     const currency = data.currency ?? ACTIVE_CURRENCY;
+    const admin = getSupabaseAdmin();
 
-    const order = await razorpay.orders.create({
-      amount: toSubunits(data.amount, currency), // major units → minor units
+    const { data: order, error: orderErr } = await admin
+      .from("orders")
+      .select("*, order_items(*)")
+      .eq("id", data.internalOrderId)
+      .single();
+    if (orderErr || !order) throw new Error("Order not found.");
+    if (order.payment_status === "paid") throw new Error("Order already paid.");
+
+    const items = ((order as unknown as { order_items?: OrderItem[] }).order_items ??
+      []) as OrderItem[];
+    if (items.length === 0) throw new Error("Order has no items.");
+
+    // Recompute the amount authoritatively from live product prices.
+    let subtotal = 0;
+    for (const item of items) {
+      if (!item.product_id) throw new Error("Order item is missing a product reference.");
+      const { data: product, error: prodErr } = await admin
+        .from("products")
+        .select("price, status")
+        .eq("id", item.product_id)
+        .single();
+      if (prodErr || !product) throw new Error("A product in this order no longer exists.");
+      if (product.status !== "published")
+        throw new Error("A product in this order is not purchasable.");
+
+      const lineTotal = product.price * item.quantity;
+      subtotal += lineTotal;
+
+      // Correct the stored snapshot so the DB order reflects the true price.
+      await admin
+        .from("order_items")
+        .update({ price_snapshot: product.price, line_total: lineTotal })
+        .eq("id", item.id);
+    }
+
+    // Discounts are forced to 0 until a validated coupon system exists — a
+    // client-supplied discount_amount could otherwise zero out the total.
+    const total = subtotal + SHIPPING_COST;
+
+    await admin
+      .from("orders")
+      .update({ subtotal, shipping_cost: SHIPPING_COST, discount_amount: 0, total })
+      .eq("id", order.id);
+
+    const rzpOrder = await razorpay.orders.create({
+      amount: toSubunits(total, currency), // major units → minor units
       currency,
       receipt: data.receipt,
       payment_capture: true,
@@ -47,10 +101,14 @@ export const createRazorpayOrder = createServerFn({ method: "POST" })
       notes: { artspire_order_id: data.internalOrderId },
     });
 
+    // Bind the Razorpay order id to our order server-side (do NOT rely on the
+    // client calling attachRazorpayOrderId — anon has no UPDATE on orders).
+    await admin.from("orders").update({ razorpay_order_id: rzpOrder.id }).eq("id", order.id);
+
     return {
-      id: order.id,
-      amount: order.amount,
-      currency: order.currency,
+      id: rzpOrder.id,
+      amount: rzpOrder.amount,
+      currency: rzpOrder.currency,
     };
   });
 
@@ -67,6 +125,7 @@ export const createRazorpayOrder = createServerFn({ method: "POST" })
  */
 async function applyConfirmedPayment(params: {
   orderId: string;
+  razorpayOrderId: string;
   razorpayPaymentId: string;
   razorpaySignature: string;
 }): Promise<{ order: Order; alreadyConfirmed: boolean }> {
@@ -82,6 +141,33 @@ async function applyConfirmedPayment(params: {
 
   if (existingOrder.payment_status === "paid") {
     return { order: existingOrder as unknown as Order, alreadyConfirmed: true };
+  }
+
+  // ─── AUTHORITATIVE PAYMENT VERIFICATION ───────────────────────
+  // Defends against (a) amount tampering and (b) reusing one order's valid
+  // signature to confirm a different order. A valid HMAC signature only
+  // proves "a real payment happened" — not that it was for THIS order or
+  // the right amount. So we verify the payment directly against Razorpay.
+  if (
+    !existingOrder.razorpay_order_id ||
+    existingOrder.razorpay_order_id !== params.razorpayOrderId
+  ) {
+    throw new Error("Payment does not belong to this order — refusing to confirm.");
+  }
+
+  const razorpay = getRazorpayInstance();
+  const payment = await razorpay.payments.fetch(params.razorpayPaymentId);
+
+  if (payment.order_id !== params.razorpayOrderId) {
+    throw new Error("Payment/order mismatch — refusing to confirm.");
+  }
+  if (payment.status !== "captured") {
+    throw new Error(`Payment not captured (status: ${payment.status}) — refusing to confirm.`);
+  }
+  const currency = ((existingOrder.currency as CurrencyCode) ?? ACTIVE_CURRENCY) as CurrencyCode;
+  const expectedSubunits = toSubunits(Number(existingOrder.total), currency);
+  if (Number(payment.amount) !== expectedSubunits) {
+    throw new Error("Paid amount does not match the order total — refusing to confirm.");
   }
 
   const { data: updatedOrder, error: updateError } = await admin
@@ -154,6 +240,7 @@ export async function confirmPaymentServerSide(params: {
 
   return applyConfirmedPayment({
     orderId: params.orderId,
+    razorpayOrderId: params.razorpayOrderId,
     razorpayPaymentId: params.razorpayPaymentId,
     razorpaySignature: params.razorpaySignature,
   });
@@ -182,6 +269,7 @@ export async function confirmPaymentFromWebhook(params: {
 
   return applyConfirmedPayment({
     orderId: params.orderId,
+    razorpayOrderId: params.razorpayOrderId,
     razorpayPaymentId: params.razorpayPaymentId,
     razorpaySignature: signature,
   });

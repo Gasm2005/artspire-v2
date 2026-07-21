@@ -1,7 +1,7 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useState, useEffect, useCallback } from "react";
 import { getCartItems, getOrCreateSessionId, clearCart, type CartItem } from "@/lib/cart";
-import { createPendingOrder, attachRazorpayOrderId, markOrderPaymentFailed } from "@/lib/orders";
+import { createPendingOrder, markOrderPaymentFailed } from "@/lib/orders";
 import {
   createRazorpayOrder,
   confirmPaymentAfterCheckout,
@@ -177,10 +177,12 @@ function CheckoutPage() {
         return;
       }
 
+      // Amount is intentionally NOT sent — the server recomputes it
+      // authoritatively from live product prices (see createRazorpayOrder)
+      // and binds the Razorpay order id to our order server-side.
       const razorpayOrder = await createRazorpayOrder({
-        data: { amount: total, receipt: order.order_number, internalOrderId: order.id },
+        data: { receipt: order.order_number, internalOrderId: order.id },
       });
-      await attachRazorpayOrderId(order.id, razorpayOrder.id);
 
       const { keyId } = await getRazorpayKeyId();
 
