@@ -32,7 +32,7 @@ function itemsToHtml(items: OrderItem[]): string {
         <td style="padding:8px 0;border-bottom:1px solid #E5E0D8;font-family:sans-serif;font-size:13px;color:#1D1C17;text-align:right;">
           ₹${item.line_total.toLocaleString("en-IN")}
         </td>
-      </tr>`
+      </tr>`,
     )
     .join("");
 }

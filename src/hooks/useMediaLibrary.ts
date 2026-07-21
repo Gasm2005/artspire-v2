@@ -38,34 +38,31 @@ export function useMediaLibrary(opts?: { folder?: string; tag?: string; search?:
   }, [load]);
 
   const upload = useCallback(
-    async (file: File, meta?: { folder?: string; altText?: string; title?: string; tags?: string[] }) => {
+    async (
+      file: File,
+      meta?: { folder?: string; altText?: string; title?: string; tags?: string[] },
+    ) => {
       const result = await uploadMediaFile(file, meta);
       await load();
       return result;
     },
-    [load]
+    [load],
   );
 
-  const update = useCallback(
-    async (id: string, values: Partial<MediaItem>) => {
-      const updated = await updateMediaItem(id, values);
-      setItems((prev) => prev.map((item) => (item.id === id ? updated : item)));
-      return updated;
-    },
-    []
-  );
+  const update = useCallback(async (id: string, values: Partial<MediaItem>) => {
+    const updated = await updateMediaItem(id, values);
+    setItems((prev) => prev.map((item) => (item.id === id ? updated : item)));
+    return updated;
+  }, []);
 
-  const remove = useCallback(
-    async (id: string, hard = false) => {
-      if (hard) {
-        await hardDeleteMediaItem(id);
-      } else {
-        await softDeleteMediaItem(id);
-      }
-      setItems((prev) => prev.filter((item) => item.id !== id));
-    },
-    []
-  );
+  const remove = useCallback(async (id: string, hard = false) => {
+    if (hard) {
+      await hardDeleteMediaItem(id);
+    } else {
+      await softDeleteMediaItem(id);
+    }
+    setItems((prev) => prev.filter((item) => item.id !== id));
+  }, []);
 
   return {
     items,
@@ -99,7 +96,9 @@ export function useMediaItem(id: string) {
       }
     }
     load();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [id]);
 
   return { item, loading, error };
@@ -130,7 +129,9 @@ export function useMediaUsage(mediaId: string) {
       }
     }
     load();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [mediaId]);
 
   const link = useCallback(
@@ -143,7 +144,7 @@ export function useMediaUsage(mediaId: string) {
       setUsages(usageData);
       setCount(usageCount);
     },
-    [mediaId]
+    [mediaId],
   );
 
   const unlink = useCallback(
@@ -156,7 +157,7 @@ export function useMediaUsage(mediaId: string) {
       setUsages(usageData);
       setCount(usageCount);
     },
-    [mediaId]
+    [mediaId],
   );
 
   return { usages, count, loading, link, unlink };

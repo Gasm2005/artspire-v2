@@ -1,66 +1,122 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cart — The Artspire</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
-<link rel="stylesheet" href="assets/styles.css">
-</head>
-<body data-page="">
-<div id="site-header"></div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cart — The Artspire</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body data-page="">
+    <div id="site-header"></div>
 
-<div class="wrap crumbs"><a href="index.html">Home</a> / <a href="shop.html">Shop</a> / <span>Cart</span></div>
-
-<section style="padding-top:16px">
-  <div class="wrap">
-    <h1 class="serif reveal-words" style="font-size:44px;color:var(--forest);font-weight:500;margin-bottom:28px">Your Cart</h1>
-    <div class="cart-cols" style="display:grid;grid-template-columns:1.6fr 1fr;gap:48px;align-items:start">
-      <div class="rv">
-        <div class="cart-line">
-          <div class="frame thumb" data-label=""></div>
-          <div style="flex:1">
-            <div class="cat">Luxury Lamps</div>
-            <h4>Handcrafted Metallic Lamp</h4>
-            <p style="font-size:12px;color:var(--stone);margin-top:2px">Only 1 in stock · one of a kind</p>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
-              <div class="qty"><button>−</button><span>1</span><button>+</button></div>
-              <span style="font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--forest)">₹4,999</span>
-            </div>
-          </div>
-        </div>
-        <div class="cart-line">
-          <div class="frame thumb" data-label=""></div>
-          <div style="flex:1">
-            <div class="cat">Clay Decor</div>
-            <h4>Hand-thrown Vessel</h4>
-            <p style="font-size:12px;color:var(--stone);margin-top:2px">Made to order · 5 days</p>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
-              <div class="qty"><button>−</button><span>1</span><button>+</button></div>
-              <span style="font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--forest)">₹2,400</span>
-            </div>
-          </div>
-        </div>
-        <a class="btn-ghost" href="shop.html" style="margin-top:20px;display:inline-block">← Continue shopping</a>
-      </div>
-
-      <div class="summary rv d1">
-        <h3 class="serif" style="font-size:22px;color:var(--forest);font-weight:500;margin-bottom:16px">Order Summary</h3>
-        <div class="row"><span>Subtotal</span><span>₹7,399</span></div>
-        <div class="row"><span>Shipping</span><span>₹150</span></div>
-        <div class="row"><span>Gift note</span><span>Free</span></div>
-        <div class="row total"><span>Total</span><span>₹7,549</span></div>
-        <a class="btn btn-solid btn-block" href="checkout.html" style="margin-top:18px"><span>Proceed to Checkout</span></a>
-        <p style="font-size:11px;color:var(--stone);text-align:center;margin-top:12px">Secured by Razorpay · UPI, Cards, Netbanking</p>
-      </div>
+    <div class="wrap crumbs">
+      <a href="index.html">Home</a> / <a href="shop.html">Shop</a> / <span>Cart</span>
     </div>
-  </div>
-</section>
 
-<div id="site-footer"></div>
-<script src="assets/app.js"></script>
-</body>
+    <section style="padding-top: 16px">
+      <div class="wrap">
+        <h1
+          class="serif reveal-words"
+          style="font-size: 44px; color: var(--forest); font-weight: 500; margin-bottom: 28px"
+        >
+          Your Cart
+        </h1>
+        <div
+          class="cart-cols"
+          style="display: grid; grid-template-columns: 1.6fr 1fr; gap: 48px; align-items: start"
+        >
+          <div class="rv">
+            <div class="cart-line">
+              <div class="frame thumb" data-label=""></div>
+              <div style="flex: 1">
+                <div class="cat">Luxury Lamps</div>
+                <h4>Handcrafted Metallic Lamp</h4>
+                <p style="font-size: 12px; color: var(--stone); margin-top: 2px">
+                  Only 1 in stock · one of a kind
+                </p>
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-top: 12px;
+                  "
+                >
+                  <div class="qty"><button>−</button><span>1</span><button>+</button></div>
+                  <span
+                    style="
+                      font-family: &quot;Cormorant Garamond&quot;, serif;
+                      font-size: 20px;
+                      color: var(--forest);
+                    "
+                    >₹4,999</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="cart-line">
+              <div class="frame thumb" data-label=""></div>
+              <div style="flex: 1">
+                <div class="cat">Clay Decor</div>
+                <h4>Hand-thrown Vessel</h4>
+                <p style="font-size: 12px; color: var(--stone); margin-top: 2px">
+                  Made to order · 5 days
+                </p>
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-top: 12px;
+                  "
+                >
+                  <div class="qty"><button>−</button><span>1</span><button>+</button></div>
+                  <span
+                    style="
+                      font-family: &quot;Cormorant Garamond&quot;, serif;
+                      font-size: 20px;
+                      color: var(--forest);
+                    "
+                    >₹2,400</span
+                  >
+                </div>
+              </div>
+            </div>
+            <a class="btn-ghost" href="shop.html" style="margin-top: 20px; display: inline-block"
+              >← Continue shopping</a
+            >
+          </div>
+
+          <div class="summary rv d1">
+            <h3
+              class="serif"
+              style="font-size: 22px; color: var(--forest); font-weight: 500; margin-bottom: 16px"
+            >
+              Order Summary
+            </h3>
+            <div class="row"><span>Subtotal</span><span>₹7,399</span></div>
+            <div class="row"><span>Shipping</span><span>₹150</span></div>
+            <div class="row"><span>Gift note</span><span>Free</span></div>
+            <div class="row total"><span>Total</span><span>₹7,549</span></div>
+            <a class="btn btn-solid btn-block" href="checkout.html" style="margin-top: 18px"
+              ><span>Proceed to Checkout</span></a
+            >
+            <p style="font-size: 11px; color: var(--stone); text-align: center; margin-top: 12px">
+              Secured by Razorpay · UPI, Cards, Netbanking
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div id="site-footer"></div>
+    <script src="assets/app.js"></script>
+  </body>
 </html>

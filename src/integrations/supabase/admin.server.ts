@@ -25,7 +25,7 @@ export function getSupabaseAdmin() {
   if (!url || !serviceRoleKey) {
     throw new Error(
       "Supabase admin client not configured. Set SUPABASE_SERVICE_ROLE_KEY (and VITE_SUPABASE_URL) in Vercel environment variables. " +
-        "Find the service_role key in Supabase Dashboard → Settings → API — keep it secret, never expose it client-side."
+        "Find the service_role key in Supabase Dashboard → Settings → API — keep it secret, never expose it client-side.",
     );
   }
 

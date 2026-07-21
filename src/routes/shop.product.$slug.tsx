@@ -37,7 +37,13 @@ export const Route = createFileRoute("/shop/product/$slug")({
     return {
       meta: [
         { title: product.meta_title ?? `${product.title} | The Artspire Shop` },
-        { name: "description", content: product.meta_description ?? product.summary ?? `${product.title} — handmade, one of a kind, by The Artspire.` },
+        {
+          name: "description",
+          content:
+            product.meta_description ??
+            product.summary ??
+            `${product.title} — handmade, one of a kind, by The Artspire.`,
+        },
         { property: "og:title", content: product.meta_title ?? `${product.title} | The Artspire` },
         { property: "og:image", content: product.image_url ?? OG_IMAGE },
         { property: "og:type", content: "product" },
@@ -47,11 +53,19 @@ export const Route = createFileRoute("/shop/product/$slug")({
   component: ProductPage,
   notFoundComponent: () => (
     <SiteChrome>
-      <section><div className="wrap" style={{ textAlign: "center", padding: "80px 0" }}>
-        <h1 className="serif" style={{ fontSize: 44, color: "var(--forest)", fontWeight: 500 }}>Piece not found</h1>
-        <p style={{ color: "var(--stone)", margin: "10px 0 24px" }}>This piece may have sold or moved.</p>
-        <Link className="btn btn-solid" to="/shop"><span>Back to shop</span></Link>
-      </div></section>
+      <section>
+        <div className="wrap" style={{ textAlign: "center", padding: "80px 0" }}>
+          <h1 className="serif" style={{ fontSize: 44, color: "var(--forest)", fontWeight: 500 }}>
+            Piece not found
+          </h1>
+          <p style={{ color: "var(--stone)", margin: "10px 0 24px" }}>
+            This piece may have sold or moved.
+          </p>
+          <Link className="btn btn-solid" to="/shop">
+            <span>Back to shop</span>
+          </Link>
+        </div>
+      </section>
     </SiteChrome>
   ),
 });
@@ -106,49 +120,78 @@ function ProductPage() {
     <SiteChrome>
       <div className="wrap crumbs">
         <Link to="/">Home</Link> / <Link to="/shop">Shop</Link>
-        {product.categories?.name ? <> / {product.categories.name}</> : null} / <span>{product.title}</span>
+        {product.categories?.name ? <> / {product.categories.name}</> : null} /{" "}
+        <span>{product.title}</span>
       </div>
 
       <div className="wrap pdp">
         <div className="gallery">
           <div className="thumbs">
             {images.map((src, i) => (
-              <div key={i} className={"frame" + (i === idx ? " active" : "")} onClick={() => setIdx(i)} data-label={`View ${i + 1}`}>
+              <div
+                key={i}
+                className={"frame" + (i === idx ? " active" : "")}
+                onClick={() => setIdx(i)}
+                data-label={`View ${i + 1}`}
+              >
                 <img src={src} alt={product.title} loading="lazy" />
               </div>
             ))}
           </div>
           <div
-            className="frame main-img tilt" data-label="Product photo"
-            onTouchStart={(e) => { startX.current = e.touches[0].clientX; }}
+            className="frame main-img tilt"
+            data-label="Product photo"
+            onTouchStart={(e) => {
+              startX.current = e.touches[0].clientX;
+            }}
             onTouchEnd={(e) => {
               const dx = e.changedTouches[0].clientX - startX.current;
               if (Math.abs(dx) > 40 && images.length > 1) {
-                setIdx((i) => (dx < 0 ? (i + 1) % images.length : (i - 1 + images.length) % images.length));
+                setIdx((i) =>
+                  dx < 0 ? (i + 1) % images.length : (i - 1 + images.length) % images.length,
+                );
               }
             }}
           >
             {activeImg ? <img src={activeImg} alt={product.title} /> : null}
           </div>
           {images.length > 1 && (
-            <div className="gdots">{images.map((_, i) => <span key={i} className={i === idx ? "on" : ""} onClick={() => setIdx(i)} />)}</div>
+            <div className="gdots">
+              {images.map((_, i) => (
+                <span key={i} className={i === idx ? "on" : ""} onClick={() => setIdx(i)} />
+              ))}
+            </div>
           )}
         </div>
 
         <div className="info">
           {product.categories?.name && <div className="cat">{product.categories.name}</div>}
           <h1>{product.title}</h1>
-          <div className="price-row"><span className="price-lg">₹{product.price.toLocaleString("en-IN")}</span><span className="tax">Inclusive of all taxes</span></div>
+          <div className="price-row">
+            <span className="price-lg">₹{product.price.toLocaleString("en-IN")}</span>
+            <span className="tax">Inclusive of all taxes</span>
+          </div>
           {reviews.length > 0 && (
-            <div className="rating"><span className="stars">{"★".repeat(Math.round(avgRating))}</span> {avgRating.toFixed(1)} · {reviews.length} {reviews.length === 1 ? "review" : "reviews"}</div>
+            <div className="rating">
+              <span className="stars">{"★".repeat(Math.round(avgRating))}</span>{" "}
+              {avgRating.toFixed(1)} · {reviews.length}{" "}
+              {reviews.length === 1 ? "review" : "reviews"}
+            </div>
           )}
 
           {soldOut ? (
-            <div className="scarcity"><span className="dotg"></span> Sold out — join the waitlist</div>
+            <div className="scarcity">
+              <span className="dotg"></span> Sold out — join the waitlist
+            </div>
           ) : product.is_one_of_a_kind ? (
-            <div className="scarcity"><span className="dotg"></span> Only 1 in stock — each piece is one of a kind</div>
+            <div className="scarcity">
+              <span className="dotg"></span> Only 1 in stock — each piece is one of a kind
+            </div>
           ) : lowStock ? (
-            <div className="scarcity"><span className="dotg"></span> Only {product.inventory_count} left — this one won't be remade</div>
+            <div className="scarcity">
+              <span className="dotg"></span> Only {product.inventory_count} left — this one won't be
+              remade
+            </div>
           ) : null}
 
           {(product.summary || product.description) && (
@@ -157,11 +200,22 @@ function ProductPage() {
 
           <div className="maker">
             <div className="av"></div>
-            <div className="t"><b>Made by Himangi Pandey</b><br /><span>Lucknow, India · 11+ years of craft</span></div>
+            <div className="t">
+              <b>Made by Himangi Pandey</b>
+              <br />
+              <span>Lucknow, India · 11+ years of craft</span>
+            </div>
           </div>
 
           {soldOut ? (
-            <a className="btn btn-solid btn-block" href={waLink(`Hi! Please notify me when "${product.title}" is back.`)} target="_blank" rel="noreferrer"><span>Join the waitlist</span></a>
+            <a
+              className="btn btn-solid btn-block"
+              href={waLink(`Hi! Please notify me when "${product.title}" is back.`)}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <span>Join the waitlist</span>
+            </a>
           ) : (
             <>
               <div className="qty-row">
@@ -170,39 +224,110 @@ function ProductPage() {
                   <span>{quantity}</span>
                   <button onClick={() => setQuantity((q) => q + 1)}>+</button>
                 </div>
-                <button className="btn btn-solid btn-block" disabled={adding} onClick={handleAddToCart}><span>{adding ? "Adding…" : "Add to Cart"}</span></button>
+                <button
+                  className="btn btn-solid btn-block"
+                  disabled={adding}
+                  onClick={handleAddToCart}
+                >
+                  <span>{adding ? "Adding…" : "Add to Cart"}</span>
+                </button>
               </div>
-              <button className="btn btn-gold btn-block" disabled={adding} onClick={handleBuyNow}><span>Buy it now</span></button>
+              <button className="btn btn-gold btn-block" disabled={adding} onClick={handleBuyNow}>
+                <span>Buy it now</span>
+              </button>
             </>
           )}
 
-          <a className="concierge" href={waLink(`Hi The Artspire! I'm interested in "${product.title}" (₹${product.price.toLocaleString("en-IN")}). Is it available?`)} target="_blank" rel="noreferrer">
-            <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.6"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8A8.5 8.5 0 1 1 21 11.5z" /></svg>
+          <a
+            className="concierge"
+            href={waLink(
+              `Hi The Artspire! I'm interested in "${product.title}" (₹${product.price.toLocaleString("en-IN")}). Is it available?`,
+            )}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.6">
+              <path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8A8.5 8.5 0 1 1 21 11.5z" />
+            </svg>
             Questions? Chat with Himangi on WhatsApp
           </a>
 
           <div className="trust">
-            <div><svg viewBox="0 0 24 24" fill="none" strokeWidth="1.5"><path d="M12 2 4 5v6c0 5 3.5 8 8 11 4.5-3 8-6 8-11V5z" /></svg>Handmade guarantee</div>
-            <div><svg viewBox="0 0 24 24" fill="none" strokeWidth="1.5"><rect x="3" y="11" width="18" height="10" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>Secure checkout</div>
-            <div><svg viewBox="0 0 24 24" fill="none" strokeWidth="1.5"><path d="M16 3H1v13h15zM16 8h4l3 3v5h-7z" /><circle cx="5.5" cy="18.5" r="2.5" /><circle cx="18.5" cy="18.5" r="2.5" /></svg>Insured packaging</div>
+            <div>
+              <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.5">
+                <path d="M12 2 4 5v6c0 5 3.5 8 8 11 4.5-3 8-6 8-11V5z" />
+              </svg>
+              Handmade guarantee
+            </div>
+            <div>
+              <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.5">
+                <rect x="3" y="11" width="18" height="10" rx="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+              Secure checkout
+            </div>
+            <div>
+              <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.5">
+                <path d="M16 3H1v13h15zM16 8h4l3 3v5h-7z" />
+                <circle cx="5.5" cy="18.5" r="2.5" />
+                <circle cx="18.5" cy="18.5" r="2.5" />
+              </svg>
+              Insured packaging
+            </div>
           </div>
 
           <div className="acc">
-            <details open><summary>Details &amp; materials</summary><div className="body">{product.care_instructions ? product.care_instructions : "Each piece is individually made — expect subtle, beautiful variation. Care notes are included with every order."}</div></details>
-            <details><summary>Shipping &amp; delivery</summary><div className="body">Complimentary insured shipping across India, dispatched in 3–5 business days. Fragile pieces are hand-packed in protective, recyclable materials.</div></details>
-            <details><summary>Returns &amp; care</summary><div className="body"><b>Returns:</b> 7-day return on ready-made pieces if unused and undamaged (bespoke commissions excluded).<br /><b>Care:</b> Wipe gently with a dry, soft cloth. Avoid moisture and direct sunlight.</div></details>
+            <details open>
+              <summary>Details &amp; materials</summary>
+              <div className="body">
+                {product.care_instructions
+                  ? product.care_instructions
+                  : "Each piece is individually made — expect subtle, beautiful variation. Care notes are included with every order."}
+              </div>
+            </details>
+            <details>
+              <summary>Shipping &amp; delivery</summary>
+              <div className="body">
+                Complimentary insured shipping across India, dispatched in 3–5 business days.
+                Fragile pieces are hand-packed in protective, recyclable materials.
+              </div>
+            </details>
+            <details>
+              <summary>Returns &amp; care</summary>
+              <div className="body">
+                <b>Returns:</b> 7-day return on ready-made pieces if unused and undamaged (bespoke
+                commissions excluded).
+                <br />
+                <b>Care:</b> Wipe gently with a dry, soft cloth. Avoid moisture and direct sunlight.
+              </div>
+            </details>
           </div>
         </div>
       </div>
 
       <section className="exclusive" style={{ marginTop: 40 }}>
         <div className="wrap exc-grid">
-          <div className="frame tilt" data-label="Process photo — the piece being made" style={{ aspectRatio: "4/3", background: "var(--forest-2)", borderColor: "rgba(198,165,102,.4)", borderRadius: 3 }}></div>
+          <div
+            className="frame tilt"
+            data-label="Process photo — the piece being made"
+            style={{
+              aspectRatio: "4/3",
+              background: "var(--forest-2)",
+              borderColor: "rgba(198,165,102,.4)",
+              borderRadius: 3,
+            }}
+          ></div>
           <div>
             <span className="eyebrow rv">The story of this piece</span>
             <h2 className="reveal-words">Shaped slowly, by one pair of hands.</h2>
-            <p className="rv d2">This piece begins as raw material in Himangi's Lucknow studio, worked and finished by hand over several days — no moulds, no assembly line.</p>
-            <p className="rv d3">When you buy an Artspire object, you're taking home a small, deliberate act of craft, made to be lived with and passed on.</p>
+            <p className="rv d2">
+              This piece begins as raw material in Himangi's Lucknow studio, worked and finished by
+              hand over several days — no moulds, no assembly line.
+            </p>
+            <p className="rv d3">
+              When you buy an Artspire object, you're taking home a small, deliberate act of craft,
+              made to be lived with and passed on.
+            </p>
           </div>
         </div>
       </section>
@@ -210,14 +335,37 @@ function ProductPage() {
       {related.length > 0 && (
         <section>
           <div className="wrap">
-            <div className="sec-head" style={{ justifyContent: "center", textAlign: "center", flexDirection: "column", alignItems: "center" }}>
-              <span className="eyebrow rv">You may also love</span><h2 className="reveal-words">More from the studio</h2>
+            <div
+              className="sec-head"
+              style={{
+                justifyContent: "center",
+                textAlign: "center",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <span className="eyebrow rv">You may also love</span>
+              <h2 className="reveal-words">More from the studio</h2>
             </div>
             <div className="grid g4">
               {related.map((p, i) => (
-                <Link key={p.id} to="/shop/product/$slug" params={{ slug: p.slug }} className={"card rv" + (i % 4 === 1 ? " d1" : i % 4 === 2 ? " d2" : i % 4 === 3 ? " d3" : "")}>
+                <Link
+                  key={p.id}
+                  to="/shop/product/$slug"
+                  params={{ slug: p.slug }}
+                  className={
+                    "card rv" +
+                    (i % 4 === 1 ? " d1" : i % 4 === 2 ? " d2" : i % 4 === 3 ? " d3" : "")
+                  }
+                >
                   <div className="imgwrap tilt">
-                    {p.image_url ? <div className="frame"><img src={p.image_url} alt={p.title} loading="lazy" /></div> : <div className="frame" data-label="Product photo"></div>}
+                    {p.image_url ? (
+                      <div className="frame">
+                        <img src={p.image_url} alt={p.title} loading="lazy" />
+                      </div>
+                    ) : (
+                      <div className="frame" data-label="Product photo"></div>
+                    )}
                     <div className="quick">Quick view</div>
                   </div>
                   {p.categories?.name && <div className="cat">{p.categories.name}</div>}

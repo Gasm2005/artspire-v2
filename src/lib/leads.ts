@@ -48,7 +48,11 @@ export async function getAllLeads(opts?: { status?: LeadStatus; limit?: number }
 export async function updateLeadStatus(leadId: string, status: LeadStatus): Promise<void> {
   const { error } = await supabase
     .from("leads")
-    .update({ status, status_changed_at: new Date().toISOString(), updated_at: new Date().toISOString() })
+    .update({
+      status,
+      status_changed_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    })
     .eq("id", leadId);
   if (error) throw error;
 }

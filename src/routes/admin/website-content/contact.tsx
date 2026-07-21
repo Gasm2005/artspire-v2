@@ -49,24 +49,64 @@ function ContactContentPage() {
     {
       name: "Contact Info",
       fields: [
-        { key: "contact.info.phone", label: "Phone Number", type: "text" as const, placeholder: "+91 98765 43210" },
-        { key: "contact.info.whatsapp", label: "WhatsApp Number", type: "text" as const, placeholder: "+91 98765 43210" },
-        { key: "contact.info.email", label: "Email Address", type: "text" as const, placeholder: "hello@artspire.in" },
-        { key: "contact.info.address", label: "Full Address", type: "textarea" as const, placeholder: "Mumbai, Maharashtra, India" },
+        {
+          key: "contact.info.phone",
+          label: "Phone Number",
+          type: "text" as const,
+          placeholder: "+91 98765 43210",
+        },
+        {
+          key: "contact.info.whatsapp",
+          label: "WhatsApp Number",
+          type: "text" as const,
+          placeholder: "+91 98765 43210",
+        },
+        {
+          key: "contact.info.email",
+          label: "Email Address",
+          type: "text" as const,
+          placeholder: "hello@artspire.in",
+        },
+        {
+          key: "contact.info.address",
+          label: "Full Address",
+          type: "textarea" as const,
+          placeholder: "Mumbai, Maharashtra, India",
+        },
       ],
     },
     {
       name: "Business Hours",
       fields: [
-        { key: "contact.hours.text", label: "Hours Display", type: "text" as const, placeholder: "Mon–Sat, 9am–9pm" },
+        {
+          key: "contact.hours.text",
+          label: "Hours Display",
+          type: "text" as const,
+          placeholder: "Mon–Sat, 9am–9pm",
+        },
       ],
     },
     {
       name: "Social Links",
       fields: [
-        { key: "contact.social.instagram", label: "Instagram URL", type: "text" as const, placeholder: "https://instagram.com/artspire" },
-        { key: "contact.social.facebook", label: "Facebook URL", type: "text" as const, placeholder: "https://facebook.com/artspire" },
-        { key: "contact.social.whatsapp", label: "WhatsApp Link", type: "text" as const, placeholder: "https://wa.me/917408690994" },
+        {
+          key: "contact.social.instagram",
+          label: "Instagram URL",
+          type: "text" as const,
+          placeholder: "https://instagram.com/artspire",
+        },
+        {
+          key: "contact.social.facebook",
+          label: "Facebook URL",
+          type: "text" as const,
+          placeholder: "https://facebook.com/artspire",
+        },
+        {
+          key: "contact.social.whatsapp",
+          label: "WhatsApp Link",
+          type: "text" as const,
+          placeholder: "https://wa.me/917408690994",
+        },
       ],
     },
   ];
@@ -74,20 +114,31 @@ function ContactContentPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
-        <a href="/admin/website-content" className="p-2 rounded-lg hover:bg-forest/5 text-stone hover:text-forest transition-colors">
+        <a
+          href="/admin/website-content"
+          className="p-2 rounded-lg hover:bg-forest/5 text-stone hover:text-forest transition-colors"
+        >
           <ArrowLeft size={18} />
         </a>
         <div>
-          <h1 className="font-display text-[24px] md:text-[28px] text-forest font-medium">Contact Page</h1>
-          <p className="font-body text-[13px] text-stone mt-0.5">Edit contact info, hours, and social links</p>
+          <h1 className="font-display text-[24px] md:text-[28px] text-forest font-medium">
+            Contact Page
+          </h1>
+          <p className="font-body text-[13px] text-stone mt-0.5">
+            Edit contact info, hours, and social links
+          </p>
         </div>
       </div>
 
       {saveStatus === "success" && (
-        <div className="p-3 rounded-xl bg-green-50 border border-green-200 font-body text-[13px] text-green-700">✅ Saved.</div>
+        <div className="p-3 rounded-xl bg-green-50 border border-green-200 font-body text-[13px] text-green-700">
+          ✅ Saved.
+        </div>
       )}
       {saveStatus === "error" && (
-        <div className="p-3 rounded-xl bg-red-50 border border-red-200 font-body text-[13px] text-red-700">❌ Failed.</div>
+        <div className="p-3 rounded-xl bg-red-50 border border-red-200 font-body text-[13px] text-red-700">
+          ❌ Failed.
+        </div>
       )}
 
       {loading ? (
@@ -95,8 +146,13 @@ function ContactContentPage() {
       ) : (
         <div className="space-y-6">
           {sections.map((section) => (
-            <div key={section.name} className="bg-white rounded-2xl border border-border p-5 shadow-sm">
-              <h2 className="font-display text-[16px] text-forest font-medium mb-4">{section.name}</h2>
+            <div
+              key={section.name}
+              className="bg-white rounded-2xl border border-border p-5 shadow-sm"
+            >
+              <h2 className="font-display text-[16px] text-forest font-medium mb-4">
+                {section.name}
+              </h2>
               <div className="space-y-4">
                 {section.fields.map((field) => (
                   <ContentField
@@ -137,7 +193,9 @@ function ContentField({
 
   return (
     <div>
-      <label className="block font-body text-[11px] font-semibold text-stone uppercase tracking-wider mb-1.5">{label}</label>
+      <label className="block font-body text-[11px] font-semibold text-stone uppercase tracking-wider mb-1.5">
+        {label}
+      </label>
       <div className="flex gap-2">
         {type === "textarea" ? (
           <textarea

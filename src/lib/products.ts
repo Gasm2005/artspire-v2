@@ -153,7 +153,9 @@ export async function getHomepageProducts(limit = 6) {
 export async function getRelatedProducts(productId: string, categoryId: string | null, limit = 4) {
   let query = supabase
     .from("products")
-    .select("id, slug, title, image_url, price, category_id, categories:shop_categories(name, slug)")
+    .select(
+      "id, slug, title, image_url, price, category_id, categories:shop_categories(name, slug)",
+    )
     .eq("status", "published")
     .is("deleted_at", null)
     .neq("id", productId)
@@ -179,7 +181,10 @@ export async function getProductGalleryImages(productId: string): Promise<Produc
   return (data ?? []) as ProductGalleryImage[];
 }
 
-export async function setProductGalleryImages(productId: string, mediaIds: string[]): Promise<void> {
+export async function setProductGalleryImages(
+  productId: string,
+  mediaIds: string[],
+): Promise<void> {
   const { error: delError } = await supabase
     .from("product_gallery_images")
     .delete()
@@ -234,11 +239,7 @@ export async function ensureUniqueProductSlug(title: string, currentId?: string)
 // ─── CREATE ─────────────────────────────────────────────────
 
 export async function createProduct(values: ProductInsert): Promise<Product> {
-  const { data, error } = await supabase
-    .from("products")
-    .insert(values)
-    .select()
-    .single();
+  const { data, error } = await supabase.from("products").insert(values).select().single();
 
   if (error) throw error;
   return data as Product;
@@ -282,10 +283,7 @@ export async function softDeleteProduct(id: string): Promise<void> {
 }
 
 export async function hardDeleteProduct(id: string): Promise<void> {
-  const { error } = await supabase
-    .from("products")
-    .delete()
-    .eq("id", id);
+  const { error } = await supabase.from("products").delete().eq("id", id);
 
   if (error) throw error;
 }

@@ -49,14 +49,29 @@ function FooterContentPage() {
     {
       name: "Brand",
       fields: [
-        { key: "footer.brand.tagline", label: "Tagline", type: "text" as const, placeholder: "Crafting Your Vision" },
-        { key: "footer.brand.description", label: "Description", type: "textarea" as const, placeholder: "Handcrafted art for life's most meaningful moments..." },
+        {
+          key: "footer.brand.tagline",
+          label: "Tagline",
+          type: "text" as const,
+          placeholder: "Crafting Your Vision",
+        },
+        {
+          key: "footer.brand.description",
+          label: "Description",
+          type: "textarea" as const,
+          placeholder: "Handcrafted art for life's most meaningful moments...",
+        },
       ],
     },
     {
       name: "Copyright",
       fields: [
-        { key: "footer.copyright.text", label: "Copyright Text", type: "text" as const, placeholder: "© 2025 Artspire Studio · All Rights Reserved" },
+        {
+          key: "footer.copyright.text",
+          label: "Copyright Text",
+          type: "text" as const,
+          placeholder: "© 2025 Artspire Studio · All Rights Reserved",
+        },
       ],
     },
   ];
@@ -64,20 +79,31 @@ function FooterContentPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
-        <a href="/admin/website-content" className="p-2 rounded-lg hover:bg-forest/5 text-stone hover:text-forest transition-colors">
+        <a
+          href="/admin/website-content"
+          className="p-2 rounded-lg hover:bg-forest/5 text-stone hover:text-forest transition-colors"
+        >
           <ArrowLeft size={18} />
         </a>
         <div>
-          <h1 className="font-display text-[24px] md:text-[28px] text-forest font-medium">Footer Content</h1>
-          <p className="font-body text-[13px] text-stone mt-0.5">Edit the footer text and branding</p>
+          <h1 className="font-display text-[24px] md:text-[28px] text-forest font-medium">
+            Footer Content
+          </h1>
+          <p className="font-body text-[13px] text-stone mt-0.5">
+            Edit the footer text and branding
+          </p>
         </div>
       </div>
 
       {saveStatus === "success" && (
-        <div className="p-3 rounded-xl bg-green-50 border border-green-200 font-body text-[13px] text-green-700">✅ Saved.</div>
+        <div className="p-3 rounded-xl bg-green-50 border border-green-200 font-body text-[13px] text-green-700">
+          ✅ Saved.
+        </div>
       )}
       {saveStatus === "error" && (
-        <div className="p-3 rounded-xl bg-red-50 border border-red-200 font-body text-[13px] text-red-700">❌ Failed.</div>
+        <div className="p-3 rounded-xl bg-red-50 border border-red-200 font-body text-[13px] text-red-700">
+          ❌ Failed.
+        </div>
       )}
 
       {loading ? (
@@ -85,8 +111,13 @@ function FooterContentPage() {
       ) : (
         <div className="space-y-6">
           {sections.map((section) => (
-            <div key={section.name} className="bg-white rounded-2xl border border-border p-5 shadow-sm">
-              <h2 className="font-display text-[16px] text-forest font-medium mb-4">{section.name}</h2>
+            <div
+              key={section.name}
+              className="bg-white rounded-2xl border border-border p-5 shadow-sm"
+            >
+              <h2 className="font-display text-[16px] text-forest font-medium mb-4">
+                {section.name}
+              </h2>
               <div className="space-y-4">
                 {section.fields.map((field) => (
                   <ContentField
@@ -127,7 +158,9 @@ function ContentField({
 
   return (
     <div>
-      <label className="block font-body text-[11px] font-semibold text-stone uppercase tracking-wider mb-1.5">{label}</label>
+      <label className="block font-body text-[11px] font-semibold text-stone uppercase tracking-wider mb-1.5">
+        {label}
+      </label>
       <div className="flex gap-2">
         {type === "textarea" ? (
           <textarea

@@ -8,7 +8,11 @@ export interface NewsletterSubscriber {
   created_at: string;
 }
 
-export async function subscribeToNewsletter(params: { email?: string; phone?: string; source?: string }): Promise<void> {
+export async function subscribeToNewsletter(params: {
+  email?: string;
+  phone?: string;
+  source?: string;
+}): Promise<void> {
   const { error } = await supabase.from("newsletter_subscribers").insert({
     email: params.email || null,
     phone: params.phone || null,

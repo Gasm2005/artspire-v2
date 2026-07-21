@@ -20,7 +20,7 @@ export const SITE_URL: string = normalize(
   (typeof import.meta !== "undefined" &&
     (import.meta as unknown as { env?: Record<string, string | undefined> }).env?.VITE_SITE_URL) ||
     (typeof process !== "undefined" ? process.env?.VITE_SITE_URL : undefined) ||
-    FALLBACK_SITE_URL
+    FALLBACK_SITE_URL,
 );
 
 /** Absolute URL for a path, e.g. absoluteUrl("/shop") → "https://theartspire.com/shop". */

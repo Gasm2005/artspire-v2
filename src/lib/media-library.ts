@@ -33,7 +33,10 @@ export type MediaItem = {
   deleted_at: string | null;
 };
 
-export type MediaItemInsert = Omit<Partial<MediaItem>, "id" | "created_at" | "updated_at" | "deleted_at">;
+export type MediaItemInsert = Omit<
+  Partial<MediaItem>,
+  "id" | "created_at" | "updated_at" | "deleted_at"
+>;
 export type MediaItemUpdate = Partial<MediaItem>;
 
 export type MediaVariant = {
@@ -212,7 +215,7 @@ export async function uploadMediaFile(
     altText?: string;
     title?: string;
     tags?: string[];
-  }
+  },
 ): Promise<UploadMediaResult> {
   const folder = opts?.folder ?? "uncategorized";
   const fileExt = file.name.split(".").pop() || "jpg";
@@ -263,10 +266,7 @@ export async function uploadMediaFile(
 
 // ─── UPDATE ─────────────────────────────────────────────────
 
-export async function updateMediaItem(
-  id: string,
-  values: MediaItemUpdate
-): Promise<MediaItem> {
+export async function updateMediaItem(id: string, values: MediaItemUpdate): Promise<MediaItem> {
   const { data, error } = await supabase
     .from("media_library")
     .update({ ...values, updated_at: new Date().toISOString() } as MediaLibraryUpdate)
@@ -299,16 +299,11 @@ export async function hardDeleteMediaItem(id: string): Promise<void> {
 
   if (item?.storage_path) {
     // Delete from storage
-    await supabase.storage
-      .from("media-library")
-      .remove([item.storage_path]);
+    await supabase.storage.from("media-library").remove([item.storage_path]);
   }
 
   // Delete from DB
-  const { error } = await supabase
-    .from("media_library")
-    .delete()
-    .eq("id", id);
+  const { error } = await supabase.from("media_library").delete().eq("id", id);
 
   if (error) throw error;
 }
@@ -319,11 +314,14 @@ export async function logMediaUsage(
   mediaId: string,
   entityType: string,
   entityId: string,
-  usageType: string
+  usageType: string,
 ): Promise<void> {
-  const { error } = await supabase
-    .from("media_usage_log")
-    .insert({ media_id: mediaId, entity_type: entityType, entity_id: entityId, usage_type: usageType });
+  const { error } = await supabase.from("media_usage_log").insert({
+    media_id: mediaId,
+    entity_type: entityType,
+    entity_id: entityId,
+    usage_type: usageType,
+  });
 
   if (error) throw error;
 
@@ -334,7 +332,7 @@ export async function logMediaUsage(
 export async function removeMediaUsage(
   mediaId: string,
   entityType: string,
-  entityId: string
+  entityId: string,
 ): Promise<void> {
   const { error } = await supabase
     .from("media_usage_log")

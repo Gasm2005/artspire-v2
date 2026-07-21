@@ -9,7 +9,9 @@ export const Route = createFileRoute("/admin/reviews")({
 });
 
 function AdminReviewsPage() {
-  const [reviews, setReviews] = useState<(ProductReview & { products?: { title: string } | null })[]>([]);
+  const [reviews, setReviews] = useState<
+    (ProductReview & { products?: { title: string } | null })[]
+  >([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"pending" | "all">("pending");
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -65,14 +67,18 @@ function AdminReviewsPage() {
     <div className="space-y-5">
       <div>
         <h1 className="font-display text-[24px] md:text-[28px] text-forest font-medium">Reviews</h1>
-        <p className="font-body text-[13px] text-stone mt-0.5">Moderate customer reviews before they go public</p>
+        <p className="font-body text-[13px] text-stone mt-0.5">
+          Moderate customer reviews before they go public
+        </p>
       </div>
 
       <div className="flex gap-2">
         <button
           onClick={() => setFilter("pending")}
           className={`px-3 py-1.5 rounded-lg font-body text-[12px] font-semibold transition-colors ${
-            filter === "pending" ? "bg-forest text-white" : "bg-white border border-border text-stone"
+            filter === "pending"
+              ? "bg-forest text-white"
+              : "bg-white border border-border text-stone"
           }`}
         >
           Pending
@@ -95,7 +101,9 @@ function AdminReviewsPage() {
         <div className="bg-white rounded-2xl border border-border p-10 text-center">
           <MessageSquareText size={26} className="mx-auto text-stone/30 mb-2" />
           <p className="font-body text-stone text-[14px]">
-            {filter === "pending" ? "No pending reviews — you're all caught up." : "No reviews yet."}
+            {filter === "pending"
+              ? "No pending reviews — you're all caught up."
+              : "No reviews yet."}
           </p>
         </div>
       ) : (
@@ -105,8 +113,12 @@ function AdminReviewsPage() {
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-body text-[13px] font-semibold text-forest">{r.customer_name}</span>
-                    <span className="font-body text-[11px] text-stone/50">on {r.products?.title ?? "Unknown product"}</span>
+                    <span className="font-body text-[13px] font-semibold text-forest">
+                      {r.customer_name}
+                    </span>
+                    <span className="font-body text-[11px] text-stone/50">
+                      on {r.products?.title ?? "Unknown product"}
+                    </span>
                     {!r.is_approved && (
                       <span className="px-1.5 py-0.5 rounded-full bg-amber-50 text-amber-700 font-body text-[9px] font-bold uppercase">
                         Pending
@@ -115,10 +127,16 @@ function AdminReviewsPage() {
                   </div>
                   <div className="flex items-center gap-0.5 mt-1 mb-2">
                     {[1, 2, 3, 4, 5].map((i) => (
-                      <Star key={i} size={12} className={i <= r.rating ? "fill-gold text-gold" : "text-border"} />
+                      <Star
+                        key={i}
+                        size={12}
+                        className={i <= r.rating ? "fill-gold text-gold" : "text-border"}
+                      />
                     ))}
                   </div>
-                  {r.comment && <p className="font-body text-[13px] text-stone leading-relaxed">{r.comment}</p>}
+                  {r.comment && (
+                    <p className="font-body text-[13px] text-stone leading-relaxed">{r.comment}</p>
+                  )}
                 </div>
                 <div className="flex gap-1.5 shrink-0">
                   {!r.is_approved && (

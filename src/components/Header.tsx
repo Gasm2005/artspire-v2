@@ -61,7 +61,10 @@ export function Header({ onMenuClick }: { onMenuClick: () => void }) {
           </picture>
         </Link>
 
-        <nav aria-label="Main navigation" className="flex items-center gap-8 font-body text-[13px] font-medium text-stone/70">
+        <nav
+          aria-label="Main navigation"
+          className="flex items-center gap-8 font-body text-[13px] font-medium text-stone/70"
+        >
           {navLinks.map((l) => {
             const isActive = location.pathname === l.to;
             return (

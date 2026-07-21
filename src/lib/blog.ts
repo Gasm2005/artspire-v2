@@ -68,17 +68,31 @@ export async function getPostById(id: string): Promise<BlogPost | null> {
 export async function createPost(input: BlogPostInput): Promise<BlogPost> {
   const payload = {
     ...input,
-    published_at: input.status === "published" ? input.published_at ?? new Date().toISOString() : null,
+    published_at:
+      input.status === "published" ? (input.published_at ?? new Date().toISOString()) : null,
   };
-  const { data, error } = await supabase.from("blog_posts").insert(payload as BlogPostsInsert).select().single();
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .insert(payload as BlogPostsInsert)
+    .select()
+    .single();
   if (error) throw error;
   return data as BlogPost;
 }
 
 export async function updatePost(id: string, input: BlogPostInput): Promise<BlogPost> {
-  const payload: BlogPostInput & { updated_at: string } = { ...input, updated_at: new Date().toISOString() };
-  if (input.status === "published" && !input.published_at) payload.published_at = new Date().toISOString();
-  const { data, error } = await supabase.from("blog_posts").update(payload).eq("id", id).select().single();
+  const payload: BlogPostInput & { updated_at: string } = {
+    ...input,
+    updated_at: new Date().toISOString(),
+  };
+  if (input.status === "published" && !input.published_at)
+    payload.published_at = new Date().toISOString();
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .update(payload)
+    .eq("id", id)
+    .select()
+    .single();
   if (error) throw error;
   return data as BlogPost;
 }

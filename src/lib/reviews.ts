@@ -49,7 +49,9 @@ export async function submitReview(params: {
 
 // ─── ADMIN ──────────────────────────────────────────────────
 
-export async function getAllReviews(opts?: { pendingOnly?: boolean }): Promise<(ProductReview & { products?: { title: string } | null })[]> {
+export async function getAllReviews(opts?: {
+  pendingOnly?: boolean;
+}): Promise<(ProductReview & { products?: { title: string } | null })[]> {
   let query = supabase
     .from("product_reviews")
     .select("*, products(title)")
@@ -63,7 +65,10 @@ export async function getAllReviews(opts?: { pendingOnly?: boolean }): Promise<(
 }
 
 export async function approveReview(id: string): Promise<void> {
-  const { error } = await supabase.from("product_reviews").update({ is_approved: true }).eq("id", id);
+  const { error } = await supabase
+    .from("product_reviews")
+    .update({ is_approved: true })
+    .eq("id", id);
   if (error) throw error;
 }
 

@@ -21,8 +21,12 @@ function CategoriesPage() {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="font-display text-[24px] md:text-[28px] text-forest font-medium">Categories</h1>
-        <p className="font-body text-[13px] text-stone mt-0.5">Edit category name, tagline, and image</p>
+        <h1 className="font-display text-[24px] md:text-[28px] text-forest font-medium">
+          Categories
+        </h1>
+        <p className="font-body text-[13px] text-stone mt-0.5">
+          Edit category name, tagline, and image
+        </p>
       </div>
 
       {loading ? (
@@ -30,11 +34,18 @@ function CategoriesPage() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {categories.map((cat) => (
-            <div key={cat.id} className="bg-white rounded-2xl border border-border overflow-hidden shadow-sm">
+            <div
+              key={cat.id}
+              className="bg-white rounded-2xl border border-border overflow-hidden shadow-sm"
+            >
               <div className="aspect-[4/3] relative bg-cream overflow-hidden">
                 {cat.image_url ? (
                   <>
-                    <img src={cat.image_url} alt={cat.name} className="absolute inset-0 w-full h-full object-cover" />
+                    <img
+                      src={cat.image_url}
+                      alt={cat.name}
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                     <span className="absolute bottom-3 left-4 font-display text-[17px] text-white font-medium drop-shadow">
                       {cat.name}

@@ -7,10 +7,7 @@ export type FAQUpdate = Database["public"]["Tables"]["faqs"]["Update"];
 export type FAQEntityType = Database["public"]["Enums"]["faq_entity_type"];
 
 export async function getFAQs(entityType?: FAQEntityType, entityId?: string) {
-  let query = supabase
-    .from("faqs")
-    .select("*")
-    .order("display_order", { ascending: true });
+  let query = supabase.from("faqs").select("*").order("display_order", { ascending: true });
 
   if (entityType) query = query.eq("entity_type", entityType);
   if (entityId) query = query.eq("entity_id", entityId);
@@ -33,44 +30,28 @@ export async function getCategoryFAQs(categoryId: string) {
 }
 
 export async function getFAQById(id: string) {
-  const { data, error } = await supabase
-    .from("faqs")
-    .select("*")
-    .eq("id", id)
-    .single();
+  const { data, error } = await supabase.from("faqs").select("*").eq("id", id).single();
 
   if (error) throw error;
   return data as FAQ | null;
 }
 
 export async function createFAQ(values: FAQInsert): Promise<FAQ> {
-  const { data, error } = await supabase
-    .from("faqs")
-    .insert(values)
-    .select()
-    .single();
+  const { data, error } = await supabase.from("faqs").insert(values).select().single();
 
   if (error) throw error;
   return data as FAQ;
 }
 
 export async function updateFAQ(id: string, values: FAQUpdate): Promise<FAQ> {
-  const { data, error } = await supabase
-    .from("faqs")
-    .update(values)
-    .eq("id", id)
-    .select()
-    .single();
+  const { data, error } = await supabase.from("faqs").update(values).eq("id", id).select().single();
 
   if (error) throw error;
   return data as FAQ;
 }
 
 export async function deleteFAQ(id: string): Promise<void> {
-  const { error } = await supabase
-    .from("faqs")
-    .delete()
-    .eq("id", id);
+  const { error } = await supabase.from("faqs").delete().eq("id", id);
 
   if (error) throw error;
 }

@@ -105,14 +105,12 @@ export async function addToCart(sessionId: string, product: Product, quantity = 
       .eq("id", existingItem.id);
     if (error) throw error;
   } else {
-    const { error } = await supabase
-      .from("cart_items")
-      .insert({
-        cart_id: cart.id,
-        product_id: product.id,
-        quantity,
-        price_at_add: product.price,
-      });
+    const { error } = await supabase.from("cart_items").insert({
+      cart_id: cart.id,
+      product_id: product.id,
+      quantity,
+      price_at_add: product.price,
+    });
     if (error) throw error;
   }
 
@@ -124,18 +122,12 @@ export async function updateCartItemQuantity(itemId: string, quantity: number): 
     await removeCartItem(itemId);
     return;
   }
-  const { error } = await supabase
-    .from("cart_items")
-    .update({ quantity })
-    .eq("id", itemId);
+  const { error } = await supabase.from("cart_items").update({ quantity }).eq("id", itemId);
   if (error) throw error;
 }
 
 export async function removeCartItem(itemId: string): Promise<void> {
-  const { error } = await supabase
-    .from("cart_items")
-    .delete()
-    .eq("id", itemId);
+  const { error } = await supabase.from("cart_items").delete().eq("id", itemId);
   if (error) throw error;
 }
 
@@ -148,9 +140,6 @@ export async function clearCart(sessionId: string): Promise<void> {
 
   if (!cart) return;
 
-  const { error } = await supabase
-    .from("cart_items")
-    .delete()
-    .eq("cart_id", cart.id);
+  const { error } = await supabase.from("cart_items").delete().eq("cart_id", cart.id);
   if (error) throw error;
 }

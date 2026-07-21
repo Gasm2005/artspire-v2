@@ -24,7 +24,6 @@ export type CategoryWithVisuals = Category & {
   updated_by?: string | null;
 };
 
-
 export async function getCategories() {
   const { data, error } = await supabase
     .from("categories")
@@ -99,11 +98,7 @@ export async function ensureUniqueCategorySlug(name: string, currentId?: string)
 }
 
 export async function createCategory(values: CategoryInsert): Promise<Category> {
-  const { data, error } = await supabase
-    .from("categories")
-    .insert(values)
-    .select()
-    .single();
+  const { data, error } = await supabase.from("categories").insert(values).select().single();
 
   if (error) throw error;
   return data as Category;
@@ -131,10 +126,7 @@ export async function softDeleteCategory(id: string): Promise<void> {
 }
 
 export async function hardDeleteCategory(id: string): Promise<void> {
-  const { error } = await supabase
-    .from("categories")
-    .delete()
-    .eq("id", id);
+  const { error } = await supabase.from("categories").delete().eq("id", id);
 
   if (error) throw error;
 }

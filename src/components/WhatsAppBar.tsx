@@ -13,7 +13,9 @@ export function WhatsAppBar() {
       aria-label="Chat with Himangi on WhatsApp"
     >
       <MessageCircle size={18} aria-hidden="true" />
-      <span className="font-body font-semibold text-[13px] tracking-widest uppercase">Commission Art</span>
+      <span className="font-body font-semibold text-[13px] tracking-widest uppercase">
+        Commission Art
+      </span>
     </a>
   );
 }

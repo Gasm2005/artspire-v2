@@ -25,7 +25,9 @@ export const Route = createFileRoute("/api/webhooks/razorpay")({
       POST: async ({ request }) => {
         const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET;
         if (!webhookSecret) {
-          console.error("[razorpay webhook] RAZORPAY_WEBHOOK_SECRET not configured — rejecting webhook.");
+          console.error(
+            "[razorpay webhook] RAZORPAY_WEBHOOK_SECRET not configured — rejecting webhook.",
+          );
           return new Response("Webhook not configured", { status: 500 });
         }
 
@@ -38,7 +40,10 @@ export const Route = createFileRoute("/api/webhooks/razorpay")({
           return new Response("Missing signature", { status: 400 });
         }
 
-        const expectedSignature = crypto.createHmac("sha256", webhookSecret).update(rawBody).digest("hex");
+        const expectedSignature = crypto
+          .createHmac("sha256", webhookSecret)
+          .update(rawBody)
+          .digest("hex");
 
         // Constant-time comparison to avoid timing attacks on the signature check.
         const signatureValid =
@@ -52,7 +57,11 @@ export const Route = createFileRoute("/api/webhooks/razorpay")({
 
         let event: {
           event?: string;
-          payload?: { payment?: { entity?: { id?: string; order_id?: string; notes?: Record<string, string> } } };
+          payload?: {
+            payment?: {
+              entity?: { id?: string; order_id?: string; notes?: Record<string, string> };
+            };
+          };
         };
 
         try {
@@ -89,7 +98,7 @@ export const Route = createFileRoute("/api/webhooks/razorpay")({
             razorpayPaymentId,
           });
           console.log(
-            `[razorpay webhook] Order ${internalOrderId} ${result.alreadyConfirmed ? "already confirmed (no-op)" : "confirmed via webhook"}.`
+            `[razorpay webhook] Order ${internalOrderId} ${result.alreadyConfirmed ? "already confirmed (no-op)" : "confirmed via webhook"}.`,
           );
           return new Response("OK", { status: 200 });
         } catch (err) {

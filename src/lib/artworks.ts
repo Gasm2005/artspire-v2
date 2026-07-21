@@ -62,10 +62,7 @@ export async function getArtworks(opts?: {
   orderBy?: "display_order" | "published_at" | "created_at";
   ascending?: boolean;
 }) {
-  let query = supabase
-    .from("artworks")
-    .select("*, categories(*)")
-    .is("deleted_at", null);
+  let query = supabase.from("artworks").select("*, categories(*)").is("deleted_at", null);
 
   if (opts?.status) query = query.eq("status", opts.status);
   if (opts?.featured) query = query.eq("featured", true);
@@ -112,14 +109,16 @@ export async function getArtworkById(id: string) {
 export async function getArtworkWithImages(id: string): Promise<ArtworkWithImages | null> {
   const { data, error } = await supabase
     .from("artworks")
-    .select(`
+    .select(
+      `
       *,
       categories(*),
       main_image:media_library!main_image_id(public_url),
       thumbnail_image:media_library!thumbnail_image_id(public_url),
       before_image:media_library!before_image_id(public_url),
       after_image:media_library!after_image_id(public_url)
-    `)
+    `,
+    )
     .eq("id", id)
     .is("deleted_at", null)
     .single();
@@ -189,7 +188,9 @@ export async function getArtworkTags(artworkId: string) {
     .eq("artwork_id", artworkId);
 
   if (error) throw error;
-  return (data ?? []).map((d) => d.tags).filter(Boolean) as Database["public"]["Tables"]["tags"]["Row"][];
+  return (data ?? [])
+    .map((d) => d.tags)
+    .filter(Boolean) as Database["public"]["Tables"]["tags"]["Row"][];
 }
 
 export async function getAllArtworkTags(artworkId: string) {
@@ -225,7 +226,7 @@ export async function getArtworkGalleryImages(artworkId: string): Promise<Artwor
 
 export async function setArtworkGalleryImages(
   artworkId: string,
-  images: { media_id: string; caption?: string; alt_text?: string; display_order?: number }[]
+  images: { media_id: string; caption?: string; alt_text?: string; display_order?: number }[],
 ): Promise<void> {
   // Delete existing
   const { error: delError } = await supabase
@@ -245,14 +246,15 @@ export async function setArtworkGalleryImages(
     display_order: img.display_order ?? i,
   }));
 
-  const { error: insError } = await supabase
-    .from("artwork_gallery_images")
-    .insert(inserts);
+  const { error: insError } = await supabase.from("artwork_gallery_images").insert(inserts);
 
   if (insError) throw insError;
 }
 
-export async function reorderGalleryImages(artworkId: string, orderedMediaIds: string[]): Promise<void> {
+export async function reorderGalleryImages(
+  artworkId: string,
+  orderedMediaIds: string[],
+): Promise<void> {
   for (let i = 0; i < orderedMediaIds.length; i++) {
     const { error } = await supabase
       .from("artwork_gallery_images")
@@ -288,7 +290,13 @@ export async function getArtworkProcessImages(artworkId: string): Promise<Artwor
 
 export async function setArtworkProcessImages(
   artworkId: string,
-  images: { media_id: string; step_number?: number; step_title?: string; step_description?: string; display_order?: number }[]
+  images: {
+    media_id: string;
+    step_number?: number;
+    step_title?: string;
+    step_description?: string;
+    display_order?: number;
+  }[],
 ): Promise<void> {
   const { error: delError } = await supabase
     .from("artwork_process_images")
@@ -308,14 +316,15 @@ export async function setArtworkProcessImages(
     display_order: img.display_order ?? i,
   }));
 
-  const { error: insError } = await supabase
-    .from("artwork_process_images")
-    .insert(inserts);
+  const { error: insError } = await supabase.from("artwork_process_images").insert(inserts);
 
   if (insError) throw insError;
 }
 
-export async function reorderProcessImages(artworkId: string, orderedMediaIds: string[]): Promise<void> {
+export async function reorderProcessImages(
+  artworkId: string,
+  orderedMediaIds: string[],
+): Promise<void> {
   for (let i = 0; i < orderedMediaIds.length; i++) {
     const { error } = await supabase
       .from("artwork_process_images")
@@ -365,11 +374,7 @@ export async function ensureUniqueSlug(title: string, currentId?: string): Promi
 // ─── CREATE ─────────────────────────────────────────────────
 
 export async function createArtwork(values: ArtworkInsert): Promise<Artwork> {
-  const { data, error } = await supabase
-    .from("artworks")
-    .insert(values)
-    .select()
-    .single();
+  const { data, error } = await supabase.from("artworks").insert(values).select().single();
 
   if (error) throw error;
   return data as Artwork;
@@ -401,10 +406,7 @@ export async function softDeleteArtwork(id: string): Promise<void> {
 }
 
 export async function hardDeleteArtwork(id: string): Promise<void> {
-  const { error } = await supabase
-    .from("artworks")
-    .delete()
-    .eq("id", id);
+  const { error } = await supabase.from("artworks").delete().eq("id", id);
 
   if (error) throw error;
 }
@@ -422,9 +424,7 @@ export async function setArtworkTags(artworkId: string, tagIds: string[]): Promi
   if (tagIds.length === 0) return;
 
   const inserts = tagIds.map((tagId) => ({ artwork_id: artworkId, tag_id: tagId }));
-  const { error: insError } = await supabase
-    .from("artwork_tags")
-    .insert(inserts);
+  const { error: insError } = await supabase.from("artwork_tags").insert(inserts);
 
   if (insError) throw insError;
 }
@@ -445,7 +445,10 @@ export async function archiveArtwork(id: string): Promise<Artwork> {
 
 // ─── IMAGE STORAGE ──────────────────────────────────────────
 
-export async function uploadArtworkImage(file: File, slug: string): Promise<{ path: string; publicUrl: string }> {
+export async function uploadArtworkImage(
+  file: File,
+  slug: string,
+): Promise<{ path: string; publicUrl: string }> {
   const fileExt = file.name.split(".").pop() || "jpg";
   const filePath = `artworks/${slug}-${Date.now()}.${fileExt}`;
 
@@ -455,9 +458,7 @@ export async function uploadArtworkImage(file: File, slug: string): Promise<{ pa
 
   if (error) throw error;
 
-  const { data: publicUrlData } = supabase.storage
-    .from("artwork-images")
-    .getPublicUrl(data.path);
+  const { data: publicUrlData } = supabase.storage.from("artwork-images").getPublicUrl(data.path);
 
   return { path: data.path, publicUrl: publicUrlData.publicUrl };
 }

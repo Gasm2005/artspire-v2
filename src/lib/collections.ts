@@ -85,7 +85,10 @@ export async function getProductsInCollection(collectionId: string) {
   return (data ?? []).map((row: any) => row.products).filter(Boolean);
 }
 
-export async function setProductCollections(productId: string, collectionIds: string[]): Promise<void> {
+export async function setProductCollections(
+  productId: string,
+  collectionIds: string[],
+): Promise<void> {
   const { error: delError } = await supabase
     .from("product_collections")
     .delete()
@@ -94,9 +97,13 @@ export async function setProductCollections(productId: string, collectionIds: st
 
   if (collectionIds.length === 0) return;
 
-  const { error } = await supabase
-    .from("product_collections")
-    .insert(collectionIds.map((collection_id, i) => ({ product_id: productId, collection_id, display_order: i })));
+  const { error } = await supabase.from("product_collections").insert(
+    collectionIds.map((collection_id, i) => ({
+      product_id: productId,
+      collection_id,
+      display_order: i,
+    })),
+  );
   if (error) throw error;
 }
 
@@ -180,7 +187,10 @@ export async function getAllMediumCraftContent(): Promise<MediumCraftContent[]> 
   return (data ?? []) as MediumCraftContent[];
 }
 
-export async function updateMediumCraftContent(medium: string, values: Partial<MediumCraftContent>): Promise<MediumCraftContent> {
+export async function updateMediumCraftContent(
+  medium: string,
+  values: Partial<MediumCraftContent>,
+): Promise<MediumCraftContent> {
   const { data, error } = await supabase
     .from("medium_craft_content")
     .update({ ...values, updated_at: new Date().toISOString() })

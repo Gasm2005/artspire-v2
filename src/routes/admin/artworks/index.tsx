@@ -104,8 +104,12 @@ function AdminArtworksPage() {
     <div className="space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-display text-[24px] md:text-[28px] text-forest font-medium">Artworks</h1>
-          <p className="font-body text-[13px] text-stone mt-0.5">Manage and publish your artworks</p>
+          <h1 className="font-display text-[24px] md:text-[28px] text-forest font-medium">
+            Artworks
+          </h1>
+          <p className="font-body text-[13px] text-stone mt-0.5">
+            Manage and publish your artworks
+          </p>
         </div>
         <a
           href="/admin/artworks/new"
@@ -152,35 +156,58 @@ function AdminArtworksPage() {
             <table className="w-full text-left">
               <thead>
                 <tr className="border-b border-border">
-                  <th className="px-4 py-3 font-body text-[10px] font-bold text-stone uppercase tracking-wider">Artwork</th>
-                  <th className="px-4 py-3 font-body text-[10px] font-bold text-stone uppercase tracking-wider hidden md:table-cell">Category</th>
-                  <th className="px-4 py-3 font-body text-[10px] font-bold text-stone uppercase tracking-wider">Status</th>
-                  <th className="px-4 py-3 font-body text-[10px] font-bold text-stone uppercase tracking-wider text-right">Actions</th>
+                  <th className="px-4 py-3 font-body text-[10px] font-bold text-stone uppercase tracking-wider">
+                    Artwork
+                  </th>
+                  <th className="px-4 py-3 font-body text-[10px] font-bold text-stone uppercase tracking-wider hidden md:table-cell">
+                    Category
+                  </th>
+                  <th className="px-4 py-3 font-body text-[10px] font-bold text-stone uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-4 py-3 font-body text-[10px] font-bold text-stone uppercase tracking-wider text-right">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.map((artwork) => (
-                  <tr key={artwork.id} className="border-b border-border last:border-b-0 hover:bg-cream/30 transition-colors">
+                  <tr
+                    key={artwork.id}
+                    className="border-b border-border last:border-b-0 hover:bg-cream/30 transition-colors"
+                  >
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-lg bg-forest/5 overflow-hidden shrink-0">
                           {artwork.image_url ? (
-                            <img src={artwork.image_url} alt="" className="w-full h-full object-cover" />
+                            <img
+                              src={artwork.image_url}
+                              alt=""
+                              className="w-full h-full object-cover"
+                            />
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center text-stone/30 text-[10px]">No img</div>
+                            <div className="w-full h-full flex items-center justify-center text-stone/30 text-[10px]">
+                              No img
+                            </div>
                           )}
                         </div>
                         <div>
-                          <div className="font-body text-[13px] font-semibold text-forest">{artwork.title}</div>
+                          <div className="font-body text-[13px] font-semibold text-forest">
+                            {artwork.title}
+                          </div>
                           <div className="font-body text-[11px] text-stone/60">{artwork.slug}</div>
                         </div>
                       </div>
                     </td>
                     <td className="px-4 py-3 hidden md:table-cell">
-                      <span className="font-body text-[12px] text-stone">{artwork.categories?.name ?? "—"}</span>
+                      <span className="font-body text-[12px] text-stone">
+                        {artwork.categories?.name ?? "—"}
+                      </span>
                     </td>
                     <td className="px-4 py-3">
-                      <span className={`inline-block px-2 py-0.5 rounded-full font-body text-[10px] font-bold uppercase tracking-wider ${statusBadge(artwork.status)}`}>
+                      <span
+                        className={`inline-block px-2 py-0.5 rounded-full font-body text-[10px] font-bold uppercase tracking-wider ${statusBadge(artwork.status)}`}
+                      >
                         {artwork.status}
                       </span>
                     </td>

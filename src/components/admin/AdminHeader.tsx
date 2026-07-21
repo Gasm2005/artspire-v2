@@ -27,9 +27,7 @@ export function AdminHeader() {
       <div className="flex items-center justify-between h-[56px] px-4">
         {/* Page title */}
         <div className="flex items-center gap-3">
-          <h1 className="font-display text-[18px] text-forest font-medium">
-            {getPageTitle()}
-          </h1>
+          <h1 className="font-display text-[18px] text-forest font-medium">{getPageTitle()}</h1>
         </div>
 
         {/* Search */}

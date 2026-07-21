@@ -41,7 +41,7 @@ export async function upsertSEOMetadata(values: SEOMetadataInsert): Promise<SEOM
 
 export async function updateSEOMetadata(
   id: string,
-  values: SEOMetadataUpdate
+  values: SEOMetadataUpdate,
 ): Promise<SEOMetadata> {
   const { data, error } = await supabase
     .from("seo_metadata")
@@ -55,10 +55,7 @@ export async function updateSEOMetadata(
 }
 
 export async function deleteSEOMetadata(id: string): Promise<void> {
-  const { error } = await supabase
-    .from("seo_metadata")
-    .delete()
-    .eq("id", id);
+  const { error } = await supabase.from("seo_metadata").delete().eq("id", id);
 
   if (error) throw error;
 }
@@ -85,13 +82,16 @@ export function buildArtworkStructuredData(artwork: {
     url: `${getSiteUrl()}/artwork/${artwork.slug}`,
     dateCreated: artwork.created_at,
     artform: artwork.category || "Mixed Media",
-    offers: artwork.price > 0 && artwork.status === "published" ? {
-      "@type": "Offer",
-      price: artwork.price.toString(),
-      priceCurrency: artwork.currency || "INR",
-      availability: "https://schema.org/InStock",
-      url: `${getSiteUrl()}/artwork/${artwork.slug}`,
-    } : undefined,
+    offers:
+      artwork.price > 0 && artwork.status === "published"
+        ? {
+            "@type": "Offer",
+            price: artwork.price.toString(),
+            priceCurrency: artwork.currency || "INR",
+            availability: "https://schema.org/InStock",
+            url: `${getSiteUrl()}/artwork/${artwork.slug}`,
+          }
+        : undefined,
   };
 }
 
@@ -102,15 +102,12 @@ export function buildOrganizationStructuredData(): Record<string, unknown> {
     name: "Artspire",
     url: getSiteUrl(),
     logo: `${getSiteUrl()}/logo.png`,
-    sameAs: [
-      "https://facebook.com/artspire",
-      "https://instagram.com/artspire",
-    ],
+    sameAs: ["https://facebook.com/artspire", "https://instagram.com/artspire"],
   };
 }
 
 export function buildBreadcrumbStructuredData(
-  items: { name: string; item: string }[]
+  items: { name: string; item: string }[],
 ): Record<string, unknown> {
   return {
     "@context": "https://schema.org",

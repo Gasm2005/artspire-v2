@@ -28,7 +28,12 @@ export const Route = createFileRoute("/shop/")({
     return {
       meta: [
         { title: seo?.title ?? "Shop | The Artspire — Handmade Home Décor & Art" },
-        { name: "description", content: seo?.description ?? "Ready-made handcrafted pieces — clay sculpture, mirror art, paintings, and sketches. Each one made by hand by Himangi Pandey. Ships across India." },
+        {
+          name: "description",
+          content:
+            seo?.description ??
+            "Ready-made handcrafted pieces — clay sculpture, mirror art, paintings, and sketches. Each one made by hand by Himangi Pandey. Ships across India.",
+        },
         ...(seo?.ogImage ? [{ property: "og:image", content: seo.ogImage }] : []),
       ],
     };
@@ -60,21 +65,39 @@ function ShopPage() {
         <div className="bb"></div>
         <div className="inner">
           <span className="eyebrow">The Collection</span>
-          <h1>Objects made to be <em>lived with</em>.</h1>
-          <p>Every piece shaped by hand, one at a time — in limited numbers, with no two exactly alike.</p>
+          <h1>
+            Objects made to be <em>lived with</em>.
+          </h1>
+          <p>
+            Every piece shaped by hand, one at a time — in limited numbers, with no two exactly
+            alike.
+          </p>
         </div>
       </div>
 
       <div className="toolbar">
         <div className="wrap row">
           <div className="chips">
-            <button className={activeCategory === "all" ? "chip active" : "chip"} onClick={() => setActiveCategory("all")}>All Pieces</button>
+            <button
+              className={activeCategory === "all" ? "chip active" : "chip"}
+              onClick={() => setActiveCategory("all")}
+            >
+              All Pieces
+            </button>
             {categories.map((cat) => (
-              <button key={cat.id} className={activeCategory === cat.slug ? "chip active" : "chip"} onClick={() => setActiveCategory(cat.slug)}>{cat.name}</button>
+              <button
+                key={cat.id}
+                className={activeCategory === cat.slug ? "chip active" : "chip"}
+                onClick={() => setActiveCategory(cat.slug)}
+              >
+                {cat.name}
+              </button>
             ))}
           </div>
           <div className="tools-right">
-            <span className="count">{filtered.length} {filtered.length === 1 ? "piece" : "pieces"}</span>
+            <span className="count">
+              {filtered.length} {filtered.length === 1 ? "piece" : "pieces"}
+            </span>
             <input
               className="sort"
               style={{ minWidth: 160 }}
@@ -82,7 +105,11 @@ function ShopPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <select className="sort" value={sortBy} onChange={(e) => setSortBy(e.target.value as "newest" | "price_low" | "price_high")}>
+            <select
+              className="sort"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as "newest" | "price_low" | "price_high")}
+            >
               <option value="newest">Sort: Featured</option>
               <option value="price_low">Price: low to high</option>
               <option value="price_high">Price: high to low</option>
@@ -95,8 +122,15 @@ function ShopPage() {
         <div className="wrap">
           {filtered.length === 0 ? (
             <div style={{ textAlign: "center", padding: "80px 0" }}>
-              <h2 className="serif" style={{ fontSize: 28, color: "var(--forest)", fontWeight: 500 }}>No pieces match your filter</h2>
-              <p style={{ color: "var(--stone)", marginTop: 8 }}>Try a different category or search.</p>
+              <h2
+                className="serif"
+                style={{ fontSize: 28, color: "var(--forest)", fontWeight: 500 }}
+              >
+                No pieces match your filter
+              </h2>
+              <p style={{ color: "var(--stone)", marginTop: 8 }}>
+                Try a different category or search.
+              </p>
             </div>
           ) : (
             <div className="grid">
@@ -106,17 +140,26 @@ function ShopPage() {
                   to="/shop/product/$slug"
                   params={{ slug: product.slug }}
                   preload="intent"
-                  className={"card rv" + (i % 4 === 1 ? " d1" : i % 4 === 2 ? " d2" : i % 4 === 3 ? " d3" : "")}
+                  className={
+                    "card rv" +
+                    (i % 4 === 1 ? " d1" : i % 4 === 2 ? " d2" : i % 4 === 3 ? " d3" : "")
+                  }
                 >
                   <div className="imgwrap tilt">
                     {product.status === "sold_out" && <span className="badge sold">Sold out</span>}
-                    {product.is_one_of_a_kind && product.status === "published" && <span className="badge limited">1 of 1</span>}
+                    {product.is_one_of_a_kind && product.status === "published" && (
+                      <span className="badge limited">1 of 1</span>
+                    )}
                     {product.image_url ? (
-                      <div className="frame"><img src={product.image_url} alt={product.title} loading="lazy" /></div>
+                      <div className="frame">
+                        <img src={product.image_url} alt={product.title} loading="lazy" />
+                      </div>
                     ) : (
                       <div className="frame" data-label="Product photo"></div>
                     )}
-                    <div className="quick">{product.status === "sold_out" ? "Notify me" : "Quick view"}</div>
+                    <div className="quick">
+                      {product.status === "sold_out" ? "Notify me" : "Quick view"}
+                    </div>
                   </div>
                   {product.categories?.name && <div className="cat">{product.categories.name}</div>}
                   <h3>{product.title}</h3>

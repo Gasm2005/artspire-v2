@@ -4,7 +4,15 @@ import type { CartItem } from "./cart";
 
 type OrdersUpdate = Database["public"]["Tables"]["orders"]["Update"];
 
-export type OrderStatus = "pending" | "payment_failed" | "confirmed" | "processing" | "shipped" | "delivered" | "cancelled" | "refunded";
+export type OrderStatus =
+  | "pending"
+  | "payment_failed"
+  | "confirmed"
+  | "processing"
+  | "shipped"
+  | "delivered"
+  | "cancelled"
+  | "refunded";
 export type PaymentStatus = "pending" | "paid" | "failed" | "refunded" | "partially_refunded";
 
 export interface ShippingAddress {
@@ -74,14 +82,17 @@ export async function createPendingOrder(params: {
   discountAmount?: number;
   couponCode?: string;
 }): Promise<Order> {
-  const subtotal = params.cartItems.reduce((sum, item) => sum + item.price_at_add * item.quantity, 0);
+  const subtotal = params.cartItems.reduce(
+    (sum, item) => sum + item.price_at_add * item.quantity,
+    0,
+  );
   const shippingCost = params.shippingCost ?? 0;
   const discountAmount = params.discountAmount ?? 0;
   const total = subtotal + shippingCost - discountAmount;
 
   // Generate order number via DB function
-  const { data: orderNumberData, error: orderNumberError } = await supabase
-    .rpc("generate_order_number");
+  const { data: orderNumberData, error: orderNumberError } =
+    await supabase.rpc("generate_order_number");
   if (orderNumberError) throw orderNumberError;
 
   const { data: order, error } = await supabase
@@ -125,7 +136,10 @@ export async function createPendingOrder(params: {
 
 // ─── ATTACH RAZORPAY ORDER ID ─────────────────────────────────
 
-export async function attachRazorpayOrderId(orderId: string, razorpayOrderId: string): Promise<void> {
+export async function attachRazorpayOrderId(
+  orderId: string,
+  razorpayOrderId: string,
+): Promise<void> {
   const { error } = await supabase
     .from("orders")
     .update({ razorpay_order_id: razorpayOrderId })

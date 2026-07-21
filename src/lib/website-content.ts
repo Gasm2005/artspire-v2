@@ -14,7 +14,15 @@ export type WebsiteContent = {
   value_html: string | null;
   value_json: Record<string, unknown> | null;
   value_media_id: string | null;
-  field_type: "text" | "textarea" | "html" | "image" | "multi_image" | "repeater" | "select" | "toggle";
+  field_type:
+    | "text"
+    | "textarea"
+    | "html"
+    | "image"
+    | "multi_image"
+    | "repeater"
+    | "select"
+    | "toggle";
   description: string | null;
   placeholder: string | null;
   is_required: boolean | null;
@@ -23,7 +31,10 @@ export type WebsiteContent = {
   updated_at: string | null;
 };
 
-export type WebsiteContentInsert = Omit<Partial<WebsiteContent>, "id" | "created_at" | "updated_at">;
+export type WebsiteContentInsert = Omit<
+  Partial<WebsiteContent>,
+  "id" | "created_at" | "updated_at"
+>;
 export type WebsiteContentUpdate = Partial<WebsiteContent>;
 export type ContentFieldType = WebsiteContent["field_type"];
 
@@ -147,7 +158,7 @@ export async function createRepeaterItem(values: {
 
 export async function updateWebsiteContent(
   id: string,
-  values: WebsiteContentUpdate
+  values: WebsiteContentUpdate,
 ): Promise<WebsiteContent> {
   const { data, error } = await supabase
     .from("website_content")
@@ -162,11 +173,13 @@ export async function updateWebsiteContent(
 
 export async function upsertWebsiteContent(
   contentKey: string,
-  values: Omit<WebsiteContentInsert, "content_key">
+  values: Omit<WebsiteContentInsert, "content_key">,
 ): Promise<WebsiteContent> {
   const { data, error } = await supabase
     .from("website_content")
-    .upsert({ content_key: contentKey, ...values } as WebsiteContentDbInsert, { onConflict: "content_key" })
+    .upsert({ content_key: contentKey, ...values } as WebsiteContentDbInsert, {
+      onConflict: "content_key",
+    })
     .select()
     .single();
 
@@ -176,7 +189,7 @@ export async function upsertWebsiteContent(
 
 export async function updateRepeaterItem(
   id: string,
-  values: { displayOrder?: number; itemData?: Record<string, unknown> }
+  values: { displayOrder?: number; itemData?: Record<string, unknown> },
 ): Promise<RepeaterItem> {
   const { data, error } = await supabase
     .from("website_content_repeater_items")
@@ -195,19 +208,13 @@ export async function updateRepeaterItem(
 // ─── DELETE ─────────────────────────────────────────────────
 
 export async function deleteWebsiteContent(id: string): Promise<void> {
-  const { error } = await supabase
-    .from("website_content")
-    .delete()
-    .eq("id", id);
+  const { error } = await supabase.from("website_content").delete().eq("id", id);
 
   if (error) throw error;
 }
 
 export async function deleteRepeaterItem(id: string): Promise<void> {
-  const { error } = await supabase
-    .from("website_content_repeater_items")
-    .delete()
-    .eq("id", id);
+  const { error } = await supabase.from("website_content_repeater_items").delete().eq("id", id);
 
   if (error) throw error;
 }
@@ -307,12 +314,10 @@ export const FOOTER_SECTIONS = [
 ];
 
 // ─── SEO helper for route loaders ───────────────────────────
-export async function getPageSEO(pageKey: string): Promise<{ title: string | null; description: string | null; ogImage: string | null }> {
-  const keys = [
-    `seo.${pageKey}.title`,
-    `seo.${pageKey}.description`,
-    `seo.${pageKey}.og_image`,
-  ];
+export async function getPageSEO(
+  pageKey: string,
+): Promise<{ title: string | null; description: string | null; ogImage: string | null }> {
+  const keys = [`seo.${pageKey}.title`, `seo.${pageKey}.description`, `seo.${pageKey}.og_image`];
   const { data } = await supabase
     .from("website_content")
     .select("content_key, value_text")

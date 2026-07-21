@@ -1,66 +1,161 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shop — The Artspire</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
-<link rel="stylesheet" href="assets/styles.css">
-</head>
-<body data-page="shop">
-<div id="site-header"></div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shop — The Artspire</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body data-page="shop">
+    <div id="site-header"></div>
 
-<div class="banner">
-  <div class="bb"></div>
-  <div class="inner">
-    <span class="eyebrow">The Collection</span>
-    <h1>Objects made to be <em>lived with</em>.</h1>
-    <p>Every piece shaped by hand, one at a time — in limited numbers, with no two exactly alike.</p>
-  </div>
-</div>
-
-<div class="toolbar">
-  <div class="wrap row">
-    <div class="chips">
-      <button class="chip active">All Pieces</button>
-      <button class="chip">Luxury Lamps</button>
-      <button class="chip">Clay Decor</button>
-      <button class="chip">Cement Sculptures</button>
-      <button class="chip">Wooden Objects</button>
-      <button class="chip">Premium Gifts</button>
-      <button class="chip">Collectibles</button>
-    </div>
-    <div class="tools-right">
-      <span class="count">18 pieces</span>
-      <select class="sort"><option>Sort: Featured</option><option>Newest first</option><option>Price: low to high</option><option>Price: high to low</option></select>
-    </div>
-  </div>
-</div>
-
-<section>
-  <div class="wrap">
-    <div class="grid">
-      <a class="card rv" href="product.html"><div class="imgwrap tilt"><span class="badge limited">1 of 1</span><div class="frame" data-label="Product photo"></div><div class="quick">Quick view</div></div><div class="cat">Luxury Lamps</div><h3>Handcrafted Metallic Lamp</h3><div class="price">₹4,999</div><div class="stock">Only 1 in stock</div></a>
-      <a class="card rv d1" href="product.html"><div class="imgwrap tilt"><span class="badge new">New</span><div class="frame" data-label="Product photo"></div><div class="quick">Quick view</div></div><div class="cat">Clay Decor</div><h3>Hand-thrown Vessel</h3><div class="price">₹2,400</div><div class="stock">Made to order · 5 days</div></a>
-      <a class="card rv d2" href="product.html"><div class="imgwrap tilt"><div class="frame" data-label="Product photo"></div><div class="quick">Quick view</div></div><div class="cat">Cement Sculptures</div><h3>Monolith Object</h3><div class="price">₹3,200</div><div class="stock">In stock</div></a>
-      <a class="card rv" href="product.html"><div class="imgwrap tilt"><div class="frame" data-label="Product photo"></div><div class="quick">Quick view</div></div><div class="cat">Wooden Objects</div><h3>Carved Bowl Set</h3><div class="price">₹1,850</div><div class="stock">In stock</div></a>
-      <a class="card rv d1" href="product.html"><div class="imgwrap tilt"><span class="badge limited">Limited</span><div class="frame" data-label="Product photo"></div><div class="quick">Quick view</div></div><div class="cat">Premium Gifts</div><h3>Brass Candle Holder</h3><div class="price">₹1,299</div><div class="stock">Only 3 left</div></a>
-
-      <div class="editorial rv">
-        <div class="t"><span class="eyebrow">Made the slow way</span><h3>Why handmade takes time.</h3><p>Each object is worked by one pair of hands over days, not minutes. Small variations aren't flaws — they're the maker's signature.</p><a class="btn btn-solid" href="about.html"><span>Read our story</span></a></div>
+    <div class="banner">
+      <div class="bb"></div>
+      <div class="inner">
+        <span class="eyebrow">The Collection</span>
+        <h1>Objects made to be <em>lived with</em>.</h1>
+        <p>
+          Every piece shaped by hand, one at a time — in limited numbers, with no two exactly alike.
+        </p>
       </div>
-
-      <a class="card rv" href="product.html"><div class="imgwrap tilt"><span class="badge sold">Sold out</span><div class="frame" data-label="Product photo"></div><div class="quick">Notify me</div></div><div class="cat">Bottle Art</div><h3>Painted Glass Bottle</h3><div class="price">₹899</div><div class="stock">Waitlist open</div></a>
-      <a class="card rv d1" href="product.html"><div class="imgwrap tilt"><div class="frame" data-label="Product photo"></div><div class="quick">Quick view</div></div><div class="cat">Clay Decor</div><h3>Terracotta Planter</h3><div class="price">₹1,499</div><div class="stock">In stock</div></a>
-      <a class="card rv d2" href="product.html"><div class="imgwrap tilt"><span class="badge limited">1 of 5</span><div class="frame" data-label="Product photo"></div><div class="quick">Quick view</div></div><div class="cat">Collectibles</div><h3>Limited Edition Figure</h3><div class="price">₹5,600</div><div class="stock">1 of 5 made</div></a>
     </div>
-  </div>
-</section>
 
-<div id="site-footer"></div>
-<script src="assets/app.js"></script>
-</body>
+    <div class="toolbar">
+      <div class="wrap row">
+        <div class="chips">
+          <button class="chip active">All Pieces</button>
+          <button class="chip">Luxury Lamps</button>
+          <button class="chip">Clay Decor</button>
+          <button class="chip">Cement Sculptures</button>
+          <button class="chip">Wooden Objects</button>
+          <button class="chip">Premium Gifts</button>
+          <button class="chip">Collectibles</button>
+        </div>
+        <div class="tools-right">
+          <span class="count">18 pieces</span>
+          <select class="sort">
+            <option>Sort: Featured</option>
+            <option>Newest first</option>
+            <option>Price: low to high</option>
+            <option>Price: high to low</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <section>
+      <div class="wrap">
+        <div class="grid">
+          <a class="card rv" href="product.html"
+            ><div class="imgwrap tilt">
+              <span class="badge limited">1 of 1</span>
+              <div class="frame" data-label="Product photo"></div>
+              <div class="quick">Quick view</div>
+            </div>
+            <div class="cat">Luxury Lamps</div>
+            <h3>Handcrafted Metallic Lamp</h3>
+            <div class="price">₹4,999</div>
+            <div class="stock">Only 1 in stock</div></a
+          >
+          <a class="card rv d1" href="product.html"
+            ><div class="imgwrap tilt">
+              <span class="badge new">New</span>
+              <div class="frame" data-label="Product photo"></div>
+              <div class="quick">Quick view</div>
+            </div>
+            <div class="cat">Clay Decor</div>
+            <h3>Hand-thrown Vessel</h3>
+            <div class="price">₹2,400</div>
+            <div class="stock">Made to order · 5 days</div></a
+          >
+          <a class="card rv d2" href="product.html"
+            ><div class="imgwrap tilt">
+              <div class="frame" data-label="Product photo"></div>
+              <div class="quick">Quick view</div>
+            </div>
+            <div class="cat">Cement Sculptures</div>
+            <h3>Monolith Object</h3>
+            <div class="price">₹3,200</div>
+            <div class="stock">In stock</div></a
+          >
+          <a class="card rv" href="product.html"
+            ><div class="imgwrap tilt">
+              <div class="frame" data-label="Product photo"></div>
+              <div class="quick">Quick view</div>
+            </div>
+            <div class="cat">Wooden Objects</div>
+            <h3>Carved Bowl Set</h3>
+            <div class="price">₹1,850</div>
+            <div class="stock">In stock</div></a
+          >
+          <a class="card rv d1" href="product.html"
+            ><div class="imgwrap tilt">
+              <span class="badge limited">Limited</span>
+              <div class="frame" data-label="Product photo"></div>
+              <div class="quick">Quick view</div>
+            </div>
+            <div class="cat">Premium Gifts</div>
+            <h3>Brass Candle Holder</h3>
+            <div class="price">₹1,299</div>
+            <div class="stock">Only 3 left</div></a
+          >
+
+          <div class="editorial rv">
+            <div class="t">
+              <span class="eyebrow">Made the slow way</span>
+              <h3>Why handmade takes time.</h3>
+              <p>
+                Each object is worked by one pair of hands over days, not minutes. Small variations
+                aren't flaws — they're the maker's signature.
+              </p>
+              <a class="btn btn-solid" href="about.html"><span>Read our story</span></a>
+            </div>
+          </div>
+
+          <a class="card rv" href="product.html"
+            ><div class="imgwrap tilt">
+              <span class="badge sold">Sold out</span>
+              <div class="frame" data-label="Product photo"></div>
+              <div class="quick">Notify me</div>
+            </div>
+            <div class="cat">Bottle Art</div>
+            <h3>Painted Glass Bottle</h3>
+            <div class="price">₹899</div>
+            <div class="stock">Waitlist open</div></a
+          >
+          <a class="card rv d1" href="product.html"
+            ><div class="imgwrap tilt">
+              <div class="frame" data-label="Product photo"></div>
+              <div class="quick">Quick view</div>
+            </div>
+            <div class="cat">Clay Decor</div>
+            <h3>Terracotta Planter</h3>
+            <div class="price">₹1,499</div>
+            <div class="stock">In stock</div></a
+          >
+          <a class="card rv d2" href="product.html"
+            ><div class="imgwrap tilt">
+              <span class="badge limited">1 of 5</span>
+              <div class="frame" data-label="Product photo"></div>
+              <div class="quick">Quick view</div>
+            </div>
+            <div class="cat">Collectibles</div>
+            <h3>Limited Edition Figure</h3>
+            <div class="price">₹5,600</div>
+            <div class="stock">1 of 5 made</div></a
+          >
+        </div>
+      </div>
+    </section>
+
+    <div id="site-footer"></div>
+    <script src="assets/app.js"></script>
+  </body>
 </html>

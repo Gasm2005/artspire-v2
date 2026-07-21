@@ -8,12 +8,12 @@
 
 ## SPRINT ORDER
 
-| Sprint | Focus | Duration | Modules |
-|---|---|---|---|
+| Sprint   | Focus      | Duration | Modules                                                                         |
+| -------- | ---------- | -------- | ------------------------------------------------------------------------------- |
 | Sprint 1 | Foundation | Week 1-2 | Database, Media Library, Visual Assets, Category Visual System, Website Content |
-| Sprint 2 | Content | Week 3-4 | Enhanced Artwork, FAQ Management, Page Sections, SEO Center |
-| Sprint 3 | Business | Week 5-6 | Lead Center, WhatsApp Center, Dashboard, Settings |
-| Sprint 4 | Polish | Week 7-8 | Image optimization, Content seeding, Onboarding, Testing |
+| Sprint 2 | Content    | Week 3-4 | Enhanced Artwork, FAQ Management, Page Sections, SEO Center                     |
+| Sprint 3 | Business   | Week 5-6 | Lead Center, WhatsApp Center, Dashboard, Settings                               |
+| Sprint 4 | Polish     | Week 7-8 | Image optimization, Content seeding, Onboarding, Testing                        |
 
 ---
 
@@ -517,117 +517,117 @@ src/components/Footer.tsx         # Use CMS for footer content
 
 ## EXACT FILE CREATION CHECKLIST
 
-### Data Layer (lib/*.ts)
+### Data Layer (lib/\*.ts)
 
-| # | File | Status |
-|---|---|---|
-| 1 | `src/lib/media-library.ts` | 🔴 CREATE |
-| 2 | `src/lib/visual-assets.ts` | 🔴 CREATE |
-| 3 | `src/lib/website-content.ts` | 🔴 CREATE |
-| 4 | `src/lib/page-sections.ts` | 🟡 CREATE |
-| 5 | `src/lib/leads.ts` | 🟢 CREATE |
-| 6 | `src/lib/whatsapp-clicks.ts` | 🟢 CREATE |
-| 7 | `src/lib/dashboard-metrics.ts` | 🟢 CREATE |
+| #   | File                           | Status    |
+| --- | ------------------------------ | --------- |
+| 1   | `src/lib/media-library.ts`     | 🔴 CREATE |
+| 2   | `src/lib/visual-assets.ts`     | 🔴 CREATE |
+| 3   | `src/lib/website-content.ts`   | 🔴 CREATE |
+| 4   | `src/lib/page-sections.ts`     | 🟡 CREATE |
+| 5   | `src/lib/leads.ts`             | 🟢 CREATE |
+| 6   | `src/lib/whatsapp-clicks.ts`   | 🟢 CREATE |
+| 7   | `src/lib/dashboard-metrics.ts` | 🟢 CREATE |
 
-### Hooks (hooks/*.ts)
+### Hooks (hooks/\*.ts)
 
-| # | File | Status |
-|---|---|---|
-| 1 | `src/hooks/useMediaLibrary.ts` | 🔴 CREATE |
-| 2 | `src/hooks/useVisualAssets.ts` | 🔴 CREATE |
-| 3 | `src/hooks/useWebsiteContent.ts` | 🔴 CREATE |
-| 4 | `src/hooks/usePageSections.ts` | 🟡 CREATE |
-| 5 | `src/hooks/useLeadPipeline.ts` | 🟢 CREATE |
-| 6 | `src/hooks/useWhatsappAnalytics.ts` | 🟢 CREATE |
-| 7 | `src/hooks/useDashboardMetrics.ts` | 🟢 CREATE |
+| #   | File                                | Status    |
+| --- | ----------------------------------- | --------- |
+| 1   | `src/hooks/useMediaLibrary.ts`      | 🔴 CREATE |
+| 2   | `src/hooks/useVisualAssets.ts`      | 🔴 CREATE |
+| 3   | `src/hooks/useWebsiteContent.ts`    | 🔴 CREATE |
+| 4   | `src/hooks/usePageSections.ts`      | 🟡 CREATE |
+| 5   | `src/hooks/useLeadPipeline.ts`      | 🟢 CREATE |
+| 6   | `src/hooks/useWhatsappAnalytics.ts` | 🟢 CREATE |
+| 7   | `src/hooks/useDashboardMetrics.ts`  | 🟢 CREATE |
 
-### Admin Components (components/admin/*.tsx)
+### Admin Components (components/admin/\*.tsx)
 
-| # | File | Status |
-|---|---|---|
-| 1 | `src/components/admin/AdminSidebar.tsx` | 🔴 CREATE |
-| 2 | `src/components/admin/AdminMobileNav.tsx` | 🔴 CREATE |
-| 3 | `src/components/admin/AdminHeader.tsx` | 🔴 CREATE |
-| 4 | `src/components/admin/MediaPicker.tsx` | 🔴 CREATE |
-| 5 | `src/components/admin/MultiImageUploader.tsx` | 🔴 CREATE |
-| 6 | `src/components/admin/CategoryCard.tsx` | 🔴 CREATE |
-| 7 | `src/components/admin/DataTable.tsx` | 🟡 CREATE |
-| 8 | `src/components/admin/StatusBadge.tsx` | 🟡 CREATE |
-| 9 | `src/components/admin/RichTextEditor.tsx` | 🟡 CREATE |
-| 10 | `src/components/admin/LeadPipeline.tsx` | 🟢 CREATE |
-| 11 | `src/components/admin/LeadCard.tsx` | 🟢 CREATE |
-| 12 | `src/components/admin/SectionBuilder.tsx` | 🟡 CREATE |
-| 13 | `src/components/admin/SeoScore.tsx` | 🟡 CREATE |
-| 14 | `src/components/admin/ChartWidget.tsx` | 🟢 CREATE |
-| 15 | `src/components/admin/KpiCard.tsx` | 🟢 CREATE |
-| 16 | `src/components/admin/ActivityFeed.tsx` | 🟢 CREATE |
+| #   | File                                          | Status    |
+| --- | --------------------------------------------- | --------- |
+| 1   | `src/components/admin/AdminSidebar.tsx`       | 🔴 CREATE |
+| 2   | `src/components/admin/AdminMobileNav.tsx`     | 🔴 CREATE |
+| 3   | `src/components/admin/AdminHeader.tsx`        | 🔴 CREATE |
+| 4   | `src/components/admin/MediaPicker.tsx`        | 🔴 CREATE |
+| 5   | `src/components/admin/MultiImageUploader.tsx` | 🔴 CREATE |
+| 6   | `src/components/admin/CategoryCard.tsx`       | 🔴 CREATE |
+| 7   | `src/components/admin/DataTable.tsx`          | 🟡 CREATE |
+| 8   | `src/components/admin/StatusBadge.tsx`        | 🟡 CREATE |
+| 9   | `src/components/admin/RichTextEditor.tsx`     | 🟡 CREATE |
+| 10  | `src/components/admin/LeadPipeline.tsx`       | 🟢 CREATE |
+| 11  | `src/components/admin/LeadCard.tsx`           | 🟢 CREATE |
+| 12  | `src/components/admin/SectionBuilder.tsx`     | 🟡 CREATE |
+| 13  | `src/components/admin/SeoScore.tsx`           | 🟡 CREATE |
+| 14  | `src/components/admin/ChartWidget.tsx`        | 🟢 CREATE |
+| 15  | `src/components/admin/KpiCard.tsx`            | 🟢 CREATE |
+| 16  | `src/components/admin/ActivityFeed.tsx`       | 🟢 CREATE |
 
-### Admin Routes (routes/admin/**/*.tsx)
+### Admin Routes (routes/admin/\*_/_.tsx)
 
-| # | Route | File | Status |
-|---|---|---|---|
-| 1 | `/admin/categories` | `src/routes/admin/categories/index.tsx` | 🔴 CREATE |
-| 2 | `/admin/categories/edit/$id` | `src/routes/admin/categories/edit.$id.tsx` | 🔴 CREATE |
-| 3 | `/admin/media` | `src/routes/admin/media/index.tsx` | 🔴 CREATE |
-| 4 | `/admin/media/$id` | `src/routes/admin/media/$id.tsx` | 🔴 CREATE |
-| 5 | `/admin/visual-assets` | `src/routes/admin/visual-assets/index.tsx` | 🔴 CREATE |
-| 6 | `/admin/visual-assets/edit/$id` | `src/routes/admin/visual-assets/edit.$id.tsx` | 🔴 CREATE |
-| 7 | `/admin/website-content` | `src/routes/admin/website-content/index.tsx` | 🔴 CREATE |
-| 8 | `/admin/website-content/homepage` | `src/routes/admin/website-content/homepage.tsx` | 🔴 CREATE |
-| 9 | `/admin/website-content/about` | `src/routes/admin/website-content/about.tsx` | 🔴 CREATE |
-| 10 | `/admin/website-content/contact` | `src/routes/admin/website-content/contact.tsx` | 🔴 CREATE |
-| 11 | `/admin/website-content/footer` | `src/routes/admin/website-content/footer.tsx` | 🔴 CREATE |
-| 12 | `/admin/faqs` | `src/routes/admin/faqs/index.tsx` | 🟡 CREATE |
-| 13 | `/admin/faqs/new` | `src/routes/admin/faqs/new.tsx` | 🟡 CREATE |
-| 14 | `/admin/faqs/edit/$id` | `src/routes/admin/faqs/edit.$id.tsx` | 🟡 CREATE |
-| 15 | `/admin/faqs/sections` | `src/routes/admin/faqs/sections.tsx` | 🟡 CREATE |
-| 16 | `/admin/seo` | `src/routes/admin/seo/index.tsx` | 🟡 CREATE |
-| 17 | `/admin/seo/pages` | `src/routes/admin/seo/pages.tsx` | 🟡 CREATE |
-| 18 | `/admin/seo/artworks` | `src/routes/admin/seo/artworks.tsx` | 🟡 CREATE |
-| 19 | `/admin/seo/categories` | `src/routes/admin/seo/categories.tsx` | 🟡 CREATE |
-| 20 | `/admin/seo/redirects` | `src/routes/admin/seo/redirects.tsx` | 🟡 CREATE |
-| 21 | `/admin/leads` | `src/routes/admin/leads/index.tsx` | 🟢 CREATE |
-| 22 | `/admin/leads/pipeline` | `src/routes/admin/leads/pipeline.tsx` | 🟢 CREATE |
-| 23 | `/admin/leads/$id` | `src/routes/admin/leads/$id.tsx` | 🟢 CREATE |
-| 24 | `/admin/leads/new` | `src/routes/admin/leads/new.tsx` | 🟢 CREATE |
-| 25 | `/admin/whatsapp` | `src/routes/admin/whatsapp/index.tsx` | 🟢 CREATE |
-| 26 | `/admin/whatsapp/analytics` | `src/routes/admin/whatsapp/analytics.tsx` | 🟢 CREATE |
-| 27 | `/admin/whatsapp/templates` | `src/routes/admin/whatsapp/templates.tsx` | 🟢 CREATE |
-| 28 | `/admin/pages` | `src/routes/admin/pages/index.tsx` | 🟡 CREATE |
-| 29 | `/admin/pages/$pageId` | `src/routes/admin/pages/$pageId.tsx` | 🟡 CREATE |
-| 30 | `/admin/settings` | `src/routes/admin/settings/index.tsx` | 🟢 CREATE |
+| #   | Route                             | File                                            | Status    |
+| --- | --------------------------------- | ----------------------------------------------- | --------- |
+| 1   | `/admin/categories`               | `src/routes/admin/categories/index.tsx`         | 🔴 CREATE |
+| 2   | `/admin/categories/edit/$id`      | `src/routes/admin/categories/edit.$id.tsx`      | 🔴 CREATE |
+| 3   | `/admin/media`                    | `src/routes/admin/media/index.tsx`              | 🔴 CREATE |
+| 4   | `/admin/media/$id`                | `src/routes/admin/media/$id.tsx`                | 🔴 CREATE |
+| 5   | `/admin/visual-assets`            | `src/routes/admin/visual-assets/index.tsx`      | 🔴 CREATE |
+| 6   | `/admin/visual-assets/edit/$id`   | `src/routes/admin/visual-assets/edit.$id.tsx`   | 🔴 CREATE |
+| 7   | `/admin/website-content`          | `src/routes/admin/website-content/index.tsx`    | 🔴 CREATE |
+| 8   | `/admin/website-content/homepage` | `src/routes/admin/website-content/homepage.tsx` | 🔴 CREATE |
+| 9   | `/admin/website-content/about`    | `src/routes/admin/website-content/about.tsx`    | 🔴 CREATE |
+| 10  | `/admin/website-content/contact`  | `src/routes/admin/website-content/contact.tsx`  | 🔴 CREATE |
+| 11  | `/admin/website-content/footer`   | `src/routes/admin/website-content/footer.tsx`   | 🔴 CREATE |
+| 12  | `/admin/faqs`                     | `src/routes/admin/faqs/index.tsx`               | 🟡 CREATE |
+| 13  | `/admin/faqs/new`                 | `src/routes/admin/faqs/new.tsx`                 | 🟡 CREATE |
+| 14  | `/admin/faqs/edit/$id`            | `src/routes/admin/faqs/edit.$id.tsx`            | 🟡 CREATE |
+| 15  | `/admin/faqs/sections`            | `src/routes/admin/faqs/sections.tsx`            | 🟡 CREATE |
+| 16  | `/admin/seo`                      | `src/routes/admin/seo/index.tsx`                | 🟡 CREATE |
+| 17  | `/admin/seo/pages`                | `src/routes/admin/seo/pages.tsx`                | 🟡 CREATE |
+| 18  | `/admin/seo/artworks`             | `src/routes/admin/seo/artworks.tsx`             | 🟡 CREATE |
+| 19  | `/admin/seo/categories`           | `src/routes/admin/seo/categories.tsx`           | 🟡 CREATE |
+| 20  | `/admin/seo/redirects`            | `src/routes/admin/seo/redirects.tsx`            | 🟡 CREATE |
+| 21  | `/admin/leads`                    | `src/routes/admin/leads/index.tsx`              | 🟢 CREATE |
+| 22  | `/admin/leads/pipeline`           | `src/routes/admin/leads/pipeline.tsx`           | 🟢 CREATE |
+| 23  | `/admin/leads/$id`                | `src/routes/admin/leads/$id.tsx`                | 🟢 CREATE |
+| 24  | `/admin/leads/new`                | `src/routes/admin/leads/new.tsx`                | 🟢 CREATE |
+| 25  | `/admin/whatsapp`                 | `src/routes/admin/whatsapp/index.tsx`           | 🟢 CREATE |
+| 26  | `/admin/whatsapp/analytics`       | `src/routes/admin/whatsapp/analytics.tsx`       | 🟢 CREATE |
+| 27  | `/admin/whatsapp/templates`       | `src/routes/admin/whatsapp/templates.tsx`       | 🟢 CREATE |
+| 28  | `/admin/pages`                    | `src/routes/admin/pages/index.tsx`              | 🟡 CREATE |
+| 29  | `/admin/pages/$pageId`            | `src/routes/admin/pages/$pageId.tsx`            | 🟡 CREATE |
+| 30  | `/admin/settings`                 | `src/routes/admin/settings/index.tsx`           | 🟢 CREATE |
 
 ### Files to Modify (Existing)
 
-| # | File | Changes |
-|---|---|---|
-| 1 | `src/lib/index.ts` | Add exports for new lib modules |
-| 2 | `src/lib/storage.ts` | Add media library upload helper |
-| 3 | `src/lib/artworks.ts` | Add gallery/process image methods |
-| 4 | `src/lib/categories.ts` | Add visual asset methods |
-| 5 | `src/lib/faqs.ts` | Add section support |
-| 6 | `src/lib/seo.ts` | Add health score, page inventory methods |
-| 7 | `src/routes/admin/route.tsx` | Replace layout with sidebar + header |
-| 8 | `src/routes/admin/index.tsx` | Replace with full dashboard |
-| 9 | `src/integrations/supabase/types.ts` | Regenerate with new tables |
-| 10 | `src/components/ArtworkForm.tsx` | Add media picker for gallery/process images |
-| 11 | `src/routes/index.tsx` | Use CMS data instead of hardcoded |
-| 12 | `src/routes/about.tsx` | Use CMS data instead of hardcoded |
-| 13 | `src/routes/contact.tsx` | Use CMS data instead of hardcoded |
-| 14 | `src/components/Header.tsx` | Use CMS for logo |
-| 15 | `src/components/Footer.tsx` | Use CMS for footer content |
+| #   | File                                 | Changes                                     |
+| --- | ------------------------------------ | ------------------------------------------- |
+| 1   | `src/lib/index.ts`                   | Add exports for new lib modules             |
+| 2   | `src/lib/storage.ts`                 | Add media library upload helper             |
+| 3   | `src/lib/artworks.ts`                | Add gallery/process image methods           |
+| 4   | `src/lib/categories.ts`              | Add visual asset methods                    |
+| 5   | `src/lib/faqs.ts`                    | Add section support                         |
+| 6   | `src/lib/seo.ts`                     | Add health score, page inventory methods    |
+| 7   | `src/routes/admin/route.tsx`         | Replace layout with sidebar + header        |
+| 8   | `src/routes/admin/index.tsx`         | Replace with full dashboard                 |
+| 9   | `src/integrations/supabase/types.ts` | Regenerate with new tables                  |
+| 10  | `src/components/ArtworkForm.tsx`     | Add media picker for gallery/process images |
+| 11  | `src/routes/index.tsx`               | Use CMS data instead of hardcoded           |
+| 12  | `src/routes/about.tsx`               | Use CMS data instead of hardcoded           |
+| 13  | `src/routes/contact.tsx`             | Use CMS data instead of hardcoded           |
+| 14  | `src/components/Header.tsx`          | Use CMS for logo                            |
+| 15  | `src/components/Footer.tsx`          | Use CMS for footer content                  |
 
 ---
 
 ## SUPABASE MIGRATION FILES
 
-| # | File | Content |
-|---|---|---|
-| 1 | `supabase/migrations/20250707_phase1_foundation.sql` | Extensions + core tables + indexes + RLS |
-| 2 | `supabase/migrations/20250707_phase1_content.sql` | Supporting tables (gallery, faq_sections, pages, sections) |
-| 3 | `supabase/migrations/20250707_phase1_business.sql` | Leads, WhatsApp, dashboard tables |
-| 4 | `supabase/migrations/20250707_seed_visual_assets.sql` | Predefined overlays and textures |
-| 5 | `supabase/migrations/20250707_seed_website_content.sql` | Default homepage, about, contact, footer content |
+| #   | File                                                    | Content                                                    |
+| --- | ------------------------------------------------------- | ---------------------------------------------------------- |
+| 1   | `supabase/migrations/20250707_phase1_foundation.sql`    | Extensions + core tables + indexes + RLS                   |
+| 2   | `supabase/migrations/20250707_phase1_content.sql`       | Supporting tables (gallery, faq_sections, pages, sections) |
+| 3   | `supabase/migrations/20250707_phase1_business.sql`      | Leads, WhatsApp, dashboard tables                          |
+| 4   | `supabase/migrations/20250707_seed_visual_assets.sql`   | Predefined overlays and textures                           |
+| 5   | `supabase/migrations/20250707_seed_website_content.sql` | Default homepage, about, contact, footer content           |
 
 ---
 

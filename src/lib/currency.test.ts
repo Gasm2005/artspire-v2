@@ -32,7 +32,7 @@ describe("currency config", () => {
 
   it("exposes all six target-market currencies plus INR", () => {
     expect(Object.keys(CURRENCIES).sort()).toEqual(
-      ["AED", "GBP", "INR", "KWD", "QAR", "SAR", "USD"].sort()
+      ["AED", "GBP", "INR", "KWD", "QAR", "SAR", "USD"].sort(),
     );
   });
 });

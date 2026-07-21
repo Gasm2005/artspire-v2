@@ -1,4 +1,11 @@
-import { LayoutDashboard, Palette, ShoppingBag, ClipboardList, Users, Newspaper } from "lucide-react";
+import {
+  LayoutDashboard,
+  Palette,
+  ShoppingBag,
+  ClipboardList,
+  Users,
+  Newspaper,
+} from "lucide-react";
 import { useRouter } from "@tanstack/react-router";
 
 const mobileTabs = [
@@ -33,7 +40,9 @@ export function AdminMobileNav() {
               }`}
             >
               <tab.icon size={18} />
-              <span className="font-body text-[9px] font-medium whitespace-nowrap">{tab.label}</span>
+              <span className="font-body text-[9px] font-medium whitespace-nowrap">
+                {tab.label}
+              </span>
             </a>
           );
         })}

@@ -33,7 +33,9 @@ function MediaDetailPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-[24px] md:text-[28px] text-forest font-medium">Media Detail</h1>
+        <h1 className="font-display text-[24px] md:text-[28px] text-forest font-medium">
+          Media Detail
+        </h1>
         <p className="font-body text-[13px] text-stone mt-0.5">{item.original_name}</p>
       </div>
 
@@ -71,7 +73,9 @@ function MediaDetailPage() {
         <div className="space-y-4">
           {/* Info card */}
           <div className="bg-white rounded-2xl border border-border p-5 shadow-sm">
-            <h2 className="font-display text-[16px] text-forest font-medium mb-4">File Information</h2>
+            <h2 className="font-display text-[16px] text-forest font-medium mb-4">
+              File Information
+            </h2>
             <div className="space-y-3">
               <InfoRow icon={Folder} label="Filename" value={item.original_name} />
               <InfoRow icon={Folder} label="Folder" value={item.folder ?? "—"} />
@@ -79,28 +83,42 @@ function MediaDetailPage() {
               <InfoRow icon={Image} label="Dimensions" value={dimensions} />
               <InfoRow icon={Tag} label="MIME Type" value={item.mime_type ?? "Unknown"} />
               <InfoRow icon={Calendar} label="Uploaded" value={createdDate} />
-              <InfoRow icon={Link} label="Usage Count" value={`${count} location${count !== 1 ? "s" : ""}`} />
+              <InfoRow
+                icon={Link}
+                label="Usage Count"
+                value={`${count} location${count !== 1 ? "s" : ""}`}
+              />
             </div>
           </div>
 
           {/* Alt text */}
           <div className="bg-white rounded-2xl border border-border p-5 shadow-sm">
-            <h2 className="font-display text-[16px] text-forest font-medium mb-3">Alt Text & Metadata</h2>
+            <h2 className="font-display text-[16px] text-forest font-medium mb-3">
+              Alt Text & Metadata
+            </h2>
             <div className="space-y-2">
               <div>
-                <span className="font-body text-[11px] font-bold text-stone uppercase tracking-wider">Alt Text</span>
+                <span className="font-body text-[11px] font-bold text-stone uppercase tracking-wider">
+                  Alt Text
+                </span>
                 <p className="font-body text-[13px] text-forest mt-0.5">{item.alt_text ?? "—"}</p>
               </div>
               <div>
-                <span className="font-body text-[11px] font-bold text-stone uppercase tracking-wider">Title</span>
+                <span className="font-body text-[11px] font-bold text-stone uppercase tracking-wider">
+                  Title
+                </span>
                 <p className="font-body text-[13px] text-forest mt-0.5">{item.title ?? "—"}</p>
               </div>
               <div>
-                <span className="font-body text-[11px] font-bold text-stone uppercase tracking-wider">Caption</span>
+                <span className="font-body text-[11px] font-bold text-stone uppercase tracking-wider">
+                  Caption
+                </span>
                 <p className="font-body text-[13px] text-forest mt-0.5">{item.caption ?? "—"}</p>
               </div>
               <div>
-                <span className="font-body text-[11px] font-bold text-stone uppercase tracking-wider">Tags</span>
+                <span className="font-body text-[11px] font-bold text-stone uppercase tracking-wider">
+                  Tags
+                </span>
                 <p className="font-body text-[13px] text-forest mt-0.5">
                   {item.tags && item.tags.length > 0 ? item.tags.join(", ") : "—"}
                 </p>
@@ -110,9 +128,13 @@ function MediaDetailPage() {
 
           {/* Usage tracking */}
           <div className="bg-white rounded-2xl border border-border p-5 shadow-sm">
-            <h2 className="font-display text-[16px] text-forest font-medium mb-3">Where This Image Is Used</h2>
+            <h2 className="font-display text-[16px] text-forest font-medium mb-3">
+              Where This Image Is Used
+            </h2>
             {usages.length === 0 ? (
-              <p className="font-body text-[13px] text-stone/60">This image is not used anywhere yet.</p>
+              <p className="font-body text-[13px] text-stone/60">
+                This image is not used anywhere yet.
+              </p>
             ) : (
               <div className="space-y-2">
                 {usages.map((usage, i) => (
@@ -120,9 +142,13 @@ function MediaDetailPage() {
                     key={i}
                     className="flex items-center gap-2 p-2 rounded-lg bg-cream/50 border border-border/50"
                   >
-                    <span className="font-body text-[11px] font-bold text-forest uppercase">{usage.entityType}</span>
+                    <span className="font-body text-[11px] font-bold text-forest uppercase">
+                      {usage.entityType}
+                    </span>
                     <span className="font-body text-[12px] text-stone">{usage.entityName}</span>
-                    <span className="font-body text-[10px] text-stone/50 ml-auto">{usage.usageType}</span>
+                    <span className="font-body text-[10px] text-stone/50 ml-auto">
+                      {usage.usageType}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -130,8 +156,8 @@ function MediaDetailPage() {
             {count > 0 && (
               <div className="mt-3 p-3 rounded-lg bg-amber-50 border border-amber-200">
                 <p className="font-body text-[11px] text-amber-700 font-medium">
-                  ⚠️ This image is used in {count} location{count !== 1 ? "s" : ""}. 
-                  Replacing or deleting it will affect all locations.
+                  ⚠️ This image is used in {count} location{count !== 1 ? "s" : ""}. Replacing or
+                  deleting it will affect all locations.
                 </p>
               </div>
             )}
@@ -154,7 +180,9 @@ function InfoRow({
   return (
     <div className="flex items-center gap-2">
       <Icon size={14} className="text-stone/40 shrink-0" />
-      <span className="font-body text-[11px] font-bold text-stone uppercase tracking-wider w-[100px] shrink-0">{label}</span>
+      <span className="font-body text-[11px] font-bold text-stone uppercase tracking-wider w-[100px] shrink-0">
+        {label}
+      </span>
       <span className="font-body text-[13px] text-forest truncate">{value}</span>
     </div>
   );

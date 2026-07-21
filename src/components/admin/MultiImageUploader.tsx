@@ -5,12 +5,19 @@ import { MediaPicker } from "./MediaPicker";
 
 interface MultiImageUploaderProps {
   images: { mediaId: string; publicUrl: string; caption?: string; altText?: string }[];
-  onChange: (images: { mediaId: string; publicUrl: string; caption?: string; altText?: string }[]) => void;
+  onChange: (
+    images: { mediaId: string; publicUrl: string; caption?: string; altText?: string }[],
+  ) => void;
   folder?: string;
   maxImages?: number;
 }
 
-export function MultiImageUploader({ images, onChange, folder, maxImages = 10 }: MultiImageUploaderProps) {
+export function MultiImageUploader({
+  images,
+  onChange,
+  folder,
+  maxImages = 10,
+}: MultiImageUploaderProps) {
   const [uploading, setUploading] = useState(false);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [dragIndex, setDragIndex] = useState<number | null>(null);
@@ -89,7 +96,11 @@ export function MultiImageUploader({ images, onChange, folder, maxImages = 10 }:
                 dragIndex === index ? "opacity-50 ring-2 ring-forest" : ""
               }`}
             >
-              <img src={img.publicUrl} alt={img.altText ?? ""} className="w-full h-full object-cover" />
+              <img
+                src={img.publicUrl}
+                alt={img.altText ?? ""}
+                className="w-full h-full object-cover"
+              />
               <div className="absolute top-1 left-1 p-1 rounded bg-black/30 text-white/80 opacity-0 group-hover:opacity-100 transition-opacity">
                 <GripVertical size={12} />
               </div>

@@ -57,8 +57,12 @@ function MediaLibraryPage() {
     <div className="space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-display text-[24px] md:text-[28px] text-forest font-medium">Media Library</h1>
-          <p className="font-body text-[13px] text-stone mt-0.5">Upload, manage, and track all website images</p>
+          <h1 className="font-display text-[24px] md:text-[28px] text-forest font-medium">
+            Media Library
+          </h1>
+          <p className="font-body text-[13px] text-stone mt-0.5">
+            Upload, manage, and track all website images
+          </p>
         </div>
         <label className="inline-flex items-center gap-2 h-[44px] px-5 bg-forest text-white font-body font-bold text-[13px] rounded-xl btn-primary cursor-pointer transition-colors">
           <Upload size={16} />
@@ -115,12 +119,19 @@ function MediaLibraryPage() {
         <div className="bg-white rounded-2xl border border-border p-8 text-center">
           <Image size={40} className="mx-auto text-stone/30 mb-3" />
           <p className="font-body text-stone text-[14px]">No media found.</p>
-          <p className="font-body text-stone/60 text-[12px] mt-1">Upload your first image to get started.</p>
+          <p className="font-body text-stone/60 text-[12px] mt-1">
+            Upload your first image to get started.
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
           {filtered.map((item) => (
-            <MediaCard key={item.id} item={item} onDelete={handleDelete} isDeleting={deleteId === item.id} />
+            <MediaCard
+              key={item.id}
+              item={item}
+              onDelete={handleDelete}
+              isDeleting={deleteId === item.id}
+            />
           ))}
         </div>
       )}
@@ -174,14 +185,15 @@ function MediaCard({
         </div>
       </div>
       <div className="p-3">
-        <p className="font-body text-[11px] text-forest font-medium truncate" title={item.original_name}>
+        <p
+          className="font-body text-[11px] text-forest font-medium truncate"
+          title={item.original_name}
+        >
           {item.original_name}
         </p>
         <div className="flex items-center justify-between mt-1">
           <span className="font-body text-[10px] text-stone/60 uppercase">{item.folder}</span>
-          <span className="font-body text-[10px] text-stone/60">
-            {item.usage_count ?? 0} uses
-          </span>
+          <span className="font-body text-[10px] text-stone/60">{item.usage_count ?? 0} uses</span>
         </div>
       </div>
     </div>

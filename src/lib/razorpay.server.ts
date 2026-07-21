@@ -16,7 +16,7 @@ function getRazorpayInstance() {
 
   if (!keyId || !keySecret) {
     throw new Error(
-      "Razorpay keys not configured. Set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET in Vercel environment variables."
+      "Razorpay keys not configured. Set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET in Vercel environment variables.",
     );
   }
 
@@ -30,7 +30,8 @@ function getRazorpayInstance() {
  */
 export const createRazorpayOrder = createServerFn({ method: "POST" })
   .validator(
-    (data: { amount: number; receipt: string; internalOrderId: string; currency?: CurrencyCode }) => data
+    (data: { amount: number; receipt: string; internalOrderId: string; currency?: CurrencyCode }) =>
+      data,
   )
   .handler(async ({ data }) => {
     const razorpay = getRazorpayInstance();
@@ -96,19 +97,30 @@ async function applyConfirmedPayment(params: {
     .select()
     .single();
 
-  if (updateError || !updatedOrder) throw new Error(`Failed to confirm order ${params.orderId}: ${updateError?.message}`);
+  if (updateError || !updatedOrder)
+    throw new Error(`Failed to confirm order ${params.orderId}: ${updateError?.message}`);
 
-  const { data: items } = await admin.from("order_items").select("*").eq("order_id", params.orderId);
+  const { data: items } = await admin
+    .from("order_items")
+    .select("*")
+    .eq("order_id", params.orderId);
 
   if (items) {
     await Promise.all(
       items
         .filter((i) => i.product_id)
-        .map((i) => admin.rpc("deduct_product_inventory", { p_product_id: i.product_id!, p_quantity: i.quantity }))
+        .map((i) =>
+          admin.rpc("deduct_product_inventory", {
+            p_product_id: i.product_id!,
+            p_quantity: i.quantity,
+          }),
+        ),
     );
 
-    sendOrderConfirmationEmails({ data: { order: updatedOrder as unknown as Order, items: items as OrderItem[] } }).catch((err) =>
-      console.error("[razorpay] Order confirmed but confirmation email failed:", err)
+    sendOrderConfirmationEmails({
+      data: { order: updatedOrder as unknown as Order, items: items as OrderItem[] },
+    }).catch((err) =>
+      console.error("[razorpay] Order confirmed but confirmation email failed:", err),
     );
   }
 
@@ -135,7 +147,9 @@ export async function confirmPaymentServerSide(params: {
     .digest("hex");
 
   if (expectedSignature !== params.razorpaySignature) {
-    throw new Error("Invalid Razorpay payment signature — possible tampering, refusing to confirm order.");
+    throw new Error(
+      "Invalid Razorpay payment signature — possible tampering, refusing to confirm order.",
+    );
   }
 
   return applyConfirmedPayment({
@@ -180,13 +194,18 @@ export async function confirmPaymentFromWebhook(params: {
  * happens (tab closed, network drop, etc).
  */
 export const confirmPaymentAfterCheckout = createServerFn({ method: "POST" })
-  .validator((data: { orderId: string; razorpayOrderId: string; razorpayPaymentId: string; razorpaySignature: string }) => data)
+  .validator(
+    (data: {
+      orderId: string;
+      razorpayOrderId: string;
+      razorpayPaymentId: string;
+      razorpaySignature: string;
+    }) => data,
+  )
   .handler(async ({ data }) => {
     const result = await confirmPaymentServerSide(data);
     return { order: result.order };
   });
-
-
 
 /**
  * Returns the public Razorpay Key ID for client-side checkout.js

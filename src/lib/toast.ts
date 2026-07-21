@@ -3,7 +3,7 @@ import { toast as sonnerToast } from "sonner";
 /**
  * Artspire toast utility.
  * Thin wrapper around Sonner with consistent messaging and styling.
- * 
+ *
  * Usage:
  *   import { toast } from "@/lib/toast";
  *   toast.success("Category saved!");
@@ -38,7 +38,7 @@ export const toast = {
 
   promise: <T>(
     promise: Promise<T>,
-    messages: { loading: string; success: string; error: string }
+    messages: { loading: string; success: string; error: string },
   ) =>
     sonnerToast.promise(promise, {
       loading: messages.loading,

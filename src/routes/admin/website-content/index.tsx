@@ -52,7 +52,9 @@ function WebsiteContentPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-[24px] md:text-[28px] text-forest font-medium">Website Content</h1>
+        <h1 className="font-display text-[24px] md:text-[28px] text-forest font-medium">
+          Website Content
+        </h1>
         <p className="font-body text-[13px] text-stone mt-0.5">
           Manage all text, images, and content on every page
         </p>
@@ -73,8 +75,13 @@ function WebsiteContentPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between">
-                    <h2 className="font-display text-[18px] text-forest font-medium">{page.name}</h2>
-                    <ChevronRight size={16} className="text-stone/40 group-hover:text-forest transition-colors" />
+                    <h2 className="font-display text-[18px] text-forest font-medium">
+                      {page.name}
+                    </h2>
+                    <ChevronRight
+                      size={16}
+                      className="text-stone/40 group-hover:text-forest transition-colors"
+                    />
                   </div>
                   <p className="font-body text-[13px] text-stone mt-1">{page.description}</p>
                   <div className="mt-3 flex flex-wrap gap-1.5">
@@ -104,11 +111,13 @@ function WebsiteContentPage() {
         <div className="flex items-start gap-3">
           <FileText size={18} className="text-forest mt-0.5 shrink-0" />
           <div>
-            <h3 className="font-body text-[14px] font-bold text-forest">How Website Content Works</h3>
+            <h3 className="font-body text-[14px] font-bold text-forest">
+              How Website Content Works
+            </h3>
             <p className="font-body text-[13px] text-stone mt-1 leading-relaxed">
-              Every piece of text, every image, and every link on your website is stored in the database.
-              Click on a page above to edit its content. Changes are reflected immediately on the public site.
-              No code changes needed.
+              Every piece of text, every image, and every link on your website is stored in the
+              database. Click on a page above to edit its content. Changes are reflected immediately
+              on the public site. No code changes needed.
             </p>
           </div>
         </div>

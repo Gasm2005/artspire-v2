@@ -21,9 +21,7 @@ function EditArtworkPage() {
         <h1 className="font-display text-[24px] md:text-[28px] text-forest font-medium">
           Edit Artwork
         </h1>
-        <p className="font-body text-[13px] text-stone mt-0.5">
-          Update "{artwork.title}"
-        </p>
+        <p className="font-body text-[13px] text-stone mt-0.5">Update "{artwork.title}"</p>
       </div>
 
       <div className="bg-white rounded-2xl border border-border p-5 md:p-8 shadow-sm">

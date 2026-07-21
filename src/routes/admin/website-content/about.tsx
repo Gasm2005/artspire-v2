@@ -53,25 +53,46 @@ function AboutContentPage() {
     {
       name: "Trust Line (below H1)",
       fields: [
-        { key: "about.trust.text", label: "Trust line", type: "text" as const, placeholder: "11+ Years · 1000+ Memories Created · One Pair of Hands · Handcrafted" },
+        {
+          key: "about.trust.text",
+          label: "Trust line",
+          type: "text" as const,
+          placeholder: "11+ Years · 1000+ Memories Created · One Pair of Hands · Handcrafted",
+        },
       ],
     },
     {
       name: "Why Artspire Exists",
       fields: [
-        { key: "about.why.content", label: "Paragraph", type: "textarea" as const, placeholder: "Think about the last time you wanted to give someone something truly original..." },
+        {
+          key: "about.why.content",
+          label: "Paragraph",
+          type: "textarea" as const,
+          placeholder:
+            "Think about the last time you wanted to give someone something truly original...",
+        },
       ],
     },
     {
       name: "The Night I Started Over",
       fields: [
-        { key: "about.night.content", label: "Paragraph", type: "textarea" as const, placeholder: "A client needed a portrait..." },
+        {
+          key: "about.night.content",
+          label: "Paragraph",
+          type: "textarea" as const,
+          placeholder: "A client needed a portrait...",
+        },
       ],
     },
     {
       name: "Why Clients Return",
       fields: [
-        { key: "about.return.content", label: "Paragraph", type: "textarea" as const, placeholder: "Trust is not built through marketing..." },
+        {
+          key: "about.return.content",
+          label: "Paragraph",
+          type: "textarea" as const,
+          placeholder: "Trust is not built through marketing...",
+        },
       ],
     },
   ];
@@ -81,12 +102,19 @@ function AboutContentPage() {
   return (
     <div className="space-y-6 max-w-2xl">
       <div className="flex items-center gap-3">
-        <a href="/admin/website-content" className="p-2 rounded-lg hover:bg-forest/5 text-stone hover:text-forest transition-colors">
+        <a
+          href="/admin/website-content"
+          className="p-2 rounded-lg hover:bg-forest/5 text-stone hover:text-forest transition-colors"
+        >
           <ArrowLeft size={18} />
         </a>
         <div>
-          <h1 className="font-display text-[24px] md:text-[28px] text-forest font-medium">About Page</h1>
-          <p className="font-body text-[13px] text-stone mt-0.5">Edit photos and story content on the About page</p>
+          <h1 className="font-display text-[24px] md:text-[28px] text-forest font-medium">
+            About Page
+          </h1>
+          <p className="font-body text-[13px] text-stone mt-0.5">
+            Edit photos and story content on the About page
+          </p>
         </div>
       </div>
 
@@ -163,12 +191,17 @@ function AboutImageField({
 
   return (
     <div>
-      <label className="block font-body text-[11px] font-semibold text-stone uppercase tracking-wider mb-2">{label}</label>
+      <label className="block font-body text-[11px] font-semibold text-stone uppercase tracking-wider mb-2">
+        {label}
+      </label>
       {preview ? (
         <div className="relative rounded-xl overflow-hidden border border-border w-full max-w-xs">
           <img src={preview} alt={label} className="w-full h-[140px] object-cover" />
           <button
-            onClick={() => { setPreview(""); onSave(""); }}
+            onClick={() => {
+              setPreview("");
+              onSave("");
+            }}
             className="absolute top-2 right-2 p-1.5 bg-white/90 rounded-full shadow hover:bg-white transition-colors"
           >
             <X size={12} className="text-stone" />
@@ -176,14 +209,33 @@ function AboutImageField({
           <label className="absolute bottom-2 right-2 inline-flex items-center gap-1 px-2.5 py-1 bg-white/90 rounded-lg font-body text-[10px] font-semibold text-forest cursor-pointer hover:bg-white transition-colors">
             {uploading ? <Loader2 size={11} className="animate-spin" /> : <Upload size={11} />}
             Change
-            <input ref={inputRef} type="file" accept="image/*" className="hidden" onChange={handleFile} disabled={uploading} />
+            <input
+              ref={inputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleFile}
+              disabled={uploading}
+            />
           </label>
         </div>
       ) : (
         <label className="flex flex-col items-center justify-center w-full max-w-xs h-[120px] rounded-xl border-2 border-dashed border-border bg-cream hover:border-gold transition-colors cursor-pointer">
-          {uploading ? <Loader2 size={20} className="animate-spin text-stone/40 mb-1" /> : <Upload size={20} className="text-stone/40 mb-1" />}
-          <span className="font-body text-[11px] text-stone/60">{uploading ? "Uploading…" : "Click to upload"}</span>
-          <input type="file" accept="image/*" className="hidden" onChange={handleFile} disabled={uploading} />
+          {uploading ? (
+            <Loader2 size={20} className="animate-spin text-stone/40 mb-1" />
+          ) : (
+            <Upload size={20} className="text-stone/40 mb-1" />
+          )}
+          <span className="font-body text-[11px] text-stone/60">
+            {uploading ? "Uploading…" : "Click to upload"}
+          </span>
+          <input
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleFile}
+            disabled={uploading}
+          />
         </label>
       )}
     </div>
@@ -213,7 +265,9 @@ function ContentField({
 
   return (
     <div>
-      <label className="block font-body text-[11px] font-semibold text-stone uppercase tracking-wider mb-1.5">{label}</label>
+      <label className="block font-body text-[11px] font-semibold text-stone uppercase tracking-wider mb-1.5">
+        {label}
+      </label>
       <div className="flex gap-2">
         {type === "textarea" ? (
           <textarea

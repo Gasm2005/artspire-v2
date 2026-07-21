@@ -85,7 +85,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       "@id": `${siteUrl}/#business`,
       name: "Artspire",
       alternateName: "Artspire by Himangi Pandey",
-      description: "Custom handmade pencil sketches, portraits, paintings, clay art, and mirror art made by Himangi Pandey. Delivered across India.",
+      description:
+        "Custom handmade pencil sketches, portraits, paintings, clay art, and mirror art made by Himangi Pandey. Delivered across India.",
       url: siteUrl,
       logo: `${siteUrl}/artspire-logo.png`,
       image: OG_IMAGE,
@@ -105,11 +106,56 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         "@type": "OfferCatalog",
         name: "Custom Handmade Art Services",
         itemListElement: [
-          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Custom Pencil Sketch", description: "Handmade pencil sketch portrait from your photo" }, price: "999", priceCurrency: "INR" },
-          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Colour Portrait", description: "Custom colour portrait painting from your photo" }, price: "1999", priceCurrency: "INR" },
-          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Custom Painting", description: "Handmade painting on canvas from your photo" }, price: "2999", priceCurrency: "INR" },
-          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Clay Art Sculpture", description: "Custom clay sculpture from your photo" }, price: "1799", priceCurrency: "INR" },
-          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Mirror Art", description: "Custom handmade mirror art from your photo" }, price: "2499", priceCurrency: "INR" },
+          {
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: "Custom Pencil Sketch",
+              description: "Handmade pencil sketch portrait from your photo",
+            },
+            price: "999",
+            priceCurrency: "INR",
+          },
+          {
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: "Colour Portrait",
+              description: "Custom colour portrait painting from your photo",
+            },
+            price: "1999",
+            priceCurrency: "INR",
+          },
+          {
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: "Custom Painting",
+              description: "Handmade painting on canvas from your photo",
+            },
+            price: "2999",
+            priceCurrency: "INR",
+          },
+          {
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: "Clay Art Sculpture",
+              description: "Custom clay sculpture from your photo",
+            },
+            price: "1799",
+            priceCurrency: "INR",
+          },
+          {
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: "Mirror Art",
+              description: "Custom handmade mirror art from your photo",
+            },
+            price: "2499",
+            priceCurrency: "INR",
+          },
         ],
       },
       sameAs: [BRAND.instagram],
@@ -123,7 +169,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       givenName: "Himangi",
       familyName: "Pandey",
       jobTitle: "Visual Artist",
-      description: "Professional visual artist with 11+ years of experience specializing in handmade pencil sketches, portraits, clay art, and mirror art. Based in Lucknow, India.",
+      description:
+        "Professional visual artist with 11+ years of experience specializing in handmade pencil sketches, portraits, clay art, and mirror art. Based in Lucknow, India.",
       url: `${siteUrl}/about`,
       image: OG_IMAGE,
       address: {
@@ -132,7 +179,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         addressRegion: "Uttar Pradesh",
         addressCountry: "IN",
       },
-      knowsAbout: ["Pencil Sketching", "Portrait Art", "Clay Sculpture", "Mirror Art", "Custom Portraiture", "Handmade Art", "Colour Portraits", "Personalized Gifts"],
+      knowsAbout: [
+        "Pencil Sketching",
+        "Portrait Art",
+        "Clay Sculpture",
+        "Mirror Art",
+        "Custom Portraiture",
+        "Handmade Art",
+        "Colour Portraits",
+        "Personalized Gifts",
+      ],
       worksFor: { "@type": "Organization", "@id": `${siteUrl}/#business`, name: "Artspire" },
       sameAs: [BRAND.instagram],
     };
@@ -143,11 +199,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       "@id": `${siteUrl}/#website`,
       name: "Artspire",
       url: siteUrl,
-      description: "Custom handmade art by Himangi Pandey — pencil sketches, portraits, paintings, clay art. Delivered across India.",
+      description:
+        "Custom handmade art by Himangi Pandey — pencil sketches, portraits, paintings, clay art. Delivered across India.",
       publisher: { "@id": `${siteUrl}/#business` },
       potentialAction: {
         "@type": "SearchAction",
-        target: { "@type": "EntryPoint", urlTemplate: `${siteUrl}/portfolio?search={search_term_string}` },
+        target: {
+          "@type": "EntryPoint",
+          urlTemplate: `${siteUrl}/portfolio?search={search_term_string}`,
+        },
         "query-input": "required name=search_term_string",
       },
     };
@@ -158,10 +218,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         { name: "viewport", content: "width=device-width, initial-scale=1" },
         { name: "robots", content: "index, follow" },
         { title: "Artspire | Handcrafted Custom Art by Himangi Pandey" },
-        { name: "description", content: "Commission handcrafted pencil sketches, portraits, clay art and personalized gifts. Made by hand by Himangi Pandey. Ships across India." },
+        {
+          name: "description",
+          content:
+            "Commission handcrafted pencil sketches, portraits, clay art and personalized gifts. Made by hand by Himangi Pandey. Ships across India.",
+        },
         { name: "author", content: "Himangi Pandey" },
         { property: "og:title", content: "Artspire | Handcrafted Custom Art" },
-        { property: "og:description", content: "Commission handcrafted pencil sketches, portraits, clay art and personalized gifts. Ships across India." },
+        {
+          property: "og:description",
+          content:
+            "Commission handcrafted pencil sketches, portraits, clay art and personalized gifts. Ships across India.",
+        },
         { property: "og:type", content: "website" },
         { property: "og:image", content: OG_IMAGE },
         { property: "og:url", content: siteUrl },
@@ -169,7 +237,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:site", content: BRAND.twitterHandle },
         { name: "twitter:title", content: "Artspire | Handcrafted Custom Art by Himangi Pandey" },
-        { name: "twitter:description", content: "Custom handmade pencil sketches, portraits, clay art. Made by Himangi Pandey. Ships across India." },
+        {
+          name: "twitter:description",
+          content:
+            "Custom handmade pencil sketches, portraits, clay art. Made by Himangi Pandey. Ships across India.",
+        },
         { name: "twitter:image", content: OG_IMAGE },
       ],
       scripts: [
@@ -181,7 +253,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       links: [
         { rel: "stylesheet", href: appCss },
         { rel: "stylesheet", href: "/theartspire.css" },
-        { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" },
+        {
+          rel: "stylesheet",
+          href: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap",
+        },
         { rel: "icon", href: "/favicon.ico" },
         { rel: "preconnect", href: "https://fonts.googleapis.com" },
         { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "" },

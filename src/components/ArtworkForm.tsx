@@ -69,12 +69,18 @@ export function ArtworkForm({ artwork, onSuccess }: ArtworkFormProps) {
   const [afterImage, setAfterImage] = useState<ImageRef | null>(null);
 
   // Multi image refs
-  const [galleryImages, setGalleryImages] = useState<{ mediaId: string; publicUrl: string; caption?: string; altText?: string }[]>([]);
-  const [processImages, setProcessImages] = useState<{ mediaId: string; publicUrl: string; stepTitle?: string; stepDescription?: string }[]>([]);
+  const [galleryImages, setGalleryImages] = useState<
+    { mediaId: string; publicUrl: string; caption?: string; altText?: string }[]
+  >([]);
+  const [processImages, setProcessImages] = useState<
+    { mediaId: string; publicUrl: string; stepTitle?: string; stepDescription?: string }[]
+  >([]);
 
   // Media picker state
   const [pickerOpen, setPickerOpen] = useState(false);
-  const [pickerTarget, setPickerTarget] = useState<"main" | "thumbnail" | "before" | "after" | null>(null);
+  const [pickerTarget, setPickerTarget] = useState<
+    "main" | "thumbnail" | "before" | "after" | null
+  >(null);
 
   // Load categories, tags, and existing images
   useEffect(() => {
@@ -94,16 +100,28 @@ export function ArtworkForm({ artwork, onSuccess }: ArtworkFormProps) {
           if (!full) return;
           // Set single image refs from DB columns
           if (full.main_image) {
-            setMainImage({ mediaId: (artwork as any).main_image_id ?? "", publicUrl: full.main_image.public_url });
+            setMainImage({
+              mediaId: (artwork as any).main_image_id ?? "",
+              publicUrl: full.main_image.public_url,
+            });
           }
           if (full.thumbnail_image) {
-            setThumbnailImage({ mediaId: (artwork as any).thumbnail_image_id ?? "", publicUrl: full.thumbnail_image.public_url });
+            setThumbnailImage({
+              mediaId: (artwork as any).thumbnail_image_id ?? "",
+              publicUrl: full.thumbnail_image.public_url,
+            });
           }
           if (full.before_image) {
-            setBeforeImage({ mediaId: (artwork as any).before_image_id ?? "", publicUrl: full.before_image.public_url });
+            setBeforeImage({
+              mediaId: (artwork as any).before_image_id ?? "",
+              publicUrl: full.before_image.public_url,
+            });
           }
           if (full.after_image) {
-            setAfterImage({ mediaId: (artwork as any).after_image_id ?? "", publicUrl: full.after_image.public_url });
+            setAfterImage({
+              mediaId: (artwork as any).after_image_id ?? "",
+              publicUrl: full.after_image.public_url,
+            });
           }
           // Gallery
           setGalleryImages(
@@ -112,7 +130,7 @@ export function ArtworkForm({ artwork, onSuccess }: ArtworkFormProps) {
               publicUrl: g.media?.public_url ?? "",
               caption: g.caption ?? undefined,
               altText: g.alt_text ?? undefined,
-            }))
+            })),
           );
           // Process
           setProcessImages(
@@ -121,7 +139,7 @@ export function ArtworkForm({ artwork, onSuccess }: ArtworkFormProps) {
               publicUrl: p.media?.public_url ?? "",
               stepTitle: p.step_title ?? undefined,
               stepDescription: p.step_description ?? undefined,
-            }))
+            })),
           );
         })
         .catch(console.error);
@@ -135,18 +153,29 @@ export function ArtworkForm({ artwork, onSuccess }: ArtworkFormProps) {
     }
   }, [form.title, manualSlug, isEdit]);
 
-  const updateField = useCallback(<K extends keyof typeof form>(key: K, value: (typeof form)[K]) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
-  }, []);
+  const updateField = useCallback(
+    <K extends keyof typeof form>(key: K, value: (typeof form)[K]) => {
+      setForm((prev) => ({ ...prev, [key]: value }));
+    },
+    [],
+  );
 
   function handlePickerSelect(mediaId: string, publicUrl: string) {
     if (!pickerTarget) return;
     const ref = { mediaId, publicUrl };
     switch (pickerTarget) {
-      case "main": setMainImage(ref); break;
-      case "thumbnail": setThumbnailImage(ref); break;
-      case "before": setBeforeImage(ref); break;
-      case "after": setAfterImage(ref); break;
+      case "main":
+        setMainImage(ref);
+        break;
+      case "thumbnail":
+        setThumbnailImage(ref);
+        break;
+      case "before":
+        setBeforeImage(ref);
+        break;
+      case "after":
+        setAfterImage(ref);
+        break;
     }
     setPickerOpen(false);
     setPickerTarget(null);
@@ -208,7 +237,7 @@ export function ArtworkForm({ artwork, onSuccess }: ArtworkFormProps) {
           caption: g.caption,
           alt_text: g.altText,
           display_order: i,
-        }))
+        })),
       );
 
       // Save process images
@@ -220,7 +249,7 @@ export function ArtworkForm({ artwork, onSuccess }: ArtworkFormProps) {
           step_title: p.stepTitle,
           step_description: p.stepDescription,
           display_order: i,
-        }))
+        })),
       );
 
       onSuccess();
@@ -232,9 +261,12 @@ export function ArtworkForm({ artwork, onSuccess }: ArtworkFormProps) {
     }
   }
 
-  const inputClass = "w-full h-[44px] px-4 rounded-xl border border-border bg-white font-body text-[14px] text-forest focus:outline-none focus:border-gold transition-colors";
-  const textareaClass = "w-full px-4 py-3 rounded-xl border border-border bg-white font-body text-[14px] text-forest focus:outline-none focus:border-gold transition-colors resize-y min-h-[120px]";
-  const labelClass = "block font-body text-[11px] font-semibold text-stone uppercase tracking-wider mb-1.5";
+  const inputClass =
+    "w-full h-[44px] px-4 rounded-xl border border-border bg-white font-body text-[14px] text-forest focus:outline-none focus:border-gold transition-colors";
+  const textareaClass =
+    "w-full px-4 py-3 rounded-xl border border-border bg-white font-body text-[14px] text-forest focus:outline-none focus:border-gold transition-colors resize-y min-h-[120px]";
+  const labelClass =
+    "block font-body text-[11px] font-semibold text-stone uppercase tracking-wider mb-1.5";
 
   function SingleImageField({
     label,
@@ -283,37 +315,65 @@ export function ArtworkForm({ artwork, onSuccess }: ArtworkFormProps) {
         <div className="space-y-5">
           <div>
             <label className={labelClass}>Title *</label>
-            <input type="text" required value={form.title} onChange={(e) => updateField("title", e.target.value)} placeholder="Artwork title" className={inputClass} />
+            <input
+              type="text"
+              required
+              value={form.title}
+              onChange={(e) => updateField("title", e.target.value)}
+              placeholder="Artwork title"
+              className={inputClass}
+            />
           </div>
 
           <div>
             <div className="flex items-center justify-between mb-1.5">
               <label className={labelClass}>Slug *</label>
               <label className="flex items-center gap-1.5 cursor-pointer">
-                <input type="checkbox" checked={manualSlug} onChange={(e) => setManualSlug(e.target.checked)} className="rounded border-border" />
+                <input
+                  type="checkbox"
+                  checked={manualSlug}
+                  onChange={(e) => setManualSlug(e.target.checked)}
+                  className="rounded border-border"
+                />
                 <span className="font-body text-[11px] text-stone">Manual override</span>
               </label>
             </div>
             <input
-              type="text" required value={form.slug}
-              onChange={(e) => { setManualSlug(true); updateField("slug", e.target.value); }}
-              placeholder="artwork-slug" className={inputClass}
+              type="text"
+              required
+              value={form.slug}
+              onChange={(e) => {
+                setManualSlug(true);
+                updateField("slug", e.target.value);
+              }}
+              placeholder="artwork-slug"
+              className={inputClass}
             />
           </div>
 
           <div>
             <label className={labelClass}>Category</label>
-            <select value={form.category_id} onChange={(e) => updateField("category_id", e.target.value)} className={inputClass}>
+            <select
+              value={form.category_id}
+              onChange={(e) => updateField("category_id", e.target.value)}
+              className={inputClass}
+            >
               <option value="">— Select category —</option>
               {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>{cat.name}</option>
+                <option key={cat.id} value={cat.id}>
+                  {cat.name}
+                </option>
               ))}
             </select>
           </div>
 
           <div>
             <label className={labelClass}>Artwork Type</label>
-            <select value={form.artwork_type} onChange={(e) => updateField("artwork_type", e.target.value as ArtworkType)} className={inputClass}>
+            <select
+              value={form.artwork_type}
+              onChange={(e) => updateField("artwork_type", e.target.value as ArtworkType)}
+              className={inputClass}
+            >
               <option value="physical">Physical</option>
               <option value="digital">Digital</option>
               <option value="commission">Commission</option>
@@ -322,34 +382,72 @@ export function ArtworkForm({ artwork, onSuccess }: ArtworkFormProps) {
 
           <div>
             <label className={labelClass}>Medium</label>
-            <input type="text" value={form.medium} onChange={(e) => updateField("medium", e.target.value)} placeholder="e.g. Pencil, Acrylic, Clay" className={inputClass} />
+            <input
+              type="text"
+              value={form.medium}
+              onChange={(e) => updateField("medium", e.target.value)}
+              placeholder="e.g. Pencil, Acrylic, Clay"
+              className={inputClass}
+            />
           </div>
 
           <div>
             <label className={labelClass}>Size</label>
-            <input type="text" value={form.size} onChange={(e) => updateField("size", e.target.value)} placeholder="e.g. 12x16 inches" className={inputClass} />
+            <input
+              type="text"
+              value={form.size}
+              onChange={(e) => updateField("size", e.target.value)}
+              placeholder="e.g. 12x16 inches"
+              className={inputClass}
+            />
           </div>
 
           <div>
             <label className={labelClass}>Display Order</label>
-            <input type="number" value={form.display_order} onChange={(e) => updateField("display_order", parseInt(e.target.value) || 0)} placeholder="0" className={inputClass} />
+            <input
+              type="number"
+              value={form.display_order}
+              onChange={(e) => updateField("display_order", parseInt(e.target.value) || 0)}
+              placeholder="0"
+              className={inputClass}
+            />
           </div>
         </div>
 
         {/* Right column */}
         <div className="space-y-5">
           {/* Main Image */}
-          <SingleImageField label="Main Image *" value={mainImage} onClear={() => setMainImage(null)} onSelect={() => openPicker("main")} />
+          <SingleImageField
+            label="Main Image *"
+            value={mainImage}
+            onClear={() => setMainImage(null)}
+            onSelect={() => openPicker("main")}
+          />
 
           {/* Thumbnail Image */}
-          <SingleImageField label="Thumbnail Image" value={thumbnailImage} onClear={() => setThumbnailImage(null)} onSelect={() => openPicker("thumbnail")} />
+          <SingleImageField
+            label="Thumbnail Image"
+            value={thumbnailImage}
+            onClear={() => setThumbnailImage(null)}
+            onSelect={() => openPicker("thumbnail")}
+          />
 
           {/* Price */}
           <div>
             <label className={labelClass}>Price</label>
             <div className="flex gap-2">
-              <input type="number" value={form.price} onChange={(e) => updateField("price", e.target.value)} placeholder="0" className={`${inputClass} flex-1`} />
-              <select value={form.currency} onChange={(e) => updateField("currency", e.target.value)} className={`${inputClass} w-24`}>
+              <input
+                type="number"
+                value={form.price}
+                onChange={(e) => updateField("price", e.target.value)}
+                placeholder="0"
+                className={`${inputClass} flex-1`}
+              />
+              <select
+                value={form.currency}
+                onChange={(e) => updateField("currency", e.target.value)}
+                className={`${inputClass} w-24`}
+              >
                 <option value="INR">INR</option>
                 <option value="USD">USD</option>
                 <option value="EUR">EUR</option>
@@ -362,8 +460,20 @@ export function ArtworkForm({ artwork, onSuccess }: ArtworkFormProps) {
             <label className={labelClass}>Tags</label>
             <div className="flex flex-wrap gap-2">
               {allTags.map((tag) => (
-                <label key={tag.id} className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-body text-[11px] font-semibold cursor-pointer transition-colors ${selectedTags.includes(tag.id) ? "bg-forest text-white" : "bg-forest/5 text-forest hover:bg-forest/10"}`}>
-                  <input type="checkbox" checked={selectedTags.includes(tag.id)} onChange={(e) => { setSelectedTags((prev) => e.target.checked ? [...prev, tag.id] : prev.filter((id) => id !== tag.id)); }} className="hidden" />
+                <label
+                  key={tag.id}
+                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-body text-[11px] font-semibold cursor-pointer transition-colors ${selectedTags.includes(tag.id) ? "bg-forest text-white" : "bg-forest/5 text-forest hover:bg-forest/10"}`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={selectedTags.includes(tag.id)}
+                    onChange={(e) => {
+                      setSelectedTags((prev) =>
+                        e.target.checked ? [...prev, tag.id] : prev.filter((id) => id !== tag.id),
+                      );
+                    }}
+                    className="hidden"
+                  />
                   {tag.name}
                 </label>
               ))}
@@ -373,11 +483,21 @@ export function ArtworkForm({ artwork, onSuccess }: ArtworkFormProps) {
           {/* Toggles */}
           <div className="flex flex-wrap gap-4">
             <label className="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" checked={form.featured} onChange={(e) => updateField("featured", e.target.checked)} className="rounded border-border w-4 h-4" />
+              <input
+                type="checkbox"
+                checked={form.featured}
+                onChange={(e) => updateField("featured", e.target.checked)}
+                className="rounded border-border w-4 h-4"
+              />
               <span className="font-body text-[13px] text-forest">Featured</span>
             </label>
             <label className="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" checked={form.show_on_homepage} onChange={(e) => updateField("show_on_homepage", e.target.checked)} className="rounded border-border w-4 h-4" />
+              <input
+                type="checkbox"
+                checked={form.show_on_homepage}
+                onChange={(e) => updateField("show_on_homepage", e.target.checked)}
+                className="rounded border-border w-4 h-4"
+              />
               <span className="font-body text-[13px] text-forest">Show on Homepage</span>
             </label>
           </div>
@@ -388,31 +508,67 @@ export function ArtworkForm({ artwork, onSuccess }: ArtworkFormProps) {
       <div className="space-y-5">
         <div>
           <label className={labelClass}>Short Description</label>
-          <textarea value={form.short_description} onChange={(e) => updateField("short_description", e.target.value)} placeholder="Short description (shown in listings and cards)" rows={2} className={textareaClass} />
+          <textarea
+            value={form.short_description}
+            onChange={(e) => updateField("short_description", e.target.value)}
+            placeholder="Short description (shown in listings and cards)"
+            rows={2}
+            className={textareaClass}
+          />
         </div>
 
         <div>
           <label className={labelClass}>Summary</label>
-          <textarea value={form.summary} onChange={(e) => updateField("summary", e.target.value)} placeholder="Summary of the artwork" rows={3} className={textareaClass} />
+          <textarea
+            value={form.summary}
+            onChange={(e) => updateField("summary", e.target.value)}
+            placeholder="Summary of the artwork"
+            rows={3}
+            className={textareaClass}
+          />
         </div>
 
         <div>
           <label className={labelClass}>Story Content</label>
-          <textarea value={form.story_content} onChange={(e) => updateField("story_content", e.target.value)} placeholder="The full story behind this artwork." rows={8} className={textareaClass} />
+          <textarea
+            value={form.story_content}
+            onChange={(e) => updateField("story_content", e.target.value)}
+            placeholder="The full story behind this artwork."
+            rows={8}
+            className={textareaClass}
+          />
         </div>
 
         <div>
           <label className={labelClass}>AI Summary</label>
-          <textarea value={form.ai_summary} onChange={(e) => updateField("ai_summary", e.target.value)} placeholder="Auto-generated or manually written AI summary" rows={3} className={textareaClass} />
+          <textarea
+            value={form.ai_summary}
+            onChange={(e) => updateField("ai_summary", e.target.value)}
+            placeholder="Auto-generated or manually written AI summary"
+            rows={3}
+            className={textareaClass}
+          />
         </div>
       </div>
 
       {/* Before & After Images */}
       <div className="bg-white rounded-2xl border border-border p-5 shadow-sm">
-        <h3 className="font-display text-[16px] text-forest font-medium mb-4">Before & After Images</h3>
+        <h3 className="font-display text-[16px] text-forest font-medium mb-4">
+          Before & After Images
+        </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <SingleImageField label="Before Image" value={beforeImage} onClear={() => setBeforeImage(null)} onSelect={() => openPicker("before")} />
-          <SingleImageField label="After Image" value={afterImage} onClear={() => setAfterImage(null)} onSelect={() => openPicker("after")} />
+          <SingleImageField
+            label="Before Image"
+            value={beforeImage}
+            onClear={() => setBeforeImage(null)}
+            onSelect={() => openPicker("before")}
+          />
+          <SingleImageField
+            label="After Image"
+            value={afterImage}
+            onClear={() => setAfterImage(null)}
+            onSelect={() => openPicker("after")}
+          />
         </div>
       </div>
 
@@ -429,7 +585,9 @@ export function ArtworkForm({ artwork, onSuccess }: ArtworkFormProps) {
 
       {/* Process Images */}
       <div className="bg-white rounded-2xl border border-border p-5 shadow-sm">
-        <h3 className="font-display text-[16px] text-forest font-medium mb-4">Process Images (Step-by-Step)</h3>
+        <h3 className="font-display text-[16px] text-forest font-medium mb-4">
+          Process Images (Step-by-Step)
+        </h3>
         <MultiImageUploader
           images={processImages}
           onChange={setProcessImages}
@@ -438,12 +596,23 @@ export function ArtworkForm({ artwork, onSuccess }: ArtworkFormProps) {
         />
         {processImages.length > 0 && (
           <div className="mt-4 space-y-3">
-            <p className="font-body text-[11px] font-semibold text-stone uppercase tracking-wider">Step Titles</p>
+            <p className="font-body text-[11px] font-semibold text-stone uppercase tracking-wider">
+              Step Titles
+            </p>
             {processImages.map((img, index) => (
-              <div key={img.mediaId} className="flex items-center gap-3 p-3 rounded-xl bg-cream/50 border border-border/50">
-                <img src={img.publicUrl} alt="" className="w-10 h-10 rounded-lg object-cover shrink-0" />
+              <div
+                key={img.mediaId}
+                className="flex items-center gap-3 p-3 rounded-xl bg-cream/50 border border-border/50"
+              >
+                <img
+                  src={img.publicUrl}
+                  alt=""
+                  className="w-10 h-10 rounded-lg object-cover shrink-0"
+                />
                 <div className="flex-1 min-w-0">
-                  <span className="font-body text-[10px] font-bold text-stone uppercase tracking-wider">Step {index + 1}</span>
+                  <span className="font-body text-[10px] font-bold text-stone uppercase tracking-wider">
+                    Step {index + 1}
+                  </span>
                   <input
                     type="text"
                     value={img.stepTitle ?? ""}

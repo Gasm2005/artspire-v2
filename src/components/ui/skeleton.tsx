@@ -4,10 +4,7 @@ import { cn } from "@/lib/utils";
 function Skeleton({ className, style, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn(
-        "animate-pulse rounded-md bg-[#E8E0D5]",
-        className
-      )}
+      className={cn("animate-pulse rounded-md bg-[#E8E0D5]", className)}
       style={style}
       {...props}
     />
@@ -17,7 +14,12 @@ function Skeleton({ className, style, ...props }: React.HTMLAttributes<HTMLDivEl
 // Artwork card skeleton — matches the portfolio grid card layout
 function ArtworkCardSkeleton({ className }: { className?: string }) {
   return (
-    <div className={cn("rounded-xl overflow-hidden bg-white border border-border/40 shadow-sm", className)}>
+    <div
+      className={cn(
+        "rounded-xl overflow-hidden bg-white border border-border/40 shadow-sm",
+        className,
+      )}
+    >
       <Skeleton className="w-full aspect-[4/3] rounded-none" />
       <div className="p-4 space-y-2">
         <Skeleton className="h-4 w-3/4" />
@@ -48,7 +50,10 @@ function ArtworkDetailSkeleton() {
       <div className="flex flex-col lg:flex-row gap-8 lg:gap-14 items-start">
         {/* Left: image placeholder — same aspect ratio as real image area */}
         <div className="w-full lg:w-1/2">
-          <Skeleton className="w-full rounded-2xl" style={{ aspectRatio: "3/4", maxHeight: "85vh" }} />
+          <Skeleton
+            className="w-full rounded-2xl"
+            style={{ aspectRatio: "3/4", maxHeight: "85vh" }}
+          />
         </div>
 
         {/* Right: content */}
@@ -104,17 +109,21 @@ function AdminTableSkeleton({ rows = 5, cols = 4 }: { rows?: number; cols?: numb
   return (
     <div className="bg-white rounded-2xl border border-border overflow-hidden">
       {/* Header */}
-      <div className="grid gap-4 px-5 py-3 border-b border-border bg-cream/50"
-        style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}>
+      <div
+        className="grid gap-4 px-5 py-3 border-b border-border bg-cream/50"
+        style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}
+      >
         {Array.from({ length: cols }).map((_, i) => (
           <Skeleton key={i} className="h-3 w-20" />
         ))}
       </div>
       {/* Rows */}
       {Array.from({ length: rows }).map((_, row) => (
-        <div key={row}
+        <div
+          key={row}
           className="grid gap-4 px-5 py-4 border-b border-border/50 last:border-0"
-          style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}>
+          style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}
+        >
           {Array.from({ length: cols }).map((_, col) => (
             <Skeleton key={col} className="h-4" style={{ width: `${60 + Math.random() * 30}%` }} />
           ))}

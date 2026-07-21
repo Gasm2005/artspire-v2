@@ -65,8 +65,10 @@ function EditShopCategoryPage() {
     }
   }
 
-  const inputClass = "w-full h-[44px] px-4 rounded-xl border border-border bg-white font-body text-[14px] text-forest focus:outline-none focus:border-gold transition-colors";
-  const labelClass = "block font-body text-[11px] font-bold text-stone uppercase tracking-wider mb-1.5";
+  const inputClass =
+    "w-full h-[44px] px-4 rounded-xl border border-border bg-white font-body text-[14px] text-forest focus:outline-none focus:border-gold transition-colors";
+  const labelClass =
+    "block font-body text-[11px] font-bold text-stone uppercase tracking-wider mb-1.5";
 
   if (loading) {
     return <p className="font-body text-stone text-[13px] p-6">Loading…</p>;
@@ -94,7 +96,10 @@ function EditShopCategoryPage() {
             <div className="relative rounded-xl overflow-hidden border border-border">
               <img src={imagePreview} alt="Preview" className="w-full h-[200px] object-cover" />
               <button
-                onClick={() => { setImagePreview(null); setImageFile(null); }}
+                onClick={() => {
+                  setImagePreview(null);
+                  setImageFile(null);
+                }}
                 className="absolute top-2 right-2 p-1.5 bg-white/90 rounded-full shadow hover:bg-white transition-colors"
               >
                 <X size={14} className="text-stone" />
@@ -102,7 +107,12 @@ function EditShopCategoryPage() {
               <label className="absolute bottom-2 right-2 inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/90 rounded-lg font-body text-[11px] font-semibold text-forest cursor-pointer hover:bg-white transition-colors shadow">
                 <Upload size={12} />
                 Change
-                <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleImageChange}
+                />
               </label>
             </div>
           ) : (
@@ -126,7 +136,9 @@ function EditShopCategoryPage() {
         </div>
 
         <div>
-          <label className={labelClass}>Tagline <span className="normal-case font-normal">(shown under name on shop)</span></label>
+          <label className={labelClass}>
+            Tagline <span className="normal-case font-normal">(shown under name on shop)</span>
+          </label>
           <input
             type="text"
             value={form.tagline}

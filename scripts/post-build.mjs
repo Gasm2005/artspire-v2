@@ -54,10 +54,7 @@ function patchFile(filePath) {
   let patched = code;
   let changed = false;
 
-  let relPath = relative(
-    dirname(filePath),
-    join(LIBS_DIR, "tslib.mjs")
-  ).replace(/\\/g, "/");
+  let relPath = relative(dirname(filePath), join(LIBS_DIR, "tslib.mjs")).replace(/\\/g, "/");
 
   // Fix: relative() returns "tslib.mjs" when both files are in the same directory.
   // Node.js interprets "tslib.mjs" as a bare package name, not a relative file.
@@ -115,10 +112,7 @@ function overridePackageJson() {
 }
 
 function verifyRequiredFiles() {
-  const required = [
-    join(TSLIB_DEST_DIR, "tslib.es6.mjs"),
-    join(TSLIB_DEST_DIR, "package.json"),
-  ];
+  const required = [join(TSLIB_DEST_DIR, "tslib.es6.mjs"), join(TSLIB_DEST_DIR, "package.json")];
   const missing = required.filter((f) => !existsSync(f));
   if (missing.length > 0) {
     throw new Error(`[post-build] CRITICAL: Missing files in output: ${missing.join(", ")}`);
@@ -170,7 +164,7 @@ async function generateSitemap() {
 
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
     console.warn(
-      "[post-build] VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY not set — sitemap will only include static pages."
+      "[post-build] VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY not set — sitemap will only include static pages.",
     );
   } else {
     try {
@@ -207,22 +201,22 @@ async function generateSitemap() {
             `${SITE_URL}/artwork/${a.slug}`,
             a.updated_at || a.published_at,
             "monthly",
-            "0.8"
-          )
+            "0.8",
+          ),
         ),
         ...(categories ?? []).map((c) =>
-          urlEntry(`${SITE_URL}/categories/${c.slug}`, c.updated_at, "weekly", "0.9")
+          urlEntry(`${SITE_URL}/categories/${c.slug}`, c.updated_at, "weekly", "0.9"),
         ),
         ...(products ?? []).map((p) =>
-          urlEntry(`${SITE_URL}/shop/product/${p.slug}`, p.updated_at, "weekly", "0.9")
+          urlEntry(`${SITE_URL}/shop/product/${p.slug}`, p.updated_at, "weekly", "0.9"),
         ),
         ...(posts ?? []).map((p) =>
-          urlEntry(`${SITE_URL}/blog/${p.slug}`, p.updated_at || p.published_at, "monthly", "0.7")
+          urlEntry(`${SITE_URL}/blog/${p.slug}`, p.updated_at || p.published_at, "monthly", "0.7"),
         ),
       ];
 
       console.log(
-        `[post-build] Sitemap: ${artworks?.length ?? 0} artworks, ${categories?.length ?? 0} categories, ${products?.length ?? 0} products, ${posts?.length ?? 0} posts`
+        `[post-build] Sitemap: ${artworks?.length ?? 0} artworks, ${categories?.length ?? 0} categories, ${products?.length ?? 0} products, ${posts?.length ?? 0} posts`,
       );
     } catch (err) {
       console.error("[post-build] Failed to fetch dynamic sitemap entries:", err.message);
@@ -244,7 +238,7 @@ async function generateSitemap() {
   }
   writeFileSync(join(STATIC_DIR, "sitemap.xml"), xml);
   console.log(
-    `[post-build] Wrote sitemap.xml with ${staticEntries.length + dynamicEntries.length} URLs`
+    `[post-build] Wrote sitemap.xml with ${staticEntries.length + dynamicEntries.length} URLs`,
   );
 }
 async function main() {
@@ -300,9 +294,7 @@ async function main() {
     }
   });
 
-  console.log(
-    `[post-build] Scanned ${scannedCount} .mjs files, patched ${patchedCount}.`
-  );
+  console.log(`[post-build] Scanned ${scannedCount} .mjs files, patched ${patchedCount}.`);
   console.log("[post-build] Done.");
 }
 

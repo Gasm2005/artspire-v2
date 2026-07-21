@@ -13,8 +13,16 @@ interface MediaPickerProps {
   multiple?: boolean;
 }
 
-export function MediaPicker({ open, onOpenChange, onSelect, folder, multiple = false }: MediaPickerProps) {
-  const { items, loading, folders } = useMediaLibrary({ folder: folder === "all" ? undefined : folder });
+export function MediaPicker({
+  open,
+  onOpenChange,
+  onSelect,
+  folder,
+  multiple = false,
+}: MediaPickerProps) {
+  const { items, loading, folders } = useMediaLibrary({
+    folder: folder === "all" ? undefined : folder,
+  });
   const [search, setSearch] = useState("");
   const [selectedFolder, setSelectedFolder] = useState(folder ?? "all");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -48,14 +56,19 @@ export function MediaPicker({ open, onOpenChange, onSelect, folder, multiple = f
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="font-display text-[18px] text-forest">Select from Media Library</DialogTitle>
+          <DialogTitle className="font-display text-[18px] text-forest">
+            Select from Media Library
+          </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
           {/* Search & filters */}
           <div className="flex gap-3">
             <div className="relative flex-1">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-stone/50" />
+              <Search
+                size={14}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-stone/50"
+              />
               <Input
                 placeholder="Search media..."
                 value={search}
@@ -70,7 +83,9 @@ export function MediaPicker({ open, onOpenChange, onSelect, folder, multiple = f
             >
               <option value="all">All Folders</option>
               {folders.map((f) => (
-                <option key={f} value={f}>{f.charAt(0).toUpperCase() + f.slice(1)}</option>
+                <option key={f} value={f}>
+                  {f.charAt(0).toUpperCase() + f.slice(1)}
+                </option>
               ))}
             </select>
           </div>
@@ -109,7 +124,9 @@ export function MediaPicker({ open, onOpenChange, onSelect, folder, multiple = f
                       </div>
                     )}
                     <div className="absolute bottom-0 left-0 right-0 p-1 bg-gradient-to-t from-black/60 to-transparent">
-                      <p className="font-body text-[9px] text-white truncate">{item.original_name}</p>
+                      <p className="font-body text-[9px] text-white truncate">
+                        {item.original_name}
+                      </p>
                     </div>
                   </button>
                 );
@@ -119,14 +136,16 @@ export function MediaPicker({ open, onOpenChange, onSelect, folder, multiple = f
 
           {/* Footer */}
           <div className="flex items-center justify-between pt-2 border-t border-border">
-            <span className="font-body text-[12px] text-stone">
-              {selectedIds.size} selected
-            </span>
+            <span className="font-body text-[12px] text-stone">{selectedIds.size} selected</span>
             <div className="flex gap-2">
               <Button variant="outline" onClick={() => onOpenChange(false)}>
                 <X size={14} className="mr-1" /> Cancel
               </Button>
-              <Button onClick={handleConfirm} disabled={selectedIds.size === 0} className="bg-forest hover:bg-forest/90">
+              <Button
+                onClick={handleConfirm}
+                disabled={selectedIds.size === 0}
+                className="bg-forest hover:bg-forest/90"
+              >
                 <Check size={14} className="mr-1" /> Select
               </Button>
             </div>

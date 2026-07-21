@@ -2,16 +2,17 @@ import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useState, useEffect, useCallback } from "react";
 import { getCartItems, getOrCreateSessionId, clearCart, type CartItem } from "@/lib/cart";
 import { createPendingOrder, attachRazorpayOrderId, markOrderPaymentFailed } from "@/lib/orders";
-import { createRazorpayOrder, confirmPaymentAfterCheckout, getRazorpayKeyId } from "@/lib/razorpay.server";
+import {
+  createRazorpayOrder,
+  confirmPaymentAfterCheckout,
+  getRazorpayKeyId,
+} from "@/lib/razorpay.server";
 import { toast } from "@/lib/toast";
 import { SiteChrome } from "@/components/site/SiteChrome";
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({
-    meta: [
-      { title: "Checkout | The Artspire" },
-      { name: "robots", content: "noindex" },
-    ],
+    meta: [{ title: "Checkout | The Artspire" }, { name: "robots", content: "noindex" }],
   }),
   component: CheckoutPage,
 });
@@ -74,7 +75,9 @@ function CheckoutPage() {
     }
   }, [router]);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => {
+    load();
+  }, [load]);
 
   useEffect(() => {
     const saved = sessionStorage.getItem("artspire_gift_message");
@@ -85,7 +88,9 @@ function CheckoutPage() {
     setForm((prev) => ({ ...prev, [key]: value }));
   }
 
-  const [pincodeLookupState, setPincodeLookupState] = useState<"idle" | "loading" | "done" | "error">("idle");
+  const [pincodeLookupState, setPincodeLookupState] = useState<
+    "idle" | "loading" | "done" | "error"
+  >("idle");
 
   useEffect(() => {
     const pincode = form.postal_code.trim();
@@ -164,7 +169,10 @@ function CheckoutPage() {
 
       const scriptLoaded = await loadRazorpayScript();
       if (!scriptLoaded) {
-        toast.error("Payment gateway failed to load.", "Please check your connection and try again.");
+        toast.error(
+          "Payment gateway failed to load.",
+          "Please check your connection and try again.",
+        );
         setSubmitting(false);
         return;
       }
@@ -213,7 +221,7 @@ function CheckoutPage() {
             console.error(err);
             toast.error(
               "We couldn't confirm your payment automatically.",
-              "If you were charged, your order will be confirmed shortly — check Track Order or contact us on WhatsApp."
+              "If you were charged, your order will be confirmed shortly — check Track Order or contact us on WhatsApp.",
             );
             setSubmitting(false);
           }
@@ -236,55 +244,208 @@ function CheckoutPage() {
 
   return (
     <SiteChrome>
-      <div className="wrap crumbs">Home / Shop / Cart / <span>Checkout</span></div>
+      <div className="wrap crumbs">
+        Home / Shop / Cart / <span>Checkout</span>
+      </div>
       <section style={{ paddingTop: 16 }}>
         <div className="wrap">
-          <h1 className="serif" style={{ fontSize: 44, color: "var(--forest)", fontWeight: 500, marginBottom: 28 }}>Checkout</h1>
+          <h1
+            className="serif"
+            style={{ fontSize: 44, color: "var(--forest)", fontWeight: 500, marginBottom: 28 }}
+          >
+            Checkout
+          </h1>
 
           {loading ? (
             <p style={{ color: "var(--stone)" }}>Loading…</p>
           ) : (
-            <div className="cart-cols" style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 48, alignItems: "start" }}>
+            <div
+              className="cart-cols"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1.6fr 1fr",
+                gap: 48,
+                alignItems: "start",
+              }}
+            >
               <div>
                 <div className="card-box" style={{ marginBottom: 20 }}>
-                  <h3 className="serif" style={{ fontSize: 20, color: "var(--forest)", fontWeight: 500, marginBottom: 16 }}>Contact details</h3>
-                  <div className="field"><label>Full name *</label><input type="text" value={form.name} onChange={(e) => updateField("name", e.target.value)} /></div>
+                  <h3
+                    className="serif"
+                    style={{
+                      fontSize: 20,
+                      color: "var(--forest)",
+                      fontWeight: 500,
+                      marginBottom: 16,
+                    }}
+                  >
+                    Contact details
+                  </h3>
+                  <div className="field">
+                    <label>Full name *</label>
+                    <input
+                      type="text"
+                      value={form.name}
+                      onChange={(e) => updateField("name", e.target.value)}
+                    />
+                  </div>
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-                    <div className="field"><label>Email *</label><input type="email" value={form.email} onChange={(e) => updateField("email", e.target.value)} /></div>
-                    <div className="field"><label>Phone *</label><input type="tel" value={form.phone} onChange={(e) => updateField("phone", e.target.value)} /></div>
+                    <div className="field">
+                      <label>Email *</label>
+                      <input
+                        type="email"
+                        value={form.email}
+                        onChange={(e) => updateField("email", e.target.value)}
+                      />
+                    </div>
+                    <div className="field">
+                      <label>Phone *</label>
+                      <input
+                        type="tel"
+                        value={form.phone}
+                        onChange={(e) => updateField("phone", e.target.value)}
+                      />
+                    </div>
                   </div>
                 </div>
 
                 <div className="card-box">
-                  <h3 className="serif" style={{ fontSize: 20, color: "var(--forest)", fontWeight: 500, marginBottom: 16 }}>Shipping address</h3>
-                  <div className="field"><label>Address line 1 *</label><input type="text" value={form.line1} onChange={(e) => updateField("line1", e.target.value)} /></div>
-                  <div className="field"><label>Address line 2</label><input type="text" value={form.line2} onChange={(e) => updateField("line2", e.target.value)} /></div>
+                  <h3
+                    className="serif"
+                    style={{
+                      fontSize: 20,
+                      color: "var(--forest)",
+                      fontWeight: 500,
+                      marginBottom: 16,
+                    }}
+                  >
+                    Shipping address
+                  </h3>
+                  <div className="field">
+                    <label>Address line 1 *</label>
+                    <input
+                      type="text"
+                      value={form.line1}
+                      onChange={(e) => updateField("line1", e.target.value)}
+                    />
+                  </div>
+                  <div className="field">
+                    <label>Address line 2</label>
+                    <input
+                      type="text"
+                      value={form.line2}
+                      onChange={(e) => updateField("line2", e.target.value)}
+                    />
+                  </div>
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
                     <div className="field">
                       <label>Postal code *</label>
-                      <input type="text" inputMode="numeric" maxLength={6} value={form.postal_code} onChange={(e) => updateField("postal_code", e.target.value.replace(/\D/g, ""))} placeholder="e.g. 226001" />
-                      {pincodeLookupState === "loading" && <p style={{ fontSize: 11, color: "var(--stone)", marginTop: 4 }}>Looking up city/state…</p>}
-                      {pincodeLookupState === "error" && <p style={{ fontSize: 11, color: "var(--stone)", marginTop: 4 }}>Couldn't auto-fill — please enter manually.</p>}
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        maxLength={6}
+                        value={form.postal_code}
+                        onChange={(e) =>
+                          updateField("postal_code", e.target.value.replace(/\D/g, ""))
+                        }
+                        placeholder="e.g. 226001"
+                      />
+                      {pincodeLookupState === "loading" && (
+                        <p style={{ fontSize: 11, color: "var(--stone)", marginTop: 4 }}>
+                          Looking up city/state…
+                        </p>
+                      )}
+                      {pincodeLookupState === "error" && (
+                        <p style={{ fontSize: 11, color: "var(--stone)", marginTop: 4 }}>
+                          Couldn't auto-fill — please enter manually.
+                        </p>
+                      )}
                     </div>
-                    <div className="field"><label>City *</label><input type="text" value={form.city} onChange={(e) => updateField("city", e.target.value)} /></div>
+                    <div className="field">
+                      <label>City *</label>
+                      <input
+                        type="text"
+                        value={form.city}
+                        onChange={(e) => updateField("city", e.target.value)}
+                      />
+                    </div>
                   </div>
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-                    <div className="field"><label>State *</label><input type="text" value={form.state} onChange={(e) => updateField("state", e.target.value)} /></div>
-                    <div className="field"><label>Country</label><input type="text" value={form.country} onChange={(e) => updateField("country", e.target.value)} /></div>
+                    <div className="field">
+                      <label>State *</label>
+                      <input
+                        type="text"
+                        value={form.state}
+                        onChange={(e) => updateField("state", e.target.value)}
+                      />
+                    </div>
+                    <div className="field">
+                      <label>Country</label>
+                      <input
+                        type="text"
+                        value={form.country}
+                        onChange={(e) => updateField("country", e.target.value)}
+                      />
+                    </div>
                   </div>
-                  <div className="field" style={{ marginBottom: 0 }}><label>Gift note (optional)</label><textarea rows={2} value={form.giftMessage} onChange={(e) => updateField("giftMessage", e.target.value)} placeholder="Add a personal message…" /></div>
+                  <div className="field" style={{ marginBottom: 0 }}>
+                    <label>Gift note (optional)</label>
+                    <textarea
+                      rows={2}
+                      value={form.giftMessage}
+                      onChange={(e) => updateField("giftMessage", e.target.value)}
+                      placeholder="Add a personal message…"
+                    />
+                  </div>
                 </div>
               </div>
 
               <div className="summary">
-                <h3 className="serif" style={{ fontSize: 22, color: "var(--forest)", fontWeight: 500, marginBottom: 16 }}>Order Summary</h3>
+                <h3
+                  className="serif"
+                  style={{
+                    fontSize: 22,
+                    color: "var(--forest)",
+                    fontWeight: 500,
+                    marginBottom: 16,
+                  }}
+                >
+                  Order Summary
+                </h3>
                 {items.map((item) => (
-                  <div className="row" key={item.id}><span>{item.product?.title} × {item.quantity}</span><span>₹{(item.price_at_add * item.quantity).toLocaleString("en-IN")}</span></div>
+                  <div className="row" key={item.id}>
+                    <span>
+                      {item.product?.title} × {item.quantity}
+                    </span>
+                    <span>₹{(item.price_at_add * item.quantity).toLocaleString("en-IN")}</span>
+                  </div>
                 ))}
-                <div className="row"><span>Shipping</span><span>₹{SHIPPING_COST.toLocaleString("en-IN")}</span></div>
-                <div className="row total"><span>Total</span><span>₹{total.toLocaleString("en-IN")}</span></div>
-                <button className="btn btn-solid btn-block" style={{ marginTop: 18 }} disabled={submitting} onClick={handlePayment}><span>{submitting ? "Processing…" : "Pay Securely"}</span></button>
-                <p style={{ fontSize: 11, color: "var(--stone)", textAlign: "center", marginTop: 12 }}>Secured by Razorpay · UPI, Cards, Netbanking</p>
+                <div className="row">
+                  <span>Shipping</span>
+                  <span>₹{SHIPPING_COST.toLocaleString("en-IN")}</span>
+                </div>
+                <div className="row total">
+                  <span>Total</span>
+                  <span>₹{total.toLocaleString("en-IN")}</span>
+                </div>
+                <button
+                  className="btn btn-solid btn-block"
+                  style={{ marginTop: 18 }}
+                  disabled={submitting}
+                  onClick={handlePayment}
+                >
+                  <span>{submitting ? "Processing…" : "Pay Securely"}</span>
+                </button>
+                <p
+                  style={{
+                    fontSize: 11,
+                    color: "var(--stone)",
+                    textAlign: "center",
+                    marginTop: 12,
+                  }}
+                >
+                  Secured by Razorpay · UPI, Cards, Netbanking
+                </p>
               </div>
             </div>
           )}

@@ -78,7 +78,10 @@ export function ShopFooter() {
                   <input
                     type="email"
                     value={email}
-                    onChange={(e) => { setEmail(e.target.value); setStatus("idle"); }}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      setStatus("idle");
+                    }}
                     placeholder="you@example.com"
                     className="flex-1 h-[38px] px-3 rounded-lg bg-white/10 border border-cream/20 font-body text-[13px] text-cream placeholder:text-cream/40 focus:outline-none focus:border-gold"
                   />
@@ -93,17 +96,24 @@ export function ShopFooter() {
                 </div>
               )}
               {status === "error" && (
-                <p className="font-body text-[11px] text-red-300 mt-1.5">Please enter a valid email.</p>
+                <p className="font-body text-[11px] text-red-300 mt-1.5">
+                  Please enter a valid email.
+                </p>
               )}
             </div>
           </div>
           {footerColumns.map((col) => (
             <div key={col.title}>
-              <h3 className="font-body text-[11px] font-semibold uppercase tracking-[0.15em] text-cream/50 mb-4">{col.title}</h3>
+              <h3 className="font-body text-[11px] font-semibold uppercase tracking-[0.15em] text-cream/50 mb-4">
+                {col.title}
+              </h3>
               <ul className="space-y-2.5">
                 {col.links.map((l) => (
                   <li key={l.label}>
-                    <Link to={l.to} className="font-body text-[13px] text-cream/70 hover:text-white transition-colors">
+                    <Link
+                      to={l.to}
+                      className="font-body text-[13px] text-cream/70 hover:text-white transition-colors"
+                    >
                       {l.label}
                     </Link>
                   </li>
@@ -113,8 +123,13 @@ export function ShopFooter() {
           ))}
         </div>
         <div className="border-t border-cream/10 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="font-body text-[12px] text-cream/40">© 2026 Artspire. All rights reserved.</p>
-          <Link to="/" className="font-body text-[12px] text-cream/50 hover:text-white transition-colors">
+          <p className="font-body text-[12px] text-cream/40">
+            © 2026 Artspire. All rights reserved.
+          </p>
+          <Link
+            to="/"
+            className="font-body text-[12px] text-cream/50 hover:text-white transition-colors"
+          >
             ← Back to Artspire main site
           </Link>
         </div>

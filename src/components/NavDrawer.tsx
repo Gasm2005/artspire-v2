@@ -14,7 +14,9 @@ const links = [
 export function NavDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [open]);
 
   return (
@@ -42,12 +44,7 @@ export function NavDrawer({ open, onClose }: { open: boolean; onClose: () => voi
         </div>
         <div className="flex flex-col px-8 py-4 gap-8 font-display text-3xl text-on-surface mt-8">
           {links.map((l) => (
-            <Link
-              key={l.to}
-              to={l.to}
-              className="active:text-gold-accent"
-              onClick={onClose}
-            >
+            <Link key={l.to} to={l.to} className="active:text-gold-accent" onClick={onClose}>
               {l.label}
             </Link>
           ))}

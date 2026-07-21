@@ -74,17 +74,16 @@ export function generateShopCategorySlug(name: string): string {
 // ─── CREATE / UPDATE / DELETE ─────────────────────────────────
 
 export async function createShopCategory(values: ShopCategoryInsert): Promise<ShopCategory> {
-  const { data, error } = await supabase
-    .from("shop_categories")
-    .insert(values)
-    .select()
-    .single();
+  const { data, error } = await supabase.from("shop_categories").insert(values).select().single();
 
   if (error) throw error;
   return data as ShopCategory;
 }
 
-export async function updateShopCategory(id: string, values: ShopCategoryUpdate): Promise<ShopCategory> {
+export async function updateShopCategory(
+  id: string,
+  values: ShopCategoryUpdate,
+): Promise<ShopCategory> {
   const { data, error } = await supabase
     .from("shop_categories")
     .update({ ...values, updated_at: new Date().toISOString() })

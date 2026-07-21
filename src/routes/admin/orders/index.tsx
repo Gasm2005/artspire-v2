@@ -91,7 +91,9 @@ function AdminOrdersPage() {
               key={f}
               onClick={() => setFilter(f)}
               className={`shrink-0 px-3 py-1.5 rounded-lg font-body text-[12px] font-semibold transition-colors ${
-                filter === f ? "bg-forest text-white" : "bg-white border border-border text-stone hover:border-forest/40"
+                filter === f
+                  ? "bg-forest text-white"
+                  : "bg-white border border-border text-stone hover:border-forest/40"
               }`}
             >
               {f === "all" ? "All" : f.replace("_", " ").replace(/^\w/, (c) => c.toUpperCase())}
@@ -126,18 +128,35 @@ function AdminOrdersPage() {
             <table className="w-full text-left">
               <thead>
                 <tr className="border-b border-border">
-                  <th className="px-4 py-3 font-body text-[10px] font-bold text-stone uppercase tracking-wider">Order</th>
-                  <th className="px-4 py-3 font-body text-[10px] font-bold text-stone uppercase tracking-wider">Customer</th>
-                  <th className="px-4 py-3 font-body text-[10px] font-bold text-stone uppercase tracking-wider hidden md:table-cell">Items</th>
-                  <th className="px-4 py-3 font-body text-[10px] font-bold text-stone uppercase tracking-wider">Total</th>
-                  <th className="px-4 py-3 font-body text-[10px] font-bold text-stone uppercase tracking-wider">Payment</th>
-                  <th className="px-4 py-3 font-body text-[10px] font-bold text-stone uppercase tracking-wider">Status</th>
-                  <th className="px-4 py-3 font-body text-[10px] font-bold text-stone uppercase tracking-wider hidden md:table-cell">Date</th>
+                  <th className="px-4 py-3 font-body text-[10px] font-bold text-stone uppercase tracking-wider">
+                    Order
+                  </th>
+                  <th className="px-4 py-3 font-body text-[10px] font-bold text-stone uppercase tracking-wider">
+                    Customer
+                  </th>
+                  <th className="px-4 py-3 font-body text-[10px] font-bold text-stone uppercase tracking-wider hidden md:table-cell">
+                    Items
+                  </th>
+                  <th className="px-4 py-3 font-body text-[10px] font-bold text-stone uppercase tracking-wider">
+                    Total
+                  </th>
+                  <th className="px-4 py-3 font-body text-[10px] font-bold text-stone uppercase tracking-wider">
+                    Payment
+                  </th>
+                  <th className="px-4 py-3 font-body text-[10px] font-bold text-stone uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-4 py-3 font-body text-[10px] font-bold text-stone uppercase tracking-wider hidden md:table-cell">
+                    Date
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.map((order) => (
-                  <tr key={order.id} className="border-b border-border last:border-b-0 hover:bg-cream/30 transition-colors">
+                  <tr
+                    key={order.id}
+                    className="border-b border-border last:border-b-0 hover:bg-cream/30 transition-colors"
+                  >
                     <td className="px-4 py-3">
                       <Link
                         to="/admin/orders/$id"
@@ -167,21 +186,27 @@ function AdminOrdersPage() {
                           order.payment_status === "paid"
                             ? "bg-green-50 text-green-700"
                             : order.payment_status === "failed"
-                            ? "bg-red-50 text-red-600"
-                            : "bg-amber-50 text-amber-700"
+                              ? "bg-red-50 text-red-600"
+                              : "bg-amber-50 text-amber-700"
                         }`}
                       >
                         {order.payment_status}
                       </span>
                     </td>
                     <td className="px-4 py-3">
-                      <span className={`inline-block px-2 py-0.5 rounded-full font-body text-[10px] font-bold uppercase tracking-wider ${statusBadge(order.status)}`}>
+                      <span
+                        className={`inline-block px-2 py-0.5 rounded-full font-body text-[10px] font-bold uppercase tracking-wider ${statusBadge(order.status)}`}
+                      >
                         {order.status.replace("_", " ")}
                       </span>
                     </td>
                     <td className="px-4 py-3 hidden md:table-cell">
                       <span className="font-body text-[12px] text-stone">
-                        {new Date(order.created_at).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}
+                        {new Date(order.created_at).toLocaleDateString("en-IN", {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        })}
                       </span>
                     </td>
                   </tr>

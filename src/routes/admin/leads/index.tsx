@@ -50,7 +50,11 @@ function statusBadge(status: LeadStatus): string {
 
 function formatDate(iso: string): string {
   try {
-    return new Date(iso).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+    return new Date(iso).toLocaleDateString("en-IN", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
   } catch {
     return iso;
   }
@@ -117,7 +121,9 @@ function LeadsPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="font-display text-[24px] md:text-[28px] text-forest font-medium">Lead Center</h1>
+          <h1 className="font-display text-[24px] md:text-[28px] text-forest font-medium">
+            Lead Center
+          </h1>
           <p className="font-body text-[13px] text-stone mt-0.5">
             {leads.length} total {leads.length === 1 ? "lead" : "leads"}
             {newCount > 0 ? ` · ${newCount} new` : ""}
@@ -143,7 +149,9 @@ function LeadsPage() {
               key={s}
               onClick={() => setFilter(s)}
               className={`px-3 py-1.5 rounded-lg font-body text-[12px] font-medium capitalize transition-colors ${
-                filter === s ? "bg-forest text-white" : "bg-white border border-border text-stone hover:text-forest"
+                filter === s
+                  ? "bg-forest text-white"
+                  : "bg-white border border-border text-stone hover:text-forest"
               }`}
             >
               {s === "all" ? "All" : s.replace("-", " ")}
@@ -176,7 +184,10 @@ function LeadsPage() {
               <thead>
                 <tr className="border-b border-border bg-cream/40">
                   {["Lead", "Contact", "Requirement", "Source", "Date", "Status"].map((h) => (
-                    <th key={h} className="px-4 py-3 font-body text-[11px] font-bold text-stone uppercase tracking-wider">
+                    <th
+                      key={h}
+                      className="px-4 py-3 font-body text-[11px] font-bold text-stone uppercase tracking-wider"
+                    >
                       {h}
                     </th>
                   ))}
@@ -184,9 +195,14 @@ function LeadsPage() {
               </thead>
               <tbody>
                 {filtered.map((lead) => (
-                  <tr key={lead.id} className="border-b border-border/60 last:border-0 hover:bg-cream/30 transition-colors">
+                  <tr
+                    key={lead.id}
+                    className="border-b border-border/60 last:border-0 hover:bg-cream/30 transition-colors"
+                  >
                     <td className="px-4 py-3 align-top">
-                      <div className="font-body text-[13px] font-semibold text-forest">{lead.name}</div>
+                      <div className="font-body text-[13px] font-semibold text-forest">
+                        {lead.name}
+                      </div>
                       <div className="font-body text-[11px] text-stone/60">{lead.lead_number}</div>
                     </td>
                     <td className="px-4 py-3 align-top">
@@ -222,11 +238,15 @@ function LeadsPage() {
                       </span>
                     </td>
                     <td className="px-4 py-3 align-top">
-                      <span className="font-body text-[12px] text-stone whitespace-nowrap">{formatDate(lead.created_at)}</span>
+                      <span className="font-body text-[12px] text-stone whitespace-nowrap">
+                        {formatDate(lead.created_at)}
+                      </span>
                     </td>
                     <td className="px-4 py-3 align-top">
                       <div className="flex items-center gap-2">
-                        <span className={`px-2 py-0.5 rounded-md font-body text-[11px] font-medium capitalize ${statusBadge(lead.status)}`}>
+                        <span
+                          className={`px-2 py-0.5 rounded-md font-body text-[11px] font-medium capitalize ${statusBadge(lead.status)}`}
+                        >
                           {lead.status.replace("-", " ")}
                         </span>
                       </div>

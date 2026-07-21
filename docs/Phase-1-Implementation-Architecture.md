@@ -1,4 +1,5 @@
 # Artspire V2 — Phase 1 Implementation Architecture
+
 ## Production-Ready CMS for Non-Technical Business Owners
 
 **Version:** 1.0  
@@ -53,21 +54,21 @@ Make the entire Artspire website **content-managed** through a professional admi
 
 13 modules that transform the website from a static showcase into a CMS-driven platform:
 
-| Module | Purpose | Business Owner Can |
-|---|---|---|
-| Dashboard | Business overview | See KPIs, trends, recent activity |
-| Artwork Management | Portfolio CRUD | Add, edit, publish, delete artworks |
-| Category Management | Category CRUD | Add categories, replace images, set SEO |
-| Media Library | Centralized assets | Upload, tag, search, track usage |
-| Visual Asset Manager | Website visuals | Replace overlays, backgrounds, graphics |
-| Website Content Manager | Static content | Edit homepage, about, contact, footer text |
-| FAQ Management | Q&A | Add, edit, reorder FAQs per page |
-| SEO Center | Search optimization | Edit meta tags, schema, canonical URLs |
-| Lead Center | CRM | View leads, update status, add notes |
-| WhatsApp Center | Conversion tracking | Manage CTAs, track clicks, view analytics |
-| Page Section Manager | Page building | Enable/disable sections, reorder, edit content |
-| Database | Data architecture | (Schema is production-ready) |
-| Admin Navigation | Navigation | Navigate all modules from sidebar |
+| Module                  | Purpose             | Business Owner Can                             |
+| ----------------------- | ------------------- | ---------------------------------------------- |
+| Dashboard               | Business overview   | See KPIs, trends, recent activity              |
+| Artwork Management      | Portfolio CRUD      | Add, edit, publish, delete artworks            |
+| Category Management     | Category CRUD       | Add categories, replace images, set SEO        |
+| Media Library           | Centralized assets  | Upload, tag, search, track usage               |
+| Visual Asset Manager    | Website visuals     | Replace overlays, backgrounds, graphics        |
+| Website Content Manager | Static content      | Edit homepage, about, contact, footer text     |
+| FAQ Management          | Q&A                 | Add, edit, reorder FAQs per page               |
+| SEO Center              | Search optimization | Edit meta tags, schema, canonical URLs         |
+| Lead Center             | CRM                 | View leads, update status, add notes           |
+| WhatsApp Center         | Conversion tracking | Manage CTAs, track clicks, view analytics      |
+| Page Section Manager    | Page building       | Enable/disable sections, reorder, edit content |
+| Database                | Data architecture   | (Schema is production-ready)                   |
+| Admin Navigation        | Navigation          | Navigate all modules from sidebar              |
 
 ### Visual Asset Architecture (Critical)
 
@@ -119,8 +120,8 @@ Provide a real-time business overview for the owner. One screen to understand th
 
 ### Admin Screens
 
-| Screen | Route | Description |
-|---|---|---|
+| Screen    | Route    | Description                      |
+| --------- | -------- | -------------------------------- |
 | Dashboard | `/admin` | KPI cards, charts, activity feed |
 
 ### KPI Cards (Top Row)
@@ -143,13 +144,13 @@ Provide a real-time business overview for the owner. One screen to understand th
 
 ### Charts
 
-| Chart | Data Source | Purpose |
-|---|---|---|
-| Traffic Over Time | `analytics_events` | See if marketing is working |
-| Lead Funnel | `leads` + `lead_activities` | Identify conversion bottlenecks |
-| Top Categories | `artworks` + `analytics_events` | Know what's popular |
-| Recent Inquiries | `leads` | Immediate action items |
-| Artwork Status | `artworks` | Content pipeline health |
+| Chart             | Data Source                     | Purpose                         |
+| ----------------- | ------------------------------- | ------------------------------- |
+| Traffic Over Time | `analytics_events`              | See if marketing is working     |
+| Lead Funnel       | `leads` + `lead_activities`     | Identify conversion bottlenecks |
+| Top Categories    | `artworks` + `analytics_events` | Know what's popular             |
+| Recent Inquiries  | `leads`                         | Immediate action items          |
+| Artwork Status    | `artworks`                      | Content pipeline health         |
 
 ### Activity Feed
 
@@ -239,82 +240,82 @@ The core product module. Business owner manages the entire portfolio — create,
 
 ### Admin Screens
 
-| Screen | Route | Description |
-|---|---|---|
-| Artwork List | `/admin/artworks` | Table/grid with filters |
-| New Artwork | `/admin/artworks/new` | Create form |
-| Edit Artwork | `/admin/artworks/edit/$id` | Edit form with preview |
-| Artwork Detail | `/admin/artworks/$id` | Read-only detail view |
+| Screen         | Route                      | Description             |
+| -------------- | -------------------------- | ----------------------- |
+| Artwork List   | `/admin/artworks`          | Table/grid with filters |
+| New Artwork    | `/admin/artworks/new`      | Create form             |
+| Edit Artwork   | `/admin/artworks/edit/$id` | Edit form with preview  |
+| Artwork Detail | `/admin/artworks/$id`      | Read-only detail view   |
 
 ### Artwork Form Fields
 
 #### Basic Information
 
-| Field | Type | Required | Notes |
-|---|---|---|---|
-| Title | text | ✅ | Max 100 chars |
-| Slug | text | ✅ | Auto-generated from title, editable |
-| Category | select | ✅ | Dropdown from `categories` table |
-| Status | select | ✅ | `draft`, `published`, `archived` |
-| Featured | toggle | ❌ | Show on homepage |
-| Show on Homepage | toggle | ❌ | Dedicated homepage slot |
-| Display Order | number | ❌ | Lower = first |
+| Field            | Type   | Required | Notes                               |
+| ---------------- | ------ | -------- | ----------------------------------- |
+| Title            | text   | ✅       | Max 100 chars                       |
+| Slug             | text   | ✅       | Auto-generated from title, editable |
+| Category         | select | ✅       | Dropdown from `categories` table    |
+| Status           | select | ✅       | `draft`, `published`, `archived`    |
+| Featured         | toggle | ❌       | Show on homepage                    |
+| Show on Homepage | toggle | ❌       | Dedicated homepage slot             |
+| Display Order    | number | ❌       | Lower = first                       |
 
 #### Descriptions
 
-| Field | Type | Required | Notes |
-|---|---|---|---|
-| Short Description | textarea | ❌ | 1-2 sentences, shown in cards |
-| Description | textarea | ❌ | Full description, shown on detail page |
-| Story Content | textarea (rich) | ❌ | The artist's story behind the piece |
+| Field             | Type            | Required | Notes                                  |
+| ----------------- | --------------- | -------- | -------------------------------------- |
+| Short Description | textarea        | ❌       | 1-2 sentences, shown in cards          |
+| Description       | textarea        | ❌       | Full description, shown on detail page |
+| Story Content     | textarea (rich) | ❌       | The artist's story behind the piece    |
 
 #### Pricing & Delivery
 
-| Field | Type | Required | Notes |
-|---|---|---|---|
-| Price | number | ❌ | INR, shown on artwork page |
-| Currency | select | ❌ | Default: INR |
-| Dimensions | text | ❌ | e.g. "12x16 inches" |
-| Delivery Time | text | ❌ | e.g. "5-7 days" |
-| Materials | text | ❌ | e.g. "Pencil, charcoal on paper" |
-| Artwork Type | select | ❌ | `physical`, `digital`, `commission` |
+| Field         | Type   | Required | Notes                               |
+| ------------- | ------ | -------- | ----------------------------------- |
+| Price         | number | ❌       | INR, shown on artwork page          |
+| Currency      | select | ❌       | Default: INR                        |
+| Dimensions    | text   | ❌       | e.g. "12x16 inches"                 |
+| Delivery Time | text   | ❌       | e.g. "5-7 days"                     |
+| Materials     | text   | ❌       | e.g. "Pencil, charcoal on paper"    |
+| Artwork Type  | select | ❌       | `physical`, `digital`, `commission` |
 
 #### Images
 
-| Field | Type | Required | Notes |
-|---|---|---|---|
-| Main Image | image upload | ✅ | Hero image, 1200x800 min |
-| Thumbnail Image | image upload | ❌ | Auto-generated if not set |
-| Gallery Images | multi-upload | ❌ | Up to 10 images |
-| Before Image | image upload | ❌ | For before/after showcase |
-| After Image | image upload | ❌ | For before/after showcase |
-| Process Images | multi-upload | ❌ | Step-by-step creation photos |
-| Alt Text | text | ❌ | Accessibility + SEO |
-| Image Caption | text | ❌ | Shown under image |
+| Field           | Type         | Required | Notes                        |
+| --------------- | ------------ | -------- | ---------------------------- |
+| Main Image      | image upload | ✅       | Hero image, 1200x800 min     |
+| Thumbnail Image | image upload | ❌       | Auto-generated if not set    |
+| Gallery Images  | multi-upload | ❌       | Up to 10 images              |
+| Before Image    | image upload | ❌       | For before/after showcase    |
+| After Image     | image upload | ❌       | For before/after showcase    |
+| Process Images  | multi-upload | ❌       | Step-by-step creation photos |
+| Alt Text        | text         | ❌       | Accessibility + SEO          |
+| Image Caption   | text         | ❌       | Shown under image            |
 
 #### Tags & SEO
 
-| Field | Type | Required | Notes |
-|---|---|---|---|
-| Tags | multi-select | ❌ | Predefined + custom tags |
-| Mood | multi-select | ❌ | Romantic, Vibrant, Minimal, etc. |
-| Occasion | multi-select | ❌ | Wedding, Birthday, Anniversary, etc. |
-| Meta Title | text | ❌ | Auto-generated from title |
-| Meta Description | textarea | ❌ | Auto-generated from description |
-| Canonical URL | text | ❌ | Auto-generated from slug |
-| OG Image | image upload | ❌ | Social sharing image |
+| Field            | Type         | Required | Notes                                |
+| ---------------- | ------------ | -------- | ------------------------------------ |
+| Tags             | multi-select | ❌       | Predefined + custom tags             |
+| Mood             | multi-select | ❌       | Romantic, Vibrant, Minimal, etc.     |
+| Occasion         | multi-select | ❌       | Wedding, Birthday, Anniversary, etc. |
+| Meta Title       | text         | ❌       | Auto-generated from title            |
+| Meta Description | textarea     | ❌       | Auto-generated from description      |
+| Canonical URL    | text         | ❌       | Auto-generated from slug             |
+| OG Image         | image upload | ❌       | Social sharing image                 |
 
 #### Actions
 
-| Action | Description |
-|---|---|
-| Save Draft | Save without publishing |
-| Publish | Make live immediately |
-| Schedule | Set future publish date |
-| Duplicate | Clone with new slug |
-| Preview | Open `/artwork/[slug]` in new tab |
-| Archive | Hide but keep data |
-| Delete | Permanent removal (with warning) |
+| Action     | Description                       |
+| ---------- | --------------------------------- |
+| Save Draft | Save without publishing           |
+| Publish    | Make live immediately             |
+| Schedule   | Set future publish date           |
+| Duplicate  | Clone with new slug               |
+| Preview    | Open `/artwork/[slug]` in new tab |
+| Archive    | Hide but keep data                |
+| Delete     | Permanent removal (with warning)  |
 
 ### Artwork List View
 
@@ -346,36 +347,36 @@ Bulk Actions: Select multiple → Publish / Archive / Delete
 ALTER TABLE artworks ADD COLUMN IF NOT EXISTS
   -- Basic
   display_order integer DEFAULT 0,
-  
+
   -- Descriptions
   short_description text, -- for cards/listings
-  
+
   -- Pricing & Delivery
   currency text DEFAULT 'INR',
   dimensions text,
   delivery_time text,
   materials text,
-  
+
   -- Artwork Type
   artwork_type text DEFAULT 'physical' CHECK (artwork_type IN ('physical', 'digital', 'commission')),
-  
+
   -- AI/SEO
   ai_generated_description text,
   ai_keywords text[],
-  
+
   -- Media (linked to media_library)
   main_image_id uuid REFERENCES media_library(id),
   thumbnail_image_id uuid REFERENCES media_library(id),
   before_image_id uuid REFERENCES media_library(id),
   after_image_id uuid REFERENCES media_library(id),
-  
+
   -- Publishing
   scheduled_publish_at timestamptz,
-  
+
   -- Tracking
   view_count integer DEFAULT 0,
   inquiry_count integer DEFAULT 0,
-  
+
   -- Audit
   created_by uuid REFERENCES profiles(id),
   updated_by uuid REFERENCES profiles(id);
@@ -419,38 +420,38 @@ Manage the 6 artwork categories (and future categories). The visual system is **
 
 ### Admin Screens
 
-| Screen | Route | Description |
-|---|---|---|
-| Category List | `/admin/categories` | Grid of category cards |
-| Edit Category | `/admin/categories/edit/$id` | Full edit form |
+| Screen        | Route                        | Description            |
+| ------------- | ---------------------------- | ---------------------- |
+| Category List | `/admin/categories`          | Grid of category cards |
+| Edit Category | `/admin/categories/edit/$id` | Full edit form         |
 
 ### Category Form Fields
 
 #### Basic Information
 
-| Field | Type | Required | Notes |
-|---|---|---|---|
-| Name | text | ✅ | e.g. "Pencil Sketches" |
-| Slug | text | ✅ | Auto-generated: `pencil-sketches` |
-| Description | textarea | ❌ | Long description for category page |
-| Short Summary | textarea | ❌ | 1-2 sentences for cards |
-| Status | select | ✅ | `draft`, `published`, `archived` |
-| Display Order | number | ❌ | Lower = first |
-| Featured | toggle | ❌ | Show on homepage |
+| Field         | Type     | Required | Notes                              |
+| ------------- | -------- | -------- | ---------------------------------- |
+| Name          | text     | ✅       | e.g. "Pencil Sketches"             |
+| Slug          | text     | ✅       | Auto-generated: `pencil-sketches`  |
+| Description   | textarea | ❌       | Long description for category page |
+| Short Summary | textarea | ❌       | 1-2 sentences for cards            |
+| Status        | select   | ✅       | `draft`, `published`, `archived`   |
+| Display Order | number   | ❌       | Lower = first                      |
+| Featured      | toggle   | ❌       | Show on homepage                   |
 
 #### Visual Assets (CRITICAL)
 
-| Field | Type | Required | Notes |
-|---|---|---|---|
-| Card Artwork Image | image upload | ✅ | **Real artwork photo** — the hero |
-| Card Decorative Overlay | select | ❌ | Brush strokes, graphite, paint, etc. |
-| Overlay Opacity | slider | ❌ | 0-100%, default 25% |
-| Card Gradient Style | select | ❌ | `bottom-dark`, `center-vignette`, `none` |
-| Card Text Position | select | ❌ | `bottom-left`, `bottom-center`, `center` |
-| Banner Artwork Image | image upload | ❌ | For category page hero |
-| Banner Decorative Overlay | select | ❌ | Same overlay options |
-| Gallery Images | multi-upload | ❌ | Category page gallery |
-| Thumbnail Image | image upload | ❌ | For listings |
+| Field                     | Type         | Required | Notes                                    |
+| ------------------------- | ------------ | -------- | ---------------------------------------- |
+| Card Artwork Image        | image upload | ✅       | **Real artwork photo** — the hero        |
+| Card Decorative Overlay   | select       | ❌       | Brush strokes, graphite, paint, etc.     |
+| Overlay Opacity           | slider       | ❌       | 0-100%, default 25%                      |
+| Card Gradient Style       | select       | ❌       | `bottom-dark`, `center-vignette`, `none` |
+| Card Text Position        | select       | ❌       | `bottom-left`, `bottom-center`, `center` |
+| Banner Artwork Image      | image upload | ❌       | For category page hero                   |
+| Banner Decorative Overlay | select       | ❌       | Same overlay options                     |
+| Gallery Images            | multi-upload | ❌       | Category page gallery                    |
+| Thumbnail Image           | image upload | ❌       | For listings                             |
 
 #### Overlay Options
 
@@ -472,18 +473,18 @@ CREATE TABLE visual_asset_overlays (
 
 #### SEO
 
-| Field | Type | Required | Notes |
-|---|---|---|---|
-| Meta Title | text | ❌ | Default: "[Category Name] | Custom Artwork | Artspire" |
-| Meta Description | textarea | ❌ | Default from description |
-| Canonical URL | text | ❌ | Auto: `/category/[slug]` |
-| OG Image | image upload | ❌ | Social sharing |
+| Field            | Type         | Required | Notes                     |
+| ---------------- | ------------ | -------- | ------------------------- | -------------- | --------- |
+| Meta Title       | text         | ❌       | Default: "[Category Name] | Custom Artwork | Artspire" |
+| Meta Description | textarea     | ❌       | Default from description  |
+| Canonical URL    | text         | ❌       | Auto: `/category/[slug]`  |
+| OG Image         | image upload | ❌       | Social sharing            |
 
 #### FAQs (Category-Specific)
 
-| Field | Type | Required | Notes |
-|---|---|---|---|
-| Category FAQs | repeater | ❌ | Question + Answer pairs |
+| Field         | Type     | Required | Notes                   |
+| ------------- | -------- | -------- | ----------------------- |
+| Category FAQs | repeater | ❌       | Question + Answer pairs |
 
 ### Category Card Visual System (Enforced)
 
@@ -553,7 +554,7 @@ ALTER TABLE categories ADD COLUMN IF NOT EXISTS
   short_summary text,
   display_order integer DEFAULT 0,
   featured boolean DEFAULT false,
-  
+
   -- Visual System
   card_artwork_image_id uuid REFERENCES media_library(id),
   card_overlay_id uuid REFERENCES visual_asset_overlays(id),
@@ -563,12 +564,12 @@ ALTER TABLE categories ADD COLUMN IF NOT EXISTS
   banner_artwork_image_id uuid REFERENCES media_library(id),
   banner_overlay_id uuid REFERENCES visual_asset_overlays(id),
   thumbnail_image_id uuid REFERENCES media_library(id),
-  
+
   -- SEO
   meta_title text,
   meta_description text,
   og_image_id uuid REFERENCES media_library(id),
-  
+
   -- Audit
   created_by uuid REFERENCES profiles(id),
   updated_by uuid REFERENCES profiles(id);
@@ -603,10 +604,10 @@ Centralized asset management for ALL images across the website. One place to upl
 
 ### Admin Screens
 
-| Screen | Route | Description |
-|---|---|---|
-| Media Library | `/admin/media` | Grid with filters, search, upload |
-| Media Detail | `/admin/media/$id` | Full metadata, usage tracking, replace |
+| Screen        | Route              | Description                            |
+| ------------- | ------------------ | -------------------------------------- |
+| Media Library | `/admin/media`     | Grid with filters, search, upload      |
+| Media Detail  | `/admin/media/$id` | Full metadata, usage tracking, replace |
 
 ### Features
 
@@ -653,7 +654,7 @@ Used In:
 
 ⚠️ Warning: This image is used in 3 places.
     Replacing it will affect all 3 locations.
-    
+
 [Replace] [Delete] [Download] [Copy URL]
 ```
 
@@ -665,23 +666,23 @@ Used In:
 -- media_library (already partially designed - complete it)
 CREATE TABLE media_library (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  
+
   -- File Info
   filename text NOT NULL,
   original_name text NOT NULL, -- original upload filename
   storage_path text NOT NULL, -- Supabase Storage path
   public_url text NOT NULL,
-  
+
   -- Dimensions
   width integer,
   height integer,
   aspect_ratio numeric(5,2),
   file_size integer, -- bytes
   mime_type text,
-  
+
   -- Variants
   variants jsonb DEFAULT '{}', -- {"thumbnail": "url", "medium": "url", "webp": "url"}
-  
+
   -- Metadata
   alt_text text,
   title text,
@@ -689,16 +690,16 @@ CREATE TABLE media_library (
   caption text,
   tags text[],
   folder text DEFAULT 'uncategorized', -- "homepage", "categories", "artworks", "testimonials"
-  
+
   -- AI (future)
   ai_generated_alt text,
   ai_generated_tags text[],
   dominant_colors jsonb,
-  
+
   -- Usage Tracking
   usage_count integer DEFAULT 0,
   used_in jsonb DEFAULT '[]', -- [{"entity_type": "artwork", "entity_id": "uuid", "usage_type": "primary"}]
-  
+
   -- Upload Info
   uploaded_by uuid REFERENCES profiles(id),
   created_at timestamptz DEFAULT now(),
@@ -723,10 +724,10 @@ CREATE TABLE media_usage_log (
 // GET /api/admin/media
 interface MediaListParams {
   search?: string;
-  type?: 'image' | 'banner' | 'thumbnail' | 'gallery' | 'icon';
+  type?: "image" | "banner" | "thumbnail" | "gallery" | "icon";
   tag?: string;
   folder?: string;
-  usage?: 'used' | 'unused' | 'any';
+  usage?: "used" | "unused" | "any";
   dateFrom?: string;
   dateTo?: string;
   page?: number;
@@ -766,35 +767,35 @@ Manage **non-photographic** visual assets — overlays, textures, patterns, back
 
 ### Admin Screens
 
-| Screen | Route | Description |
-|---|---|---|
-| Visual Assets | `/admin/visual-assets` | Grid of all visual assets |
-| Asset Detail | `/admin/visual-assets/$id` | Preview, usage, replace |
+| Screen        | Route                      | Description               |
+| ------------- | -------------------------- | ------------------------- |
+| Visual Assets | `/admin/visual-assets`     | Grid of all visual assets |
+| Asset Detail  | `/admin/visual-assets/$id` | Preview, usage, replace   |
 
 ### Asset Types
 
-| Type | Description | Examples |
-|---|---|---|
-| `overlay` | Semi-transparent decorative layer | Brush strokes, paint swashes, gold accents |
-| `texture` | Background texture | Paper grain, canvas texture, graphite |
-| `pattern` | Repeating pattern | Dot grid, watercolor dots, lines |
-| `gradient` | CSS gradient preset | Bottom dark, vignette, soft fade |
-| `icon` | UI icon | Category icons, UI elements |
-| `background` | Full background image | Hero backgrounds, section backgrounds |
-| `decorative` | Decorative element | Borders, frames, corner accents |
+| Type         | Description                       | Examples                                   |
+| ------------ | --------------------------------- | ------------------------------------------ |
+| `overlay`    | Semi-transparent decorative layer | Brush strokes, paint swashes, gold accents |
+| `texture`    | Background texture                | Paper grain, canvas texture, graphite      |
+| `pattern`    | Repeating pattern                 | Dot grid, watercolor dots, lines           |
+| `gradient`   | CSS gradient preset               | Bottom dark, vignette, soft fade           |
+| `icon`       | UI icon                           | Category icons, UI elements                |
+| `background` | Full background image             | Hero backgrounds, section backgrounds      |
+| `decorative` | Decorative element                | Borders, frames, corner accents            |
 
 ### Form Fields
 
-| Field | Type | Required |
-|---|---|---|
-| Asset Name | text | ✅ |
-| Asset Type | select | ✅ |
-| Preview | image display | ✅ (auto from upload) |
-| File | image upload | ✅ |
-| Description | textarea | ❌ |
-| Suggested Categories | multi-select | ❌ | Which categories this works well with |
-| Default Opacity | slider | ❌ | For overlays: 0-100% |
-| Status | select | ✅ | `active`, `archived` |
+| Field                | Type          | Required              |
+| -------------------- | ------------- | --------------------- | ------------------------------------- |
+| Asset Name           | text          | ✅                    |
+| Asset Type           | select        | ✅                    |
+| Preview              | image display | ✅ (auto from upload) |
+| File                 | image upload  | ✅                    |
+| Description          | textarea      | ❌                    |
+| Suggested Categories | multi-select  | ❌                    | Which categories this works well with |
+| Default Opacity      | slider        | ❌                    | For overlays: 0-100%                  |
+| Status               | select        | ✅                    | `active`, `archived`                  |
 
 ### Predefined Assets (Shipped with CMS)
 
@@ -821,7 +822,7 @@ CREATE TABLE visual_assets (
   name text NOT NULL,
   slug text UNIQUE NOT NULL,
   asset_type text NOT NULL CHECK (asset_type IN ('overlay', 'texture', 'pattern', 'gradient', 'icon', 'background', 'decorative')),
-  
+
   -- File
   storage_path text NOT NULL,
   public_url text NOT NULL,
@@ -830,19 +831,19 @@ CREATE TABLE visual_assets (
   width integer,
   height integer,
   mime_type text,
-  
+
   -- Configuration
   description text,
   default_opacity integer DEFAULT 25 CHECK (default_opacity BETWEEN 0 AND 100),
   category_suggestions text[], -- which categories this asset works well with
-  
+
   -- Status
   is_predefined boolean DEFAULT false, -- shipped with CMS, not deletable
   is_active boolean DEFAULT true,
-  
+
   -- Usage
   usage_count integer DEFAULT 0,
-  
+
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now()
 );
@@ -869,57 +870,57 @@ Manage all hardcoded text on the website. No text should be in code.
 
 ### Admin Screens
 
-| Screen | Route | Description |
-|---|---|---|
-| Website Content | `/admin/website-content` | Tabbed interface per page |
-| Homepage | `/admin/website-content/homepage` | Hero, sections, CTAs |
-| About | `/admin/website-content/about` | About page content |
-| Contact | `/admin/website-content/contact` | Contact info, social links |
-| Footer | `/admin/website-content/footer` | Footer content, links |
+| Screen          | Route                             | Description                |
+| --------------- | --------------------------------- | -------------------------- |
+| Website Content | `/admin/website-content`          | Tabbed interface per page  |
+| Homepage        | `/admin/website-content/homepage` | Hero, sections, CTAs       |
+| About           | `/admin/website-content/about`    | About page content         |
+| Contact         | `/admin/website-content/contact`  | Contact info, social links |
+| Footer          | `/admin/website-content/footer`   | Footer content, links      |
 
 ### Homepage Content
 
-| Section | Fields |
-|---|---|
-| Hero | Heading, Subheading, CTA Text, CTA Link, Hero Image, Hero Background Graphic |
-| Featured Categories | Which categories to show (multi-select), Display order |
-| Featured Artworks | Which artworks to show (multi-select), Display order |
-| Testimonials | Which testimonials to show (multi-select), Layout style |
-| CTA Section | Heading, Subheading, CTA Text, Background Image |
-| SEO | Meta Title, Meta Description, OG Image |
+| Section             | Fields                                                                       |
+| ------------------- | ---------------------------------------------------------------------------- |
+| Hero                | Heading, Subheading, CTA Text, CTA Link, Hero Image, Hero Background Graphic |
+| Featured Categories | Which categories to show (multi-select), Display order                       |
+| Featured Artworks   | Which artworks to show (multi-select), Display order                         |
+| Testimonials        | Which testimonials to show (multi-select), Layout style                      |
+| CTA Section         | Heading, Subheading, CTA Text, Background Image                              |
+| SEO                 | Meta Title, Meta Description, OG Image                                       |
 
 ### About Page Content
 
-| Section | Fields |
-|---|---|
-| Hero | Heading, Subheading, Hero Image |
-| Story | Content (rich text), Story Images |
-| Mission | Mission Statement |
-| Vision | Vision Statement |
-| Team | Team Members (repeater: Name, Role, Photo, Bio) |
-| SEO | Meta Title, Meta Description |
+| Section | Fields                                          |
+| ------- | ----------------------------------------------- |
+| Hero    | Heading, Subheading, Hero Image                 |
+| Story   | Content (rich text), Story Images               |
+| Mission | Mission Statement                               |
+| Vision  | Vision Statement                                |
+| Team    | Team Members (repeater: Name, Role, Photo, Bio) |
+| SEO     | Meta Title, Meta Description                    |
 
 ### Contact Page Content
 
-| Section | Fields |
-|---|---|
-| Phone | Primary Phone, WhatsApp Number |
-| Email | Primary Email |
-| Address | Full Address, Google Maps Embed |
-| Social Links | Instagram, Facebook, YouTube, Pinterest |
+| Section        | Fields                                               |
+| -------------- | ---------------------------------------------------- |
+| Phone          | Primary Phone, WhatsApp Number                       |
+| Email          | Primary Email                                        |
+| Address        | Full Address, Google Maps Embed                      |
+| Social Links   | Instagram, Facebook, YouTube, Pinterest              |
 | Business Hours | Opening Hours (repeater: Day, Open Time, Close Time) |
-| SEO | Meta Title, Meta Description |
+| SEO            | Meta Title, Meta Description                         |
 
 ### Footer Content
 
-| Section | Fields |
-|---|---|
-| Brand | Logo, Tagline, Short Description |
-| Quick Links | Link List (repeater: Label, URL) |
-| Contact Info | Phone, Email, Address (summary) |
-| Social Icons | Icon + URL for each platform |
-| Copyright | Copyright Text, Year |
-| Legal Links | Privacy Policy, Terms of Service URLs |
+| Section      | Fields                                |
+| ------------ | ------------------------------------- |
+| Brand        | Logo, Tagline, Short Description      |
+| Quick Links  | Link List (repeater: Label, URL)      |
+| Contact Info | Phone, Email, Address (summary)       |
+| Social Icons | Icon + URL for each platform          |
+| Copyright    | Copyright Text, Year                  |
+| Legal Links  | Privacy Policy, Terms of Service URLs |
 
 ### Database Schema
 
@@ -931,24 +932,24 @@ CREATE TABLE website_content (
   page text NOT NULL, -- "homepage", "about", "contact", "footer"
   section text NOT NULL, -- "hero", "featured", "cta", "story"
   field_name text NOT NULL, -- "heading", "subheading", "cta_text"
-  
+
   -- Value (polymorphic)
   value_text text,
   value_html text,
   value_json jsonb,
   value_media_id uuid REFERENCES media_library(id),
-  
+
   -- Type
   field_type text DEFAULT 'text' CHECK (field_type IN ('text', 'textarea', 'html', 'image', 'multi_image', 'repeater', 'select', 'toggle')),
-  
+
   -- Metadata
   description text, -- help text for the admin
   placeholder text, -- example value
   is_required boolean DEFAULT false,
-  
+
   -- Status
   is_active boolean DEFAULT true,
-  
+
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now()
 );
@@ -992,35 +993,35 @@ Manage FAQs at three levels: Global, Category, and Artwork. Auto-generate FAQ sc
 
 ### Admin Screens
 
-| Screen | Route | Description |
-|---|---|---|
-| FAQ List | `/admin/faqs` | All FAQs with filters |
-| New FAQ | `/admin/faqs/new` | Create FAQ |
-| Edit FAQ | `/admin/faqs/edit/$id` | Edit FAQ |
-| FAQ Sections | `/admin/faqs/sections` | Manage FAQ groupings |
+| Screen       | Route                  | Description           |
+| ------------ | ---------------------- | --------------------- |
+| FAQ List     | `/admin/faqs`          | All FAQs with filters |
+| New FAQ      | `/admin/faqs/new`      | Create FAQ            |
+| Edit FAQ     | `/admin/faqs/edit/$id` | Edit FAQ              |
+| FAQ Sections | `/admin/faqs/sections` | Manage FAQ groupings  |
 
 ### FAQ Form Fields
 
-| Field | Type | Required | Notes |
-|---|---|---|---|
-| Question | text | ✅ | The FAQ question |
-| Answer | textarea (rich) | ✅ | The answer, supports basic formatting |
-| Section | select | ❌ | Which FAQ section this belongs to |
-| Entity Type | select | ❌ | `global`, `category`, `artwork` |
-| Entity | select | ❌ | Which category/artwork this applies to |
-| Display Order | number | ❌ | Order within section |
-| Show on Page | toggle | ❌ | Whether to display this FAQ |
-| Schema Type | select | ❌ | `FAQPage`, `QAPage` |
+| Field         | Type            | Required | Notes                                  |
+| ------------- | --------------- | -------- | -------------------------------------- |
+| Question      | text            | ✅       | The FAQ question                       |
+| Answer        | textarea (rich) | ✅       | The answer, supports basic formatting  |
+| Section       | select          | ❌       | Which FAQ section this belongs to      |
+| Entity Type   | select          | ❌       | `global`, `category`, `artwork`        |
+| Entity        | select          | ❌       | Which category/artwork this applies to |
+| Display Order | number          | ❌       | Order within section                   |
+| Show on Page  | toggle          | ❌       | Whether to display this FAQ            |
+| Schema Type   | select          | ❌       | `FAQPage`, `QAPage`                    |
 
 ### FAQ Sections (Groupings)
 
-| Section | Description | Example Questions |
-|---|---|---|
+| Section               | Description                      | Example Questions                                          |
+| --------------------- | -------------------------------- | ---------------------------------------------------------- |
 | "Ordering & Delivery" | Questions about ordering process | "How do I place an order?", "How long does delivery take?" |
-| "Pricing & Payment" | Questions about cost and payment | "What are the prices?", "Do you accept COD?" |
-| "Artwork Process" | Questions about creation | "Can I see the artwork before delivery?" |
-| "Customization" | Questions about personalization | "Can you add a name to the artwork?" |
-| "Shipping & Returns" | Questions about logistics | "Do you ship outside India?" |
+| "Pricing & Payment"   | Questions about cost and payment | "What are the prices?", "Do you accept COD?"               |
+| "Artwork Process"     | Questions about creation         | "Can I see the artwork before delivery?"                   |
+| "Customization"       | Questions about personalization  | "Can you add a name to the artwork?"                       |
+| "Shipping & Returns"  | Questions about logistics        | "Do you ship outside India?"                               |
 
 ### Database Schema
 
@@ -1086,31 +1087,31 @@ Manage SEO for every page without touching code. Meta tags, schema markup, canon
 
 ### Admin Screens
 
-| Screen | Route | Description |
-|---|---|---|
-| SEO Dashboard | `/admin/seo` | Overview of all pages' SEO health |
-| Page SEO | `/admin/seo/pages` | Edit SEO for any page |
-| Artwork SEO | `/admin/seo/artworks` | Bulk SEO for artworks |
-| Category SEO | `/admin/seo/categories` | Bulk SEO for categories |
-| Redirects | `/admin/seo/redirects` | Manage 301 redirects |
-| Schema | `/admin/seo/schema` | Manage structured data |
+| Screen        | Route                   | Description                       |
+| ------------- | ----------------------- | --------------------------------- |
+| SEO Dashboard | `/admin/seo`            | Overview of all pages' SEO health |
+| Page SEO      | `/admin/seo/pages`      | Edit SEO for any page             |
+| Artwork SEO   | `/admin/seo/artworks`   | Bulk SEO for artworks             |
+| Category SEO  | `/admin/seo/categories` | Bulk SEO for categories           |
+| Redirects     | `/admin/seo/redirects`  | Manage 301 redirects              |
+| Schema        | `/admin/seo/schema`     | Manage structured data            |
 
 ### SEO Form (Per Page)
 
-| Field | Type | Required | Notes |
-|---|---|---|---|
-| Page | display | ✅ | Read-only: which page this is for |
-| Meta Title | text | ❌ | 50-60 chars recommended |
-| Meta Description | textarea | ❌ | 150-160 chars recommended |
-| Canonical URL | text | ❌ | Preferred URL for this page |
-| OG Title | text | ❌ | Social sharing title |
-| OG Description | textarea | ❌ | Social sharing description |
-| OG Image | image upload | ❌ | Social sharing image (1200x630) |
-| Twitter Card | select | ❌ | `summary`, `summary_large_image` |
-| Twitter Image | image upload | ❌ | Twitter sharing image |
-| Robots Meta | select | ❌ | `index,follow`, `noindex,follow`, `noindex,nofollow` |
-| Schema Type | select | ❌ | `Article`, `Product`, `FAQPage`, `Organization` |
-| Custom Schema | textarea (JSON) | ❌ | Additional JSON-LD |
+| Field            | Type            | Required | Notes                                                |
+| ---------------- | --------------- | -------- | ---------------------------------------------------- |
+| Page             | display         | ✅       | Read-only: which page this is for                    |
+| Meta Title       | text            | ❌       | 50-60 chars recommended                              |
+| Meta Description | textarea        | ❌       | 150-160 chars recommended                            |
+| Canonical URL    | text            | ❌       | Preferred URL for this page                          |
+| OG Title         | text            | ❌       | Social sharing title                                 |
+| OG Description   | textarea        | ❌       | Social sharing description                           |
+| OG Image         | image upload    | ❌       | Social sharing image (1200x630)                      |
+| Twitter Card     | select          | ❌       | `summary`, `summary_large_image`                     |
+| Twitter Image    | image upload    | ❌       | Twitter sharing image                                |
+| Robots Meta      | select          | ❌       | `index,follow`, `noindex,follow`, `noindex,nofollow` |
+| Schema Type      | select          | ❌       | `Article`, `Product`, `FAQPage`, `Organization`      |
+| Custom Schema    | textarea (JSON) | ❌       | Additional JSON-LD                                   |
 
 ### SEO Health Score
 
@@ -1139,21 +1140,21 @@ ALTER TABLE seo_metadata ADD COLUMN IF NOT EXISTS
   og_title text,
   og_description text,
   og_image_id uuid REFERENCES media_library(id),
-  
+
   -- Twitter
   twitter_card text DEFAULT 'summary_large_image' CHECK (twitter_card IN ('summary', 'summary_large_image')),
   twitter_image_id uuid REFERENCES media_library(id),
-  
+
   -- Robots
   robots_meta text DEFAULT 'index, follow' CHECK (robots_meta IN ('index, follow', 'noindex, follow', 'index, nofollow', 'noindex, nofollow')),
-  
+
   -- Canonical
   canonical_url text,
-  
+
   -- Schema
   schema_type text DEFAULT 'Article' CHECK (schema_type IN ('Article', 'Product', 'FAQPage', 'Organization', 'LocalBusiness', 'CreativeWork', 'BreadcrumbList')),
   custom_schema jsonb, -- additional JSON-LD
-  
+
   -- Health Score
   seo_score integer GENERATED ALWAYS AS (
     CASE WHEN meta_title IS NOT NULL THEN 20 ELSE 0 END +
@@ -1164,7 +1165,7 @@ ALTER TABLE seo_metadata ADD COLUMN IF NOT EXISTS
     CASE WHEN og_description IS NOT NULL THEN 10 ELSE 0 END +
     CASE WHEN structured_data IS NOT NULL THEN 15 ELSE 0 END
   ) STORED,
-  
+
   -- Audit
   updated_by uuid REFERENCES profiles(id);
 
@@ -1191,29 +1192,29 @@ CRM for managing customer inquiries. Track leads from first contact to delivery.
 
 ### Admin Screens
 
-| Screen | Route | Description |
-|---|---|---|
-| Lead List | `/admin/leads` | Pipeline view + table |
-| Lead Detail | `/admin/leads/$id` | Full lead profile + activity history |
-| New Lead | `/admin/leads/new` | Manual lead entry |
-| Edit Lead | `/admin/leads/edit/$id` | Update lead info |
-| Lead Pipeline | `/admin/leads/pipeline` | Kanban board view |
+| Screen        | Route                   | Description                          |
+| ------------- | ----------------------- | ------------------------------------ |
+| Lead List     | `/admin/leads`          | Pipeline view + table                |
+| Lead Detail   | `/admin/leads/$id`      | Full lead profile + activity history |
+| New Lead      | `/admin/leads/new`      | Manual lead entry                    |
+| Edit Lead     | `/admin/leads/edit/$id` | Update lead info                     |
+| Lead Pipeline | `/admin/leads/pipeline` | Kanban board view                    |
 
 ### Lead Form Fields
 
-| Field | Type | Required | Notes |
-|---|---|---|---|
-| Name | text | ✅ | Customer name |
-| Phone | text | ❌ | Phone number |
-| WhatsApp | text | ❌ | WhatsApp number (if different) |
-| Email | text | ❌ | Email address |
-| Requirement | textarea | ❌ | What they need |
-| Category | select | ❌ | Which category they're interested in |
-| Budget | select | ❌ | `under-1000`, `1000-5000`, `5000-10000`, `10000-25000`, `25000+` |
-| Source | select | ❌ | `website-form`, `whatsapp`, `instagram`, `facebook`, `google`, `direct`, `referral` |
-| Status | select | ✅ | Pipeline stage |
-| Notes | textarea | ❌ | Internal notes |
-| Assigned To | select | ❌ | Team member responsible |
+| Field       | Type     | Required | Notes                                                                               |
+| ----------- | -------- | -------- | ----------------------------------------------------------------------------------- |
+| Name        | text     | ✅       | Customer name                                                                       |
+| Phone       | text     | ❌       | Phone number                                                                        |
+| WhatsApp    | text     | ❌       | WhatsApp number (if different)                                                      |
+| Email       | text     | ❌       | Email address                                                                       |
+| Requirement | textarea | ❌       | What they need                                                                      |
+| Category    | select   | ❌       | Which category they're interested in                                                |
+| Budget      | select   | ❌       | `under-1000`, `1000-5000`, `5000-10000`, `10000-25000`, `25000+`                    |
+| Source      | select   | ❌       | `website-form`, `whatsapp`, `instagram`, `facebook`, `google`, `direct`, `referral` |
+| Status      | select   | ✅       | Pipeline stage                                                                      |
+| Notes       | textarea | ❌       | Internal notes                                                                      |
+| Assigned To | select   | ❌       | Team member responsible                                                             |
 
 ### Pipeline Stages (Kanban)
 
@@ -1259,34 +1260,34 @@ CRM for managing customer inquiries. Track leads from first contact to delivery.
 CREATE TABLE leads (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   lead_number text UNIQUE NOT NULL, -- ART-2025-0001
-  
+
   -- Contact Info
   name text NOT NULL,
   email text,
   phone text,
   whatsapp_number text,
   location text,
-  
+
   -- Interest
   requirement text,
   category_id uuid REFERENCES categories(id),
   artwork_id uuid REFERENCES artworks(id),
   budget_range text CHECK (budget_range IN ('under-1000', '1000-5000', '5000-10000', '10000-25000', '25000+')),
-  
+
   -- Source
   source text DEFAULT 'website' CHECK (source IN ('website-form', 'whatsapp', 'instagram', 'facebook', 'google', 'direct', 'referral')),
   source_detail text, -- "Homepage Hero CTA", "Pencil Sketches Page"
-  
+
   -- Status Pipeline
   status text DEFAULT 'new' CHECK (status IN ('new', 'contacted', 'quoted', 'negotiating', 'confirmed', 'in-production', 'delivered', 'closed-won', 'closed-lost')),
   status_changed_at timestamptz DEFAULT now(),
-  
+
   -- Assignment
   assigned_to uuid REFERENCES profiles(id),
-  
+
   -- Notes
   notes text,
-  
+
   -- Timestamps
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now()
@@ -1331,31 +1332,31 @@ Manage all WhatsApp CTAs and track conversion analytics.
 
 ### Admin Screens
 
-| Screen | Route | Description |
-|---|---|---|
-| WhatsApp Settings | `/admin/whatsapp` | Configure number, CTAs, buttons |
+| Screen             | Route                       | Description                     |
+| ------------------ | --------------------------- | ------------------------------- |
+| WhatsApp Settings  | `/admin/whatsapp`           | Configure number, CTAs, buttons |
 | WhatsApp Analytics | `/admin/whatsapp/analytics` | Click tracking, conversion data |
-| Message Templates | `/admin/whatsapp/templates` | Manage auto-reply templates |
+| Message Templates  | `/admin/whatsapp/templates` | Manage auto-reply templates     |
 
 ### WhatsApp Settings Form
 
-| Field | Type | Required | Notes |
-|---|---|---|---|
-| Primary WhatsApp Number | text | ✅ | Business WhatsApp number |
-| Display Text | text | ✅ | "Chat on WhatsApp" or custom |
-| Floating Button | toggle | ✅ | Show floating button on all pages |
-| Button Position | select | ❌ | `bottom-right`, `bottom-left`, `bottom-center` |
-| Button Style | select | ❌ | `pill`, `rounded`, `square` |
-| Button Color | color picker | ❌ | Default: brand green |
-| Pre-filled Message | textarea | ❌ | "Hi, I'm interested in custom artwork..." |
+| Field                   | Type         | Required | Notes                                          |
+| ----------------------- | ------------ | -------- | ---------------------------------------------- |
+| Primary WhatsApp Number | text         | ✅       | Business WhatsApp number                       |
+| Display Text            | text         | ✅       | "Chat on WhatsApp" or custom                   |
+| Floating Button         | toggle       | ✅       | Show floating button on all pages              |
+| Button Position         | select       | ❌       | `bottom-right`, `bottom-left`, `bottom-center` |
+| Button Style            | select       | ❌       | `pill`, `rounded`, `square`                    |
+| Button Color            | color picker | ❌       | Default: brand green                           |
+| Pre-filled Message      | textarea     | ❌       | "Hi, I'm interested in custom artwork..."      |
 
 ### Category-Specific CTAs
 
-| Setting | Description |
-|---|---|
-| Category CTA Text | Custom text per category (e.g. "Get a Pencil Sketch Quote") |
-| Category Pre-filled Message | Different message per category |
-| Artwork CTA Text | Custom text per artwork (e.g. "Order This Portrait") |
+| Setting                     | Description                                                 |
+| --------------------------- | ----------------------------------------------------------- |
+| Category CTA Text           | Custom text per category (e.g. "Get a Pencil Sketch Quote") |
+| Category Pre-filled Message | Different message per category                              |
+| Artwork CTA Text            | Custom text per artwork (e.g. "Order This Portrait")        |
 
 ### Analytics Tracking
 
@@ -1363,23 +1364,23 @@ Manage all WhatsApp CTAs and track conversion analytics.
 -- whatsapp_clicks (track every WhatsApp CTA click)
 CREATE TABLE whatsapp_clicks (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  
+
   -- Click Context
   cta_type text NOT NULL CHECK (cta_type IN ('floating-button', 'hero-cta', 'category-cta', 'artwork-cta', 'footer-cta', 'inline-cta')),
   page_url text,
   page_path text,
-  
+
   -- Content Context
   artwork_id uuid REFERENCES artworks(id),
   category_id uuid REFERENCES categories(id),
-  
+
   -- Visitor
   visitor_id text, -- anonymous cookie ID
   user_agent text,
   ip_address text,
   country text,
   city text,
-  
+
   -- Timestamps
   clicked_at timestamptz DEFAULT now()
 );
@@ -1437,10 +1438,10 @@ Every page is built from editable sections. The owner can enable/disable, reorde
 
 ### Admin Screens
 
-| Screen | Route | Description |
-|---|---|---|
-| Page Builder | `/admin/pages` | List of all pages |
-| Page Editor | `/admin/pages/$pageId` | Edit sections for a page |
+| Screen          | Route                   | Description                |
+| --------------- | ----------------------- | -------------------------- |
+| Page Builder    | `/admin/pages`          | List of all pages          |
+| Page Editor     | `/admin/pages/$pageId`  | Edit sections for a page   |
 | Section Library | `/admin/pages/sections` | Reusable section templates |
 
 ### Page Structure (Homepage Example)
@@ -1488,32 +1489,32 @@ Homepage Sections (editable order, toggle on/off):
 
 ### Section Types
 
-| Section Type | Description | Editable Fields |
-|---|---|---|
-| `hero` | Full-width hero banner | Heading, subheading, CTA, background image, overlay |
-| `category-grid` | Category cards grid | Title, categories to show, layout, columns |
-| `artwork-grid` | Artwork cards grid | Title, artworks to show, layout, filter |
-| `testimonials` | Customer testimonials | Title, testimonials, layout (slider/grid) |
-| `cta-banner` | Call-to-action banner | Heading, subheading, CTA, background |
-| `content-block` | Text + image block | Heading, content, image, image position |
-| `video` | Embedded video | Video URL, thumbnail, caption |
-| `faq` | FAQ accordion | Title, FAQs to show |
-| `image-gallery` | Image gallery | Images, layout (grid/masonry/carousel) |
-| `custom-html` | Raw HTML (advanced) | HTML content (for embeds) |
+| Section Type    | Description            | Editable Fields                                     |
+| --------------- | ---------------------- | --------------------------------------------------- |
+| `hero`          | Full-width hero banner | Heading, subheading, CTA, background image, overlay |
+| `category-grid` | Category cards grid    | Title, categories to show, layout, columns          |
+| `artwork-grid`  | Artwork cards grid     | Title, artworks to show, layout, filter             |
+| `testimonials`  | Customer testimonials  | Title, testimonials, layout (slider/grid)           |
+| `cta-banner`    | Call-to-action banner  | Heading, subheading, CTA, background                |
+| `content-block` | Text + image block     | Heading, content, image, image position             |
+| `video`         | Embedded video         | Video URL, thumbnail, caption                       |
+| `faq`           | FAQ accordion          | Title, FAQs to show                                 |
+| `image-gallery` | Image gallery          | Images, layout (grid/masonry/carousel)              |
+| `custom-html`   | Raw HTML (advanced)    | HTML content (for embeds)                           |
 
 ### Section Form
 
-| Field | Type | Description |
-|---|---|---|
-| Section Type | select | Choose from section types |
-| Section Name | text | Internal name (e.g. "Homepage Hero") |
-| Display Order | number | Position on page |
-| Is Active | toggle | Show/hide this section |
-| Background Image | image upload | Section background |
-| Background Color | color picker | Fallback color |
-| Padding Top | number | Space above section (px) |
-| Padding Bottom | number | Space below section (px) |
-| Custom CSS | textarea | Advanced styling (optional) |
+| Field            | Type         | Description                          |
+| ---------------- | ------------ | ------------------------------------ |
+| Section Type     | select       | Choose from section types            |
+| Section Name     | text         | Internal name (e.g. "Homepage Hero") |
+| Display Order    | number       | Position on page                     |
+| Is Active        | toggle       | Show/hide this section               |
+| Background Image | image upload | Section background                   |
+| Background Color | color picker | Fallback color                       |
+| Padding Top      | number       | Space above section (px)             |
+| Padding Bottom   | number       | Space below section (px)             |
+| Custom CSS       | textarea     | Advanced styling (optional)          |
 
 ### Database Schema
 
@@ -1535,30 +1536,30 @@ CREATE TABLE pages (
 CREATE TABLE page_sections (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   page_id uuid REFERENCES pages(id) ON DELETE CASCADE,
-  
+
   -- Section Identity
   section_type text NOT NULL CHECK (section_type IN ('hero', 'category-grid', 'artwork-grid', 'testimonials', 'cta-banner', 'content-block', 'video', 'faq', 'image-gallery', 'custom-html')),
   section_name text NOT NULL,
-  
+
   -- Content (polymorphic based on section_type)
   content_data jsonb NOT NULL, -- {heading: "...", subheading: "...", cta_text: "..."}
-  
+
   -- Visual
   background_image_id uuid REFERENCES media_library(id),
   background_color text,
   overlay_opacity integer DEFAULT 0,
-  
+
   -- Layout
   display_order integer DEFAULT 0,
   is_active boolean DEFAULT true,
-  
+
   -- Spacing
   padding_top integer DEFAULT 60,
   padding_bottom integer DEFAULT 60,
-  
+
   -- Advanced
   custom_css text,
-  
+
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now()
 );
@@ -2181,40 +2182,40 @@ Content submenu opens as bottom sheet:
 
 ### Sprint 1: Foundation (Week 1-2)
 
-| # | Task | Files | Why First |
-|---|---|---|---|
-| 1 | Database migrations | Supabase SQL | Everything depends on data |
-| 2 | Media Library | `media-library.ts`, `MediaUploader.tsx` | All other modules need images |
-| 3 | Visual Asset System | `visual-assets.ts`, overlay configs | Categories need overlays |
-| 4 | Category Visual System | `categories.ts` + UI | Homepage depends on category cards |
-| 5 | Website Content Manager | `website-content.ts` + forms | Eliminate hardcoded text |
+| #   | Task                    | Files                                   | Why First                          |
+| --- | ----------------------- | --------------------------------------- | ---------------------------------- |
+| 1   | Database migrations     | Supabase SQL                            | Everything depends on data         |
+| 2   | Media Library           | `media-library.ts`, `MediaUploader.tsx` | All other modules need images      |
+| 3   | Visual Asset System     | `visual-assets.ts`, overlay configs     | Categories need overlays           |
+| 4   | Category Visual System  | `categories.ts` + UI                    | Homepage depends on category cards |
+| 5   | Website Content Manager | `website-content.ts` + forms            | Eliminate hardcoded text           |
 
 ### Sprint 2: Content (Week 3-4)
 
-| # | Task | Files | Why Second |
-|---|---|---|---|
-| 6 | Artwork Management (enhanced) | `artworks.ts` + forms + gallery | Core product |
-| 7 | FAQ Management | `faqs.ts` + forms + sections | Support + SEO |
-| 8 | Page Section Manager | `pages.ts`, `page-sections.ts` | Flexible page building |
-| 9 | SEO Center | `seo.ts` + forms | Search visibility |
+| #   | Task                          | Files                           | Why Second             |
+| --- | ----------------------------- | ------------------------------- | ---------------------- |
+| 6   | Artwork Management (enhanced) | `artworks.ts` + forms + gallery | Core product           |
+| 7   | FAQ Management                | `faqs.ts` + forms + sections    | Support + SEO          |
+| 8   | Page Section Manager          | `pages.ts`, `page-sections.ts`  | Flexible page building |
+| 9   | SEO Center                    | `seo.ts` + forms                | Search visibility      |
 
 ### Sprint 3: Business (Week 5-6)
 
-| # | Task | Files | Why Third |
-|---|---|---|---|
-| 10 | Lead Center | `leads.ts` + CRM UI | Business operations |
-| 11 | WhatsApp Center | `whatsapp-clicks.ts` + analytics | Conversion tracking |
-| 12 | Dashboard | `dashboard-metrics.ts` + KPI cards | Business overview |
-| 13 | Admin Navigation | Sidebar, mobile nav, breadcrumbs | Navigation polish |
+| #   | Task             | Files                              | Why Third           |
+| --- | ---------------- | ---------------------------------- | ------------------- |
+| 10  | Lead Center      | `leads.ts` + CRM UI                | Business operations |
+| 11  | WhatsApp Center  | `whatsapp-clicks.ts` + analytics   | Conversion tracking |
+| 12  | Dashboard        | `dashboard-metrics.ts` + KPI cards | Business overview   |
+| 13  | Admin Navigation | Sidebar, mobile nav, breadcrumbs   | Navigation polish   |
 
 ### Sprint 4: Polish (Week 7-8)
 
-| # | Task | Files | Why Fourth |
-|---|---|---|---|
-| 14 | Image optimization | WebP variants, lazy loading | Performance |
-| 15 | Content seeding | Predefined overlays, demo data | Ready for owner |
-| 16 | Admin onboarding | Tooltips, empty states, guides | UX |
-| 17 | Testing & bug fixes | E2E tests, QA | Production-ready |
+| #   | Task                | Files                          | Why Fourth       |
+| --- | ------------------- | ------------------------------ | ---------------- |
+| 14  | Image optimization  | WebP variants, lazy loading    | Performance      |
+| 15  | Content seeding     | Predefined overlays, demo data | Ready for owner  |
+| 16  | Admin onboarding    | Tooltips, empty states, guides | UX               |
+| 17  | Testing & bug fixes | E2E tests, QA                  | Production-ready |
 
 ---
 
@@ -2527,18 +2528,18 @@ src/
 
 ### Success Criteria
 
-| Metric | Target |
-|---|---|
-| Business owner can add artwork without developer help | ✅ |
-| Business owner can edit homepage text without developer help | ✅ |
-| Business owner can replace category images without developer help | ✅ |
-| Business owner can manage FAQs without developer help | ✅ |
-| Business owner can edit SEO metadata without developer help | ✅ |
-| Business owner can view and manage leads without developer help | ✅ |
-| Business owner can view WhatsApp analytics without developer help | ✅ |
-| No hardcoded text remains on the website | ✅ |
-| No hardcoded images remain on the website | ✅ |
-| Category cards always show real artwork images | ✅ |
+| Metric                                                            | Target |
+| ----------------------------------------------------------------- | ------ |
+| Business owner can add artwork without developer help             | ✅     |
+| Business owner can edit homepage text without developer help      | ✅     |
+| Business owner can replace category images without developer help | ✅     |
+| Business owner can manage FAQs without developer help             | ✅     |
+| Business owner can edit SEO metadata without developer help       | ✅     |
+| Business owner can view and manage leads without developer help   | ✅     |
+| Business owner can view WhatsApp analytics without developer help | ✅     |
+| No hardcoded text remains on the website                          | ✅     |
+| No hardcoded images remain on the website                         | ✅     |
+| Category cards always show real artwork images                    | ✅     |
 
 ---
 
@@ -2546,4 +2547,3 @@ src/
 **Date:** 2025-06-24  
 **Status:** Implementation Architecture  
 **Next Step:** Approve priority order and begin Sprint 1 implementation
-

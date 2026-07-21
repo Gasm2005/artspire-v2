@@ -40,29 +40,23 @@ export function useWebsiteContent(opts?: { page?: string; section?: string }) {
     load();
   }, [load]);
 
-  const update = useCallback(
-    async (id: string, values: Partial<WebsiteContent>) => {
-      const updated = await updateWebsiteContent(id, values);
-      setItems((prev) => prev.map((item) => (item.id === id ? updated : item)));
-      return updated;
-    },
-    []
-  );
+  const update = useCallback(async (id: string, values: Partial<WebsiteContent>) => {
+    const updated = await updateWebsiteContent(id, values);
+    setItems((prev) => prev.map((item) => (item.id === id ? updated : item)));
+    return updated;
+  }, []);
 
-  const upsert = useCallback(
-    async (contentKey: string, values: Partial<WebsiteContent>) => {
-      const upserted = await upsertWebsiteContent(contentKey, values);
-      setItems((prev) => {
-        const exists = prev.find((item) => item.content_key === contentKey);
-        if (exists) {
-          return prev.map((item) => (item.id === upserted.id ? upserted : item));
-        }
-        return [...prev, upserted];
-      });
-      return upserted;
-    },
-    []
-  );
+  const upsert = useCallback(async (contentKey: string, values: Partial<WebsiteContent>) => {
+    const upserted = await upsertWebsiteContent(contentKey, values);
+    setItems((prev) => {
+      const exists = prev.find((item) => item.content_key === contentKey);
+      if (exists) {
+        return prev.map((item) => (item.id === upserted.id ? upserted : item));
+      }
+      return [...prev, upserted];
+    });
+    return upserted;
+  }, []);
 
   const getValue = useCallback(
     (contentKey: string): string | null => {
@@ -70,7 +64,7 @@ export function useWebsiteContent(opts?: { page?: string; section?: string }) {
       if (!item) return null;
       return item.value_text ?? item.value_html ?? null;
     },
-    [items]
+    [items],
   );
 
   return {
@@ -114,7 +108,7 @@ export function useWebsiteContentItem(contentKey: string) {
       setItem(updated);
       return updated;
     },
-    [item]
+    [item],
   );
 
   return { item, loading, error, refresh: load, update };
@@ -150,7 +144,7 @@ export function useRepeaterItems(parentKey: string) {
       setItems((prev) => [...prev, created]);
       return created;
     },
-    [parentKey, items.length]
+    [parentKey, items.length],
   );
 
   const update = useCallback(
@@ -159,23 +153,20 @@ export function useRepeaterItems(parentKey: string) {
       setItems((prev) => prev.map((item) => (item.id === id ? updated : item)));
       return updated;
     },
-    []
+    [],
   );
 
-  const remove = useCallback(
-    async (id: string) => {
-      await deleteRepeaterItem(id);
-      setItems((prev) => prev.filter((item) => item.id !== id));
-    },
-    []
-  );
+  const remove = useCallback(async (id: string) => {
+    await deleteRepeaterItem(id);
+    setItems((prev) => prev.filter((item) => item.id !== id));
+  }, []);
 
   const reorder = useCallback(
     async (orderedIds: string[]) => {
       await reorderRepeaterItems(orderedIds);
       await load();
     },
-    [load]
+    [load],
   );
 
   return { items, loading, refresh: load, add, update, remove, reorder };

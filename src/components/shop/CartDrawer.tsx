@@ -51,7 +51,9 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [open]);
 
   async function handleQuantityChange(item: CartItem, newQty: number) {
@@ -93,7 +95,11 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-border">
           <h2 className="font-display text-[18px] text-forest font-medium">Your Cart</h2>
-          <button onClick={onClose} aria-label="Close cart" className="p-1.5 text-stone hover:text-forest transition-colors">
+          <button
+            onClick={onClose}
+            aria-label="Close cart"
+            className="p-1.5 text-stone hover:text-forest transition-colors"
+          >
             <X size={20} />
           </button>
         </div>
@@ -122,7 +128,11 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                 <div key={item.id} className="flex gap-3">
                   <div className="w-16 h-16 rounded-lg overflow-hidden bg-cream shrink-0">
                     {item.product?.image_url && (
-                      <img src={item.product.image_url} alt={item.product.title} className="w-full h-full object-cover" />
+                      <img
+                        src={item.product.image_url}
+                        alt={item.product.title}
+                        className="w-full h-full object-cover"
+                      />
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -142,7 +152,9 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                         >
                           <Minus size={11} />
                         </button>
-                        <span className="w-7 text-center font-body text-[12px] font-semibold text-forest">{item.quantity}</span>
+                        <span className="w-7 text-center font-body text-[12px] font-semibold text-forest">
+                          {item.quantity}
+                        </span>
                         <button
                           onClick={() => handleQuantityChange(item, item.quantity + 1)}
                           disabled={updatingId === item.id}
@@ -172,7 +184,9 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
           <div className="border-t border-border px-5 py-4 space-y-3">
             <div className="flex items-center justify-between">
               <span className="font-body text-[13px] text-stone">Subtotal</span>
-              <span className="font-body text-[16px] font-semibold text-forest">₹{subtotal.toLocaleString("en-IN")}</span>
+              <span className="font-body text-[16px] font-semibold text-forest">
+                ₹{subtotal.toLocaleString("en-IN")}
+              </span>
             </div>
             <Link
               to="/cart"

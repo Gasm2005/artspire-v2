@@ -104,9 +104,7 @@ export function SimplifiedArtworkForm({ onSuccess }: SimplifiedArtworkFormProps)
       });
 
       // 2. Save artwork — ensure slug is unique before insert
-      const uniqueSlug = manualSlug
-        ? form.slug.trim()
-        : await ensureUniqueSlug(form.title);
+      const uniqueSlug = manualSlug ? form.slug.trim() : await ensureUniqueSlug(form.title);
 
       const artwork = await createArtwork({
         title: form.title.trim(),
@@ -149,9 +147,12 @@ export function SimplifiedArtworkForm({ onSuccess }: SimplifiedArtworkFormProps)
     }
   }
 
-  const inputClass = "w-full h-[44px] px-4 rounded-xl border border-border bg-white font-body text-[14px] text-forest focus:outline-none focus:border-gold transition-colors";
-  const textareaClass = "w-full px-4 py-3 rounded-xl border border-border bg-white font-body text-[14px] text-forest focus:outline-none focus:border-gold transition-colors resize-y min-h-[120px]";
-  const labelClass = "block font-body text-[11px] font-semibold text-stone uppercase tracking-wider mb-1.5";
+  const inputClass =
+    "w-full h-[44px] px-4 rounded-xl border border-border bg-white font-body text-[14px] text-forest focus:outline-none focus:border-gold transition-colors";
+  const textareaClass =
+    "w-full px-4 py-3 rounded-xl border border-border bg-white font-body text-[14px] text-forest focus:outline-none focus:border-gold transition-colors resize-y min-h-[120px]";
+  const labelClass =
+    "block font-body text-[11px] font-semibold text-stone uppercase tracking-wider mb-1.5";
 
   return (
     <div className="space-y-6">
@@ -172,7 +173,9 @@ export function SimplifiedArtworkForm({ onSuccess }: SimplifiedArtworkFormProps)
         ) : (
           <label className="flex flex-col items-center justify-center w-full h-[180px] rounded-xl border-2 border-dashed border-border bg-white hover:border-gold transition-colors cursor-pointer">
             <Image size={28} className="text-stone/40 mb-2" />
-            <span className="font-body text-[13px] text-stone/60">Click to upload artwork image</span>
+            <span className="font-body text-[13px] text-stone/60">
+              Click to upload artwork image
+            </span>
             <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
           </label>
         )}
@@ -207,7 +210,10 @@ export function SimplifiedArtworkForm({ onSuccess }: SimplifiedArtworkFormProps)
         <input
           type="text"
           value={form.slug}
-          onChange={(e) => { setManualSlug(true); updateField("slug", e.target.value); }}
+          onChange={(e) => {
+            setManualSlug(true);
+            updateField("slug", e.target.value);
+          }}
           placeholder="couple-pencil-sketch"
           className={inputClass}
         />
@@ -223,7 +229,9 @@ export function SimplifiedArtworkForm({ onSuccess }: SimplifiedArtworkFormProps)
         >
           <option value="">— Select category —</option>
           {categories.map((cat) => (
-            <option key={cat.id} value={cat.id}>{cat.name}</option>
+            <option key={cat.id} value={cat.id}>
+              {cat.name}
+            </option>
           ))}
         </select>
       </div>
@@ -238,7 +246,9 @@ export function SimplifiedArtworkForm({ onSuccess }: SimplifiedArtworkFormProps)
         >
           <option value="">— Select size —</option>
           {SIZE_OPTIONS.map((opt) => (
-            <option key={opt.value} value={opt.value}>{opt.label}</option>
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
           ))}
         </select>
       </div>

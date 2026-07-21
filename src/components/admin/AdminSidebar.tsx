@@ -18,11 +18,20 @@ import {
 } from "lucide-react";
 import { signOut } from "@/lib/admin";
 
-type Item = { label: string; to: string; icon: typeof LayoutDashboard; exact?: boolean; external?: boolean };
+type Item = {
+  label: string;
+  to: string;
+  icon: typeof LayoutDashboard;
+  exact?: boolean;
+  external?: boolean;
+};
 type Group = { title: string | null; items: Item[] };
 
 const groups: Group[] = [
-  { title: null, items: [{ label: "Dashboard", to: "/admin", icon: LayoutDashboard, exact: true }] },
+  {
+    title: null,
+    items: [{ label: "Dashboard", to: "/admin", icon: LayoutDashboard, exact: true }],
+  },
   {
     title: "Shop",
     items: [
@@ -62,7 +71,8 @@ export function AdminSidebar() {
   const router = useRouter();
   const currentPath = router.state.location.pathname;
 
-  const isActive = (to: string, exact?: boolean) => (exact ? currentPath === to : currentPath.startsWith(to));
+  const isActive = (to: string, exact?: boolean) =>
+    exact ? currentPath === to : currentPath.startsWith(to);
 
   const handleSignOut = async () => {
     await signOut();
@@ -80,17 +90,31 @@ export function AdminSidebar() {
         {groups.map((group, gi) => (
           <div key={gi} className="space-y-1">
             {group.title && (
-              <div className="px-3 pt-1 pb-1 font-body text-[10px] uppercase tracking-[0.18em] text-stone/50 font-semibold">{group.title}</div>
+              <div className="px-3 pt-1 pb-1 font-body text-[10px] uppercase tracking-[0.18em] text-stone/50 font-semibold">
+                {group.title}
+              </div>
             )}
             {group.items.map((item) => {
               const active = isActive(item.to, item.exact);
               return item.external ? (
-                <a key={item.to} href={item.to} target="_blank" rel="noreferrer" className="flex items-center gap-3 px-3 py-2.5 rounded-xl font-body text-[13px] font-medium text-stone hover:text-forest hover:bg-forest/5 transition-colors">
-                  <item.icon size={17} />{item.label}
+                <a
+                  key={item.to}
+                  href={item.to}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-xl font-body text-[13px] font-medium text-stone hover:text-forest hover:bg-forest/5 transition-colors"
+                >
+                  <item.icon size={17} />
+                  {item.label}
                 </a>
               ) : (
-                <a key={item.to} href={item.to} className={`flex items-center gap-3 px-3 py-2.5 rounded-xl font-body text-[13px] font-medium transition-colors ${active ? "bg-forest/10 text-forest" : "text-stone hover:text-forest hover:bg-forest/5"}`}>
-                  <item.icon size={17} />{item.label}
+                <a
+                  key={item.to}
+                  href={item.to}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-xl font-body text-[13px] font-medium transition-colors ${active ? "bg-forest/10 text-forest" : "text-stone hover:text-forest hover:bg-forest/5"}`}
+                >
+                  <item.icon size={17} />
+                  {item.label}
                 </a>
               );
             })}
@@ -99,7 +123,10 @@ export function AdminSidebar() {
       </nav>
 
       <div className="px-3 py-3 border-t border-border">
-        <button onClick={handleSignOut} className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl font-body text-[13px] font-medium text-stone hover:text-red-600 hover:bg-red-50 transition-colors">
+        <button
+          onClick={handleSignOut}
+          className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl font-body text-[13px] font-medium text-stone hover:text-red-600 hover:bg-red-50 transition-colors"
+        >
           <LogOut size={17} /> Log Out
         </button>
       </div>

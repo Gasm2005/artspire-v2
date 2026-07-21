@@ -4,7 +4,7 @@ import { useRouter } from "@tanstack/react-router";
 /**
  * Premium thin gold loading bar for route transitions.
  * Uses TanStack Router's isLoading state.
- * No spinner. No flash on fast loads. 
+ * No spinner. No flash on fast loads.
  */
 export function TopLoader() {
   const router = useRouter();

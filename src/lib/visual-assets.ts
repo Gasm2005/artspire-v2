@@ -56,10 +56,7 @@ export async function getVisualAssets(opts?: {
   limit?: number;
   offset?: number;
 }) {
-  let query = supabase
-    .from("visual_assets")
-    .select("*")
-    .order("created_at", { ascending: false });
+  let query = supabase.from("visual_assets").select("*").order("created_at", { ascending: false });
 
   if (opts?.assetType) {
     query = query.eq("asset_type", opts.assetType);
@@ -81,11 +78,7 @@ export async function getVisualAssets(opts?: {
 }
 
 export async function getVisualAsset(id: string) {
-  const { data, error } = await supabase
-    .from("visual_assets")
-    .select("*")
-    .eq("id", id)
-    .single();
+  const { data, error } = await supabase.from("visual_assets").select("*").eq("id", id).single();
 
   if (error) throw error;
   return data as VisualAsset | null;
@@ -179,7 +172,7 @@ export async function uploadVisualAsset(
     description?: string;
     defaultOpacity?: number;
     categorySuggestions?: string[];
-  }
+  },
 ): Promise<UploadVisualAssetResult> {
   const fileExt = file.name.split(".").pop() || "png";
   const timestamp = Date.now();
@@ -243,7 +236,10 @@ export async function createVisualAsset(values: VisualAssetInsert): Promise<Visu
 
 // ─── UPDATE ─────────────────────────────────────────────────
 
-export async function updateVisualAsset(id: string, values: VisualAssetUpdate): Promise<VisualAsset> {
+export async function updateVisualAsset(
+  id: string,
+  values: VisualAssetUpdate,
+): Promise<VisualAsset> {
   const { data, error } = await supabase
     .from("visual_assets")
     .update({ ...values, updated_at: new Date().toISOString() })
@@ -270,15 +266,10 @@ export async function deleteVisualAsset(id: string): Promise<void> {
   }
 
   if (asset?.storage_path) {
-    await supabase.storage
-      .from("visual-assets")
-      .remove([asset.storage_path]);
+    await supabase.storage.from("visual-assets").remove([asset.storage_path]);
   }
 
-  const { error } = await supabase
-    .from("visual_assets")
-    .delete()
-    .eq("id", id);
+  const { error } = await supabase.from("visual_assets").delete().eq("id", id);
 
   if (error) throw error;
 }
@@ -290,11 +281,15 @@ export async function logVisualAssetUsage(
   entityType: string,
   entityId: string,
   usageType: string,
-  opacity?: number
+  opacity?: number,
 ): Promise<void> {
-  const { error } = await supabase
-    .from("visual_asset_usage_log")
-    .insert({ asset_id: assetId, entity_type: entityType, entity_id: entityId, usage_type: usageType, opacity });
+  const { error } = await supabase.from("visual_asset_usage_log").insert({
+    asset_id: assetId,
+    entity_type: entityType,
+    entity_id: entityId,
+    usage_type: usageType,
+    opacity,
+  });
 
   if (error) throw error;
 
@@ -304,7 +299,7 @@ export async function logVisualAssetUsage(
 export async function removeVisualAssetUsage(
   assetId: string,
   entityType: string,
-  entityId: string
+  entityId: string,
 ): Promise<void> {
   const { error } = await supabase
     .from("visual_asset_usage_log")
@@ -359,7 +354,10 @@ export function generateVisualAssetSlug(name: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
-export async function ensureUniqueVisualAssetSlug(name: string, currentId?: string): Promise<string> {
+export async function ensureUniqueVisualAssetSlug(
+  name: string,
+  currentId?: string,
+): Promise<string> {
   let slug = generateVisualAssetSlug(name);
   let counter = 2;
   let isUnique = false;

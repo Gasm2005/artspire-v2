@@ -33,7 +33,9 @@ export function ShopHeader({ cartCount: cartCountProp }: { cartCount?: number })
 
   const refreshCartCount = () => {
     const sessionId = getOrCreateSessionId();
-    getCartCount(sessionId).then(setCartCount).catch(() => {});
+    getCartCount(sessionId)
+      .then(setCartCount)
+      .catch(() => {});
   };
 
   useEffect(() => {
@@ -44,7 +46,9 @@ export function ShopHeader({ cartCount: cartCountProp }: { cartCount?: number })
 
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [mobileOpen]);
 
   return (
@@ -73,7 +77,10 @@ export function ShopHeader({ cartCount: cartCountProp }: { cartCount?: number })
           </Link>
 
           {/* Desktop nav */}
-          <nav aria-label="Shop navigation" className="hidden md:flex items-center gap-8 font-body text-[12px] font-medium text-stone/70 uppercase tracking-[0.08em]">
+          <nav
+            aria-label="Shop navigation"
+            className="hidden md:flex items-center gap-8 font-body text-[12px] font-medium text-stone/70 uppercase tracking-[0.08em]"
+          >
             {shopNavLinks.map((l) => (
               <a
                 key={l.label}
@@ -87,10 +94,17 @@ export function ShopHeader({ cartCount: cartCountProp }: { cartCount?: number })
 
           {/* Right: search + cart */}
           <div className="flex items-center gap-4">
-            <button aria-label="Search the shop" className="hidden md:block text-stone/60 hover:text-forest transition-colors">
+            <button
+              aria-label="Search the shop"
+              className="hidden md:block text-stone/60 hover:text-forest transition-colors"
+            >
               <Search size={18} />
             </button>
-            <button onClick={() => setCartOpen(true)} className="relative text-stone/60 hover:text-forest transition-colors" aria-label="Open cart">
+            <button
+              onClick={() => setCartOpen(true)}
+              className="relative text-stone/60 hover:text-forest transition-colors"
+              aria-label="Open cart"
+            >
               <ShoppingBag size={19} />
               {cartCount > 0 && (
                 <span className="absolute -top-1.5 -right-1.5 w-4 h-4 flex items-center justify-center bg-gold text-white text-[9px] font-bold rounded-full">
@@ -108,17 +122,29 @@ export function ShopHeader({ cartCount: cartCountProp }: { cartCount?: number })
           <div className="absolute inset-0 bg-black/40" onClick={() => setMobileOpen(false)} />
           <div className="absolute top-0 left-0 h-full w-[280px] bg-cream shadow-xl flex flex-col">
             <div className="flex justify-end p-4">
-              <button onClick={() => setMobileOpen(false)} aria-label="Close menu" className="p-2 text-forest">
+              <button
+                onClick={() => setMobileOpen(false)}
+                aria-label="Close menu"
+                className="p-2 text-forest"
+              >
                 <X size={24} />
               </button>
             </div>
             <nav className="flex flex-col gap-6 px-8 py-4 font-display text-[22px] text-forest">
               {shopNavLinks.map((l) => (
-                <a key={l.label} href={l.hash ? `${l.to}${l.hash}` : l.to} onClick={() => setMobileOpen(false)}>
+                <a
+                  key={l.label}
+                  href={l.hash ? `${l.to}${l.hash}` : l.to}
+                  onClick={() => setMobileOpen(false)}
+                >
                   {l.label}
                 </a>
               ))}
-              <Link to="/" onClick={() => setMobileOpen(false)} className="font-body text-[13px] text-stone/50 uppercase tracking-widest mt-4">
+              <Link
+                to="/"
+                onClick={() => setMobileOpen(false)}
+                className="font-body text-[13px] text-stone/50 uppercase tracking-widest mt-4"
+              >
                 ← Back to Artspire
               </Link>
             </nav>

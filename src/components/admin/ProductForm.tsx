@@ -15,7 +15,6 @@ import { getShopCategories, type ShopCategory } from "@/lib/shop-categories";
 import { toast } from "@/lib/toast";
 import { Upload, X, Loader2, Save, Rocket, Plus } from "lucide-react";
 
-
 interface ProductFormProps {
   product?: ProductWithCategory; // present when editing
   onSuccess?: () => void;
@@ -66,7 +65,9 @@ export function ProductForm({ product, onSuccess }: ProductFormProps) {
   useEffect(() => {
     if (product?.id) {
       getProductGalleryImages(product.id)
-        .then((imgs) => setExistingGalleryUrls(imgs.map((i) => i.media?.public_url).filter(Boolean) as string[]))
+        .then((imgs) =>
+          setExistingGalleryUrls(imgs.map((i) => i.media?.public_url).filter(Boolean) as string[]),
+        )
         .catch(console.error);
     }
   }, [product?.id]);
@@ -156,7 +157,9 @@ export function ProductForm({ product, onSuccess }: ProductFormProps) {
         main_image_id: mainImageId,
         image_url: imageUrl,
         status,
-        ...(status === "published" && !product?.published_at ? { published_at: new Date().toISOString() } : {}),
+        ...(status === "published" && !product?.published_at
+          ? { published_at: new Date().toISOString() }
+          : {}),
       };
 
       let savedId: string;
@@ -175,8 +178,10 @@ export function ProductForm({ product, onSuccess }: ProductFormProps) {
       if (galleryFiles.length > 0) {
         const uploaded = await Promise.all(
           galleryFiles.map((file) =>
-            uploadMediaFile(file, { folder: "products", altText: form.title }).then((r) => r.mediaItem.id)
-          )
+            uploadMediaFile(file, { folder: "products", altText: form.title }).then(
+              (r) => r.mediaItem.id,
+            ),
+          ),
         );
         // Combine with any pre-existing gallery (edit mode) — simplistic append
         await setProductGalleryImages(savedId, uploaded);
@@ -193,9 +198,12 @@ export function ProductForm({ product, onSuccess }: ProductFormProps) {
     }
   }
 
-  const inputClass = "w-full h-[44px] px-4 rounded-xl border border-border bg-white font-body text-[14px] text-forest focus:outline-none focus:border-gold transition-colors";
-  const labelClass = "block font-body text-[11px] font-bold text-stone uppercase tracking-wider mb-1.5";
-  const textareaClass = "w-full px-4 py-2.5 rounded-xl border border-border bg-white font-body text-[14px] text-forest focus:outline-none focus:border-gold transition-colors resize-y min-h-[90px]";
+  const inputClass =
+    "w-full h-[44px] px-4 rounded-xl border border-border bg-white font-body text-[14px] text-forest focus:outline-none focus:border-gold transition-colors";
+  const labelClass =
+    "block font-body text-[11px] font-bold text-stone uppercase tracking-wider mb-1.5";
+  const textareaClass =
+    "w-full px-4 py-2.5 rounded-xl border border-border bg-white font-body text-[14px] text-forest focus:outline-none focus:border-gold transition-colors resize-y min-h-[90px]";
 
   return (
     <div className="space-y-6 max-w-2xl">
@@ -206,7 +214,10 @@ export function ProductForm({ product, onSuccess }: ProductFormProps) {
           <div className="relative rounded-xl overflow-hidden border border-border w-full max-w-sm">
             <img src={imagePreview} alt="Preview" className="w-full h-[220px] object-cover" />
             <button
-              onClick={() => { setImagePreview(null); setImageFile(null); }}
+              onClick={() => {
+                setImagePreview(null);
+                setImageFile(null);
+              }}
               className="absolute top-2 right-2 p-1.5 bg-white/90 rounded-full shadow hover:bg-white transition-colors"
             >
               <X size={14} className="text-stone" />
@@ -214,14 +225,24 @@ export function ProductForm({ product, onSuccess }: ProductFormProps) {
             <label className="absolute bottom-2 right-2 inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/90 rounded-lg font-body text-[11px] font-semibold text-forest cursor-pointer hover:bg-white transition-colors shadow">
               <Upload size={12} />
               Change
-              <input type="file" accept="image/*" className="hidden" onChange={handleMainImageChange} />
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleMainImageChange}
+              />
             </label>
           </div>
         ) : (
           <label className="flex flex-col items-center justify-center w-full max-w-sm h-[180px] rounded-xl border-2 border-dashed border-border bg-cream hover:border-gold transition-colors cursor-pointer">
             <Upload size={24} className="text-stone/40 mb-2" />
             <span className="font-body text-[13px] text-stone/60">Click to upload main image</span>
-            <input type="file" accept="image/*" className="hidden" onChange={handleMainImageChange} />
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleMainImageChange}
+            />
           </label>
         )}
       </div>
@@ -231,7 +252,10 @@ export function ProductForm({ product, onSuccess }: ProductFormProps) {
         <label className={labelClass}>Gallery — Images & Videos (up to 10 total)</label>
         <div className="flex flex-wrap gap-3">
           {existingGalleryUrls.map((url, i) => (
-            <div key={`existing-${i}`} className="w-20 h-20 rounded-lg overflow-hidden border border-border bg-cream">
+            <div
+              key={`existing-${i}`}
+              className="w-20 h-20 rounded-lg overflow-hidden border border-border bg-cream"
+            >
               {/\.(mp4|webm|mov)$/i.test(url) ? (
                 <video src={url} className="w-full h-full object-cover" muted />
               ) : (
@@ -240,7 +264,10 @@ export function ProductForm({ product, onSuccess }: ProductFormProps) {
             </div>
           ))}
           {galleryPreviews.map((url, i) => (
-            <div key={`new-${i}`} className="relative w-20 h-20 rounded-lg overflow-hidden border border-border bg-cream">
+            <div
+              key={`new-${i}`}
+              className="relative w-20 h-20 rounded-lg overflow-hidden border border-border bg-cream"
+            >
               {galleryFiles[i]?.type.startsWith("video/") ? (
                 <video src={url} className="w-full h-full object-cover" muted />
               ) : (
@@ -278,7 +305,13 @@ export function ProductForm({ product, onSuccess }: ProductFormProps) {
 
         <div>
           <label className={labelClass}>Product Name *</label>
-          <input type="text" value={form.title} onChange={(e) => updateField("title", e.target.value)} placeholder="e.g. Hand-thrown Ceramic Vase" className={inputClass} />
+          <input
+            type="text"
+            value={form.title}
+            onChange={(e) => updateField("title", e.target.value)}
+            placeholder="e.g. Hand-thrown Ceramic Vase"
+            className={inputClass}
+          />
         </div>
 
         {!isEdit && (
@@ -287,7 +320,10 @@ export function ProductForm({ product, onSuccess }: ProductFormProps) {
             <input
               type="text"
               value={form.slug}
-              onChange={(e) => { setManualSlug(true); updateField("slug", e.target.value); }}
+              onChange={(e) => {
+                setManualSlug(true);
+                updateField("slug", e.target.value);
+              }}
               placeholder="auto-generated-from-title"
               className={inputClass}
             />
@@ -297,10 +333,16 @@ export function ProductForm({ product, onSuccess }: ProductFormProps) {
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className={labelClass}>Category</label>
-            <select value={form.category_id} onChange={(e) => updateField("category_id", e.target.value)} className={inputClass}>
+            <select
+              value={form.category_id}
+              onChange={(e) => updateField("category_id", e.target.value)}
+              className={inputClass}
+            >
               <option value="">Select category</option>
               {categories.map((c) => (
-                <option key={c.id} value={c.id}>{c.name}</option>
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
               ))}
             </select>
           </div>
@@ -318,12 +360,23 @@ export function ProductForm({ product, onSuccess }: ProductFormProps) {
 
         <div>
           <label className={labelClass}>Short Summary (shown on cards)</label>
-          <input type="text" value={form.summary} onChange={(e) => updateField("summary", e.target.value)} placeholder="One sentence description" className={inputClass} />
+          <input
+            type="text"
+            value={form.summary}
+            onChange={(e) => updateField("summary", e.target.value)}
+            placeholder="One sentence description"
+            className={inputClass}
+          />
         </div>
 
         <div>
           <label className={labelClass}>Full Story / Description</label>
-          <textarea value={form.description} onChange={(e) => updateField("description", e.target.value)} placeholder="Tell the story behind this piece..." className={textareaClass} />
+          <textarea
+            value={form.description}
+            onChange={(e) => updateField("description", e.target.value)}
+            placeholder="Tell the story behind this piece..."
+            className={textareaClass}
+          />
         </div>
       </div>
 
@@ -333,26 +386,59 @@ export function ProductForm({ product, onSuccess }: ProductFormProps) {
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className={labelClass}>Price (₹) *</label>
-            <input type="number" min="0" value={form.price} onChange={(e) => updateField("price", e.target.value)} placeholder="2999" className={inputClass} />
+            <input
+              type="number"
+              min="0"
+              value={form.price}
+              onChange={(e) => updateField("price", e.target.value)}
+              placeholder="2999"
+              className={inputClass}
+            />
           </div>
           <div>
             <label className={labelClass}>Compare-at Price (optional)</label>
-            <input type="number" min="0" value={form.compare_at_price} onChange={(e) => updateField("compare_at_price", e.target.value)} placeholder="3999" className={inputClass} />
+            <input
+              type="number"
+              min="0"
+              value={form.compare_at_price}
+              onChange={(e) => updateField("compare_at_price", e.target.value)}
+              placeholder="3999"
+              className={inputClass}
+            />
           </div>
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className={labelClass}>Inventory Count</label>
-            <input type="number" min="0" value={form.inventory_count} onChange={(e) => updateField("inventory_count", e.target.value)} className={inputClass} />
+            <input
+              type="number"
+              min="0"
+              value={form.inventory_count}
+              onChange={(e) => updateField("inventory_count", e.target.value)}
+              className={inputClass}
+            />
           </div>
           <div>
             <label className={labelClass}>SKU (optional)</label>
-            <input type="text" value={form.sku} onChange={(e) => updateField("sku", e.target.value)} placeholder="ART-CLAY-001" className={inputClass} />
+            <input
+              type="text"
+              value={form.sku}
+              onChange={(e) => updateField("sku", e.target.value)}
+              placeholder="ART-CLAY-001"
+              className={inputClass}
+            />
           </div>
         </div>
         <label className="flex items-center gap-2 cursor-pointer">
-          <input type="checkbox" checked={form.is_one_of_a_kind} onChange={(e) => updateField("is_one_of_a_kind", e.target.checked)} className="w-4 h-4 accent-forest" />
-          <span className="font-body text-[13px] text-stone">This is a one-of-a-kind piece (cannot be remade)</span>
+          <input
+            type="checkbox"
+            checked={form.is_one_of_a_kind}
+            onChange={(e) => updateField("is_one_of_a_kind", e.target.checked)}
+            className="w-4 h-4 accent-forest"
+          />
+          <span className="font-body text-[13px] text-stone">
+            This is a one-of-a-kind piece (cannot be remade)
+          </span>
         </label>
       </div>
 
@@ -361,25 +447,55 @@ export function ProductForm({ product, onSuccess }: ProductFormProps) {
         <h2 className="font-display text-[16px] text-forest font-medium">Craft Details</h2>
         <div>
           <label className={labelClass}>Materials Used</label>
-          <input type="text" value={form.materials_used} onChange={(e) => updateField("materials_used", e.target.value)} placeholder="Stoneware clay, food-safe glaze" className={inputClass} />
+          <input
+            type="text"
+            value={form.materials_used}
+            onChange={(e) => updateField("materials_used", e.target.value)}
+            placeholder="Stoneware clay, food-safe glaze"
+            className={inputClass}
+          />
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className={labelClass}>Dimensions</label>
-            <input type="text" value={form.dimensions} onChange={(e) => updateField("dimensions", e.target.value)} placeholder="20cm x 15cm x 15cm" className={inputClass} />
+            <input
+              type="text"
+              value={form.dimensions}
+              onChange={(e) => updateField("dimensions", e.target.value)}
+              placeholder="20cm x 15cm x 15cm"
+              className={inputClass}
+            />
           </div>
           <div>
             <label className={labelClass}>Weight</label>
-            <input type="text" value={form.weight} onChange={(e) => updateField("weight", e.target.value)} placeholder="800g" className={inputClass} />
+            <input
+              type="text"
+              value={form.weight}
+              onChange={(e) => updateField("weight", e.target.value)}
+              placeholder="800g"
+              className={inputClass}
+            />
           </div>
         </div>
         <div>
           <label className={labelClass}>Care Instructions</label>
-          <textarea value={form.care_instructions} onChange={(e) => updateField("care_instructions", e.target.value)} placeholder="Hand wash only. Avoid direct sunlight." className={textareaClass} />
+          <textarea
+            value={form.care_instructions}
+            onChange={(e) => updateField("care_instructions", e.target.value)}
+            placeholder="Hand wash only. Avoid direct sunlight."
+            className={textareaClass}
+          />
         </div>
         <label className="flex items-center gap-2 cursor-pointer">
-          <input type="checkbox" checked={form.commission_similar_enabled} onChange={(e) => updateField("commission_similar_enabled", e.target.checked)} className="w-4 h-4 accent-forest" />
-          <span className="font-body text-[13px] text-stone">Show "Commission something like this" button</span>
+          <input
+            type="checkbox"
+            checked={form.commission_similar_enabled}
+            onChange={(e) => updateField("commission_similar_enabled", e.target.checked)}
+            className="w-4 h-4 accent-forest"
+          />
+          <span className="font-body text-[13px] text-stone">
+            Show "Commission something like this" button
+          </span>
         </label>
       </div>
 
@@ -388,11 +504,22 @@ export function ProductForm({ product, onSuccess }: ProductFormProps) {
         <h2 className="font-display text-[16px] text-forest font-medium">SEO (optional)</h2>
         <div>
           <label className={labelClass}>Meta Title</label>
-          <input type="text" value={form.meta_title} onChange={(e) => updateField("meta_title", e.target.value)} placeholder="Defaults to product name" className={inputClass} />
+          <input
+            type="text"
+            value={form.meta_title}
+            onChange={(e) => updateField("meta_title", e.target.value)}
+            placeholder="Defaults to product name"
+            className={inputClass}
+          />
         </div>
         <div>
           <label className={labelClass}>Meta Description</label>
-          <textarea value={form.meta_description} onChange={(e) => updateField("meta_description", e.target.value)} placeholder="Defaults to summary" className={textareaClass} />
+          <textarea
+            value={form.meta_description}
+            onChange={(e) => updateField("meta_description", e.target.value)}
+            placeholder="Defaults to summary"
+            className={textareaClass}
+          />
         </div>
       </div>
 
