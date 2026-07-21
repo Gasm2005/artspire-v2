@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { getRequest } from "@tanstack/react-start/server";
 import { getSupabaseAdmin } from "@/integrations/supabase/admin.server";
 import type { OrderWithItems } from "./orders";
 
@@ -9,12 +10,60 @@ import type { OrderWithItems } from "./orders";
 // return data after confirming the caller knows the phone number on
 // the order. This closes the "possession of the URL = full PII
 // access" gap: a leaked/guessed order UUID alone is no longer enough.
+//
+// Rate limiting (below) additionally stops an attacker from brute-forcing
+// the phone gate against enumerable order numbers (ART-YYYYMMDD-NNNN).
+
+type SupabaseAdmin = ReturnType<typeof getSupabaseAdmin>;
 
 function phoneMatches(storedPhone: string, providedPhone: string): boolean {
   const normalize = (p: string) => p.replace(/\D/g, "").slice(-10);
   const stored = normalize(storedPhone);
   const provided = normalize(providedPhone);
   return stored.length === 10 && stored === provided;
+}
+
+/** Best-effort client IP from the proxy headers Vercel sets. */
+function getClientIp(): string {
+  try {
+    const request = getRequest();
+    const xff = request?.headers.get("x-forwarded-for");
+    if (xff) return xff.split(",")[0].trim();
+    const xri = request?.headers.get("x-real-ip");
+    if (xri) return xri.trim();
+  } catch {
+    // getRequest() throws outside a request scope — treat as unknown.
+  }
+  return "unknown";
+}
+
+/**
+ * Throttles a sensitive lookup per client IP using the DB-backed
+ * check_rate_limit() function (serverless-safe — in-memory counters don't
+ * survive across Vercel lambdas). Fails OPEN if the RPC errors (e.g. the
+ * migration hasn't been applied yet) so a limiter outage never blocks
+ * legitimate customers; fails CLOSED only on an explicit over-limit.
+ */
+async function enforceRateLimit(
+  admin: SupabaseAdmin,
+  scope: string,
+  max: number,
+  windowSeconds: number,
+): Promise<void> {
+  const rpc = admin.rpc as unknown as (
+    fn: string,
+    args: Record<string, unknown>,
+  ) => Promise<{ data: boolean | null; error: unknown }>;
+
+  const { data: allowed, error } = await rpc("check_rate_limit", {
+    p_key: `${scope}:${getClientIp()}`,
+    p_max: max,
+    p_window_seconds: windowSeconds,
+  });
+
+  if (!error && allowed === false) {
+    throw new Error("Too many attempts. Please wait a few minutes and try again.");
+  }
 }
 
 /**
@@ -27,6 +76,9 @@ export const getOrderForConfirmation = createServerFn({ method: "POST" })
   .validator((data: { orderId: string; phone: string }) => data)
   .handler(async ({ data }): Promise<OrderWithItems | null> => {
     const admin = getSupabaseAdmin();
+    // Lower risk (needs the order UUID) but still throttled.
+    await enforceRateLimit(admin, "order-confirm", 20, 600);
+
     const { data: order, error } = await admin
       .from("orders")
       .select("*, order_items(*)")
@@ -47,6 +99,10 @@ export const getOrderByNumberVerified = createServerFn({ method: "POST" })
   .validator((data: { orderNumber: string; phone: string }) => data)
   .handler(async ({ data }): Promise<OrderWithItems | null> => {
     const admin = getSupabaseAdmin();
+    // Higher risk: order numbers are enumerable, so this is the main
+    // brute-force surface. Tighter limit.
+    await enforceRateLimit(admin, "track-order", 10, 600);
+
     const { data: order, error } = await admin
       .from("orders")
       .select("*, order_items(*)")
