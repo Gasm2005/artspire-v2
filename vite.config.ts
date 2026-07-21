@@ -14,6 +14,8 @@ export default defineConfig({
     // The @supabase/auth-js and @supabase/functions-js packages import
     // tslib helpers, but Nitro's vercel preset tracer creates _libs/tslib.mjs
     // as 0 bytes, causing ERR_MODULE_NOT_FOUND at runtime.
+    // @ts-expect-error `externals` is a valid Nitro option at runtime but is
+    // missing from TanStack Start's narrowed nitro config type.
     externals: {
       inline: ["tslib"],
     },

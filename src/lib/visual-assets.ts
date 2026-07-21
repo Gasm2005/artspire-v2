@@ -1,4 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
+
+type VisualAssetsInsert = Database["public"]["Tables"]["visual_assets"]["Insert"];
 
 export type VisualAsset = {
   id: string;
@@ -213,7 +216,7 @@ export async function uploadVisualAsset(
 
   const { data: visualAsset, error: dbError } = await supabase
     .from("visual_assets")
-    .insert(insert)
+    .insert(insert as VisualAssetsInsert)
     .select()
     .single();
 
@@ -230,7 +233,7 @@ export async function uploadVisualAsset(
 export async function createVisualAsset(values: VisualAssetInsert): Promise<VisualAsset> {
   const { data, error } = await supabase
     .from("visual_assets")
-    .insert(values)
+    .insert(values as VisualAssetsInsert)
     .select()
     .single();
 

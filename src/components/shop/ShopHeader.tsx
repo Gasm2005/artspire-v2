@@ -4,7 +4,7 @@ import { Menu, X, ShoppingBag, Search } from "lucide-react";
 import { CartDrawer } from "./CartDrawer";
 import { getCartCount, getOrCreateSessionId } from "@/lib/cart";
 
-const shopNavLinks = [
+const shopNavLinks: { to: string; label: string; hash?: string }[] = [
   { to: "/shop", label: "All Pieces" },
   { to: "/shop", label: "Collections", hash: "#collections" },
   { to: "/shop", label: "New Arrivals", hash: "#new" },

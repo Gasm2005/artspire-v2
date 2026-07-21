@@ -74,7 +74,7 @@ function MediaDetailPage() {
             <h2 className="font-display text-[16px] text-forest font-medium mb-4">File Information</h2>
             <div className="space-y-3">
               <InfoRow icon={Folder} label="Filename" value={item.original_name} />
-              <InfoRow icon={Folder} label="Folder" value={item.folder} />
+              <InfoRow icon={Folder} label="Folder" value={item.folder ?? "—"} />
               <InfoRow icon={HardDrive} label="File Size" value={fileSize} />
               <InfoRow icon={Image} label="Dimensions" value={dimensions} />
               <InfoRow icon={Tag} label="MIME Type" value={item.mime_type ?? "Unknown"} />

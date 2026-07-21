@@ -84,7 +84,7 @@ function ArtworkPage() {
           </a>
 
           <div className="acc">
-            <details open><summary>About this commission</summary><div className="body">{artwork.description ?? "Every commission begins with your photograph and a short conversation about what matters most to capture. Hand-made start to finish by Himangi."}</div></details>
+            <details open><summary>About this commission</summary><div className="body">{artwork.short_description ?? "Every commission begins with your photograph and a short conversation about what matters most to capture. Hand-made start to finish by Himangi."}</div></details>
             <details><summary>The commission process</summary><div className="body">1. Share your photo &amp; story · 2. Receive a quote &amp; timeline · 3. Approve a preview · 4. Final piece, carefully packed and shipped.</div></details>
           </div>
         </div>

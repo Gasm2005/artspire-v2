@@ -36,7 +36,7 @@ export const getOrderForConfirmation = createServerFn({ method: "POST" })
     if (error || !order) return null;
     if (!phoneMatches(order.phone, data.phone)) return null;
 
-    return order as OrderWithItems;
+    return order as unknown as OrderWithItems;
   });
 
 /**
@@ -56,5 +56,5 @@ export const getOrderByNumberVerified = createServerFn({ method: "POST" })
     if (error || !order) return null;
     if (!phoneMatches(order.phone, data.phone)) return null;
 
-    return order as OrderWithItems;
+    return order as unknown as OrderWithItems;
   });

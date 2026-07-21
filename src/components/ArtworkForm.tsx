@@ -12,6 +12,8 @@ import {
   setArtworkProcessImages,
   generateSlug,
   type ArtworkWithCategory,
+  type ArtworkInsert,
+  type ArtworkUpdate,
   type ArtworkStatus,
   type ArtworkType,
   type Category,
@@ -39,7 +41,7 @@ export function ArtworkForm({ artwork, onSuccess }: ArtworkFormProps) {
     slug: artwork?.slug ?? "",
     summary: artwork?.summary ?? "",
     short_description: (artwork as any)?.short_description ?? "",
-    story_content: artwork?.story_content ?? "",
+    story_content: (artwork?.story_content as string | null) ?? "",
     ai_summary: artwork?.ai_summary ?? "",
     category_id: artwork?.category_id ?? "",
     artwork_type: (artwork?.artwork_type ?? "physical") as ArtworkType,
@@ -50,7 +52,7 @@ export function ArtworkForm({ artwork, onSuccess }: ArtworkFormProps) {
     price: artwork?.price?.toString() ?? "",
     currency: artwork?.currency ?? "INR",
     medium: artwork?.medium ?? "",
-    size: artwork?.size ?? "",
+    size: artwork?.dimensions ?? "",
     display_order: (artwork as any)?.display_order ?? 0,
   });
 
@@ -175,7 +177,7 @@ export function ArtworkForm({ artwork, onSuccess }: ArtworkFormProps) {
         price: form.price ? parseFloat(form.price) : null,
         currency: form.currency || null,
         medium: form.medium.trim() || null,
-        size: form.size.trim() || null,
+        dimensions: form.size.trim() || null,
         display_order: form.display_order,
         main_image_id: mainImage?.mediaId || null,
         thumbnail_image_id: thumbnailImage?.mediaId || null,
@@ -186,12 +188,12 @@ export function ArtworkForm({ artwork, onSuccess }: ArtworkFormProps) {
       let savedArtworkId: string;
 
       if (isEdit && artwork) {
-        await updateArtwork(artwork.id, payload);
+        await updateArtwork(artwork.id, payload as ArtworkUpdate);
         savedArtworkId = artwork.id;
       } else {
         // Ensure slug is unique before insert — prevents DB constraint error
         const uniqueSlug = await ensureUniqueSlug(form.title);
-        const created = await createArtwork({ ...payload, slug: uniqueSlug });
+        const created = await createArtwork({ ...payload, slug: uniqueSlug } as ArtworkInsert);
         savedArtworkId = created.id;
       }
 

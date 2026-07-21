@@ -80,7 +80,7 @@ async function applyConfirmedPayment(params: {
   if (fetchError || !existingOrder) throw new Error(`Order ${params.orderId} not found.`);
 
   if (existingOrder.payment_status === "paid") {
-    return { order: existingOrder as Order, alreadyConfirmed: true };
+    return { order: existingOrder as unknown as Order, alreadyConfirmed: true };
   }
 
   const { data: updatedOrder, error: updateError } = await admin
@@ -107,12 +107,12 @@ async function applyConfirmedPayment(params: {
         .map((i) => admin.rpc("deduct_product_inventory", { p_product_id: i.product_id!, p_quantity: i.quantity }))
     );
 
-    sendOrderConfirmationEmails({ data: { order: updatedOrder as Order, items: items as OrderItem[] } }).catch((err) =>
+    sendOrderConfirmationEmails({ data: { order: updatedOrder as unknown as Order, items: items as OrderItem[] } }).catch((err) =>
       console.error("[razorpay] Order confirmed but confirmation email failed:", err)
     );
   }
 
-  return { order: updatedOrder as Order, alreadyConfirmed: false };
+  return { order: updatedOrder as unknown as Order, alreadyConfirmed: false };
 }
 
 /**

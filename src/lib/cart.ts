@@ -1,5 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
-import type { Product } from "./products";
+import type { Product, ProductWithCategory } from "./products";
 
 const CART_SESSION_KEY = "artspire_cart_session_id";
 
@@ -10,7 +10,7 @@ export interface CartItem {
   quantity: number;
   price_at_add: number;
   created_at: string;
-  product?: Product | null;
+  product?: ProductWithCategory | null;
 }
 
 export interface Cart {
@@ -67,12 +67,12 @@ export async function getCartItems(sessionId: string): Promise<CartItem[]> {
 
   const { data, error } = await supabase
     .from("cart_items")
-    .select("*, product:products(*)")
+    .select("*, product:products(*, categories:shop_categories(*))")
     .eq("cart_id", cart.id)
     .order("created_at", { ascending: true });
 
   if (error) throw error;
-  return (data ?? []) as CartItem[];
+  return (data ?? []) as unknown as CartItem[];
 }
 
 export async function getCartCount(sessionId: string): Promise<number> {

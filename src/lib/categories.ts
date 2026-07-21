@@ -7,6 +7,7 @@ export type CategoryUpdate = Database["public"]["Tables"]["categories"]["Update"
 
 // Extended Category type with Phase 1 CMS fields (until Supabase types are regenerated)
 export type CategoryWithVisuals = Category & {
+  image_url?: string | null; // resolved via card_artwork join in getCategories()
   short_summary?: string | null;
   featured?: boolean | null;
   card_artwork_image_id?: string | null;

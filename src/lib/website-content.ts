@@ -1,4 +1,8 @@
 import { supabase } from "@/integrations/supabase/client";
+import type { Database, Json } from "@/integrations/supabase/types";
+
+type WebsiteContentDbInsert = Database["public"]["Tables"]["website_content"]["Insert"];
+type WebsiteContentDbUpdate = Database["public"]["Tables"]["website_content"]["Update"];
 
 export type WebsiteContent = {
   id: string;
@@ -112,7 +116,7 @@ export async function getWebsiteContentWithRepeater(contentKey: string): Promise
 export async function createWebsiteContent(values: WebsiteContentInsert): Promise<WebsiteContent> {
   const { data, error } = await supabase
     .from("website_content")
-    .insert(values)
+    .insert(values as WebsiteContentDbInsert)
     .select()
     .single();
 
@@ -130,7 +134,7 @@ export async function createRepeaterItem(values: {
     .insert({
       parent_key: values.parentKey,
       display_order: values.displayOrder ?? 0,
-      item_data: values.itemData,
+      item_data: values.itemData as Json,
     })
     .select()
     .single();
@@ -147,7 +151,7 @@ export async function updateWebsiteContent(
 ): Promise<WebsiteContent> {
   const { data, error } = await supabase
     .from("website_content")
-    .update({ ...values, updated_at: new Date().toISOString() })
+    .update({ ...values, updated_at: new Date().toISOString() } as WebsiteContentDbUpdate)
     .eq("id", id)
     .select()
     .single();
@@ -162,7 +166,7 @@ export async function upsertWebsiteContent(
 ): Promise<WebsiteContent> {
   const { data, error } = await supabase
     .from("website_content")
-    .upsert({ content_key: contentKey, ...values }, { onConflict: "content_key" })
+    .upsert({ content_key: contentKey, ...values } as WebsiteContentDbInsert, { onConflict: "content_key" })
     .select()
     .single();
 
@@ -178,7 +182,7 @@ export async function updateRepeaterItem(
     .from("website_content_repeater_items")
     .update({
       display_order: values.displayOrder,
-      item_data: values.itemData,
+      item_data: values.itemData as Json,
     })
     .eq("id", id)
     .select()

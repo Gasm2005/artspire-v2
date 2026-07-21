@@ -1,4 +1,8 @@
 import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
+
+type CollectionsDbInsert = Database["public"]["Tables"]["collections"]["Insert"];
+type CollectionsDbUpdate = Database["public"]["Tables"]["collections"]["Update"];
 
 export interface Collection {
   id: string;
@@ -112,7 +116,7 @@ export function generateCollectionSlug(title: string): string {
 export async function createCollection(values: CollectionInsert): Promise<Collection> {
   const { data, error } = await supabase
     .from("collections")
-    .insert(values)
+    .insert(values as CollectionsDbInsert)
     .select()
     .single();
 
@@ -123,7 +127,7 @@ export async function createCollection(values: CollectionInsert): Promise<Collec
 export async function updateCollection(id: string, values: CollectionUpdate): Promise<Collection> {
   const { data, error } = await supabase
     .from("collections")
-    .update({ ...values, updated_at: new Date().toISOString() })
+    .update({ ...values, updated_at: new Date().toISOString() } as CollectionsDbUpdate)
     .eq("id", id)
     .select()
     .single();

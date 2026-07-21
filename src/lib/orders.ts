@@ -1,5 +1,8 @@
 import { supabase } from "@/integrations/supabase/client";
+import type { Database, Json } from "@/integrations/supabase/types";
 import type { CartItem } from "./cart";
+
+type OrdersUpdate = Database["public"]["Tables"]["orders"]["Update"];
 
 export type OrderStatus = "pending" | "payment_failed" | "confirmed" | "processing" | "shipped" | "delivered" | "cancelled" | "refunded";
 export type PaymentStatus = "pending" | "paid" | "failed" | "refunded" | "partially_refunded";
@@ -88,7 +91,7 @@ export async function createPendingOrder(params: {
       customer_name: params.customerName,
       email: params.email,
       phone: params.phone,
-      shipping_address: params.shippingAddress,
+      shipping_address: params.shippingAddress as unknown as Json,
       subtotal,
       shipping_cost: shippingCost,
       discount_amount: discountAmount,
@@ -117,7 +120,7 @@ export async function createPendingOrder(params: {
   const { error: itemsError } = await supabase.from("order_items").insert(itemRows);
   if (itemsError) throw itemsError;
 
-  return order as Order;
+  return order as unknown as Order;
 }
 
 // ─── ATTACH RAZORPAY ORDER ID ─────────────────────────────────
@@ -159,7 +162,7 @@ export async function getOrderById(id: string): Promise<OrderWithItems | null> {
     .single();
 
   if (error) return null;
-  return data as OrderWithItems;
+  return data as unknown as OrderWithItems;
 }
 
 // NOTE: unauthenticated callers get nothing from this now — orders has
@@ -175,7 +178,7 @@ export async function getOrderByNumber(orderNumber: string): Promise<OrderWithIt
     .single();
 
   if (error) return null;
-  return data as OrderWithItems;
+  return data as unknown as OrderWithItems;
 }
 
 // ─── ADMIN ──────────────────────────────────────────────────
@@ -191,7 +194,7 @@ export async function getAllOrders(opts?: { status?: OrderStatus; limit?: number
 
   const { data, error } = await query;
   if (error) throw error;
-  return (data ?? []) as OrderWithItems[];
+  return (data ?? []) as unknown as OrderWithItems[];
 }
 
 export async function updateOrderStatus(orderId: string, status: OrderStatus): Promise<Order> {
@@ -207,11 +210,11 @@ export async function updateOrderStatus(orderId: string, status: OrderStatus): P
 
   const { data, error } = await supabase
     .from("orders")
-    .update(updates)
+    .update(updates as OrdersUpdate)
     .eq("id", orderId)
     .select()
     .single();
 
   if (error) throw error;
-  return data as Order;
+  return data as unknown as Order;
 }

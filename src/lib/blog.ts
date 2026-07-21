@@ -1,4 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
+
+type BlogPostsInsert = Database["public"]["Tables"]["blog_posts"]["Insert"];
 
 export type BlogStatus = "draft" | "published";
 
@@ -67,7 +70,7 @@ export async function createPost(input: BlogPostInput): Promise<BlogPost> {
     ...input,
     published_at: input.status === "published" ? input.published_at ?? new Date().toISOString() : null,
   };
-  const { data, error } = await supabase.from("blog_posts").insert(payload).select().single();
+  const { data, error } = await supabase.from("blog_posts").insert(payload as BlogPostsInsert).select().single();
   if (error) throw error;
   return data as BlogPost;
 }

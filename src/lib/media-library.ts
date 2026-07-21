@@ -1,4 +1,8 @@
 import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
+
+type MediaLibraryInsert = Database["public"]["Tables"]["media_library"]["Insert"];
+type MediaLibraryUpdate = Database["public"]["Tables"]["media_library"]["Update"];
 
 export type MediaItem = {
   id: string;
@@ -245,7 +249,7 @@ export async function uploadMediaFile(
 
   const { data: mediaItem, error: dbError } = await supabase
     .from("media_library")
-    .insert(insert)
+    .insert(insert as MediaLibraryInsert)
     .select()
     .single();
 
@@ -265,7 +269,7 @@ export async function updateMediaItem(
 ): Promise<MediaItem> {
   const { data, error } = await supabase
     .from("media_library")
-    .update({ ...values, updated_at: new Date().toISOString() })
+    .update({ ...values, updated_at: new Date().toISOString() } as MediaLibraryUpdate)
     .eq("id", id)
     .select()
     .single();
