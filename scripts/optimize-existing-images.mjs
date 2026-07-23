@@ -4,8 +4,9 @@
 //   1. Reads every row in media_library (id, storage_path, mime_type).
 //   2. Downloads each file and saves the ORIGINAL to scripts/_image-backup/
 //      (your free local safety net — no Supabase backup needed).
-//   3. Re-encodes with sharp: resized to max 1600px, same format, good
-//      compression. Only re-uploads if the result is actually smaller.
+//   3. Re-encodes with sharp to WebP (resized to max 1600px, ~80 quality).
+//      The storage path/extension is unchanged (URLs stay valid) but the
+//      bytes + stored content-type become WebP. Only re-uploads if smaller.
 //   4. Overwrites the SAME storage path (upsert) so every public_url and all
 //      references keep working — nothing is deleted, nothing breaks.
 //   5. Updates media_library.file_size to the new size.
@@ -18,6 +19,7 @@
 import sharp from "sharp";
 import { createClient } from "@supabase/supabase-js";
 import { mkdir, writeFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
 import path from "node:path";
 
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL;
@@ -38,7 +40,11 @@ const supabase = createClient(SUPABASE_URL, SERVICE_KEY, {
   auth: { persistSession: false },
 });
 
-async function reencode(buffer, mime) {
+// Always output WebP — biggest savings. The file keeps its original storage
+// path/extension (so every public_url stays valid), but its bytes + the
+// stored content-type become WebP; browsers render by content-type, not by
+// the ".png"/".jpg" in the URL.
+async function reencode(buffer) {
   const img = sharp(buffer, { failOn: "none" }).rotate(); // rotate() respects EXIF orientation
   const meta = await img.metadata();
   if (meta.width && meta.width > MAX_EDGE)
@@ -46,20 +52,7 @@ async function reencode(buffer, mime) {
   else if (meta.height && meta.height > MAX_EDGE)
     img.resize({ height: MAX_EDGE, withoutEnlargement: true });
 
-  if (mime === "image/png") {
-    return {
-      data: await img.png({ compressionLevel: 9, palette: true, quality: 80 }).toBuffer(),
-      contentType: "image/png",
-    };
-  }
-  if (mime === "image/webp") {
-    return { data: await img.webp({ quality: 80 }).toBuffer(), contentType: "image/webp" };
-  }
-  // default: JPEG (covers image/jpeg)
-  return {
-    data: await img.jpeg({ quality: 80, mozjpeg: true }).toBuffer(),
-    contentType: "image/jpeg",
-  };
+  return { data: await img.webp({ quality: 80 }).toBuffer(), contentType: "image/webp" };
 }
 
 const RASTER = new Set(["image/jpeg", "image/png", "image/webp"]);
@@ -97,10 +90,12 @@ for (const row of rows) {
     }
     const original = Buffer.from(await blob.arrayBuffer());
 
-    // Local backup of the original (flatten path into a safe filename).
-    await writeFile(path.join(BACKUP_DIR, row.storage_path.replace(/[\\/]/g, "__")), original);
+    // Local backup of the TRUE original — only if not already backed up, so a
+    // re-run never overwrites the first backup with an already-processed file.
+    const backupPath = path.join(BACKUP_DIR, row.storage_path.replace(/[\\/]/g, "__"));
+    if (!existsSync(backupPath)) await writeFile(backupPath, original);
 
-    const { data: newData, contentType } = await reencode(original, row.mime_type);
+    const { data: newData, contentType } = await reencode(original);
 
     // Only replace if we actually saved meaningful bytes.
     if (newData.length >= original.length * 0.9) {
@@ -119,7 +114,10 @@ for (const row of rows) {
       skipped++;
       continue;
     }
-    await supabase.from("media_library").update({ file_size: newData.length }).eq("id", row.id);
+    await supabase
+      .from("media_library")
+      .update({ file_size: newData.length, mime_type: "image/webp" })
+      .eq("id", row.id);
 
     before += original.length;
     after += newData.length;
