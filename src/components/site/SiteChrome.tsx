@@ -229,7 +229,16 @@ export function SiteHeader() {
       <header id="hdr">
         <nav className="wrap">
           <Link to="/" className="logo" onClick={close}>
-            <img src="/artspire-logo.png" alt="The Artspire" className="logo-img" />
+            <picture>
+              <source srcSet="/artspire-logo.webp" type="image/webp" />
+              <img
+                src="/artspire-logo.png"
+                alt="The Artspire"
+                className="logo-img"
+                width={249}
+                height={58}
+              />
+            </picture>
           </Link>
           <div className="navlinks">
             <Link to="/shop">Shop</Link>
