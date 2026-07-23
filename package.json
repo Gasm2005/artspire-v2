@@ -13,7 +13,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
-    "optimize:images": "node scripts/optimize-images.mjs"
+    "optimize:images": "node scripts/optimize-images.mjs",
+    "optimize:storage": "node --env-file=.env scripts/optimize-existing-images.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

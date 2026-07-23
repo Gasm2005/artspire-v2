@@ -26,6 +26,9 @@ dist-ssr
 # Lint/tool output artifacts
 eslint-output.txt
 
+# Local image-optimizer backups (originals kept before overwriting)
+scripts/_image-backup/
+
 # Wrangler / Cloudflare
 .wrangler/
 .dev.vars
