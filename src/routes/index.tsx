@@ -123,9 +123,6 @@ function Index() {
             </div>
           </div>
         </div>
-        <div className="floating">
-          Now accepting <b>July 2026</b> commissions
-        </div>
       </section>
 
       <section>

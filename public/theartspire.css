@@ -482,24 +482,6 @@
 .tas .hero-art .frame:first-child {
   grid-row: span 2;
 }
-.tas .floating {
-  position: absolute;
-  right: 40px;
-  bottom: 130px;
-  background: var(--cream);
-  border: 1px solid var(--line);
-  padding: 14px 20px;
-  border-radius: 2px;
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--forest);
-  box-shadow: 0 20px 40px -24px rgba(46, 58, 42, 0.4);
-}
-.tas .floating b {
-  color: var(--gold);
-  font-weight: 700;
-}
 .tas section {
   padding: 74px 0;
 }
@@ -1873,9 +1855,6 @@ html.lenis body {
   .tas .banner h1 {
     font-size: 34px;
   }
-  .tas .floating {
-    display: none;
-  }
   .tas .foot-grid {
     grid-template-columns: 1fr 1fr;
   }
@@ -2111,9 +2090,6 @@ html.lenis body {
   }
   .tas .card h3 {
     font-size: 19px;
-  }
-  .tas .floating {
-    display: none;
   }
   .tas .thumbs {
     flex-direction: row;
