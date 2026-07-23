@@ -1,22 +1,25 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { getCategories, type CategoryWithVisuals } from "../lib/categories";
+import { getShopCategories, type ShopCategory } from "../lib/shop-categories";
 import { getWebsiteContent, getPageSEO, type WebsiteContent } from "../lib/website-content";
 import { getArtworks, type ArtworkWithCategory } from "../lib/artworks";
 import { SiteChrome } from "@/components/site/SiteChrome";
 
 export const Route = createFileRoute("/")({
   loader: async () => {
-    const [categories, content, seo, homepageArtworks] = await Promise.all([
+    const [categories, content, seo, homepageArtworks, shopCategories] = await Promise.all([
       getCategories().catch(() => []),
       getWebsiteContent({ page: "homepage", activeOnly: true }).catch(() => []),
       getPageSEO("homepage").catch(() => ({ title: null, description: null, ogImage: null })),
       getArtworks({ status: "published", limit: 6, orderBy: "display_order" }).catch(() => []),
+      getShopCategories({ activeOnly: true }).catch(() => []),
     ]);
     return {
       categories: categories as CategoryWithVisuals[],
       content: content as WebsiteContent[],
       seo,
       homepageArtworks: homepageArtworks as ArtworkWithCategory[],
+      shopCategories: shopCategories as ShopCategory[],
     };
   },
   head: ({ loaderData }) => {
@@ -38,6 +41,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const { shopCategories } = Route.useLoaderData();
   return (
     <SiteChrome>
       <section className="hero">
@@ -200,42 +204,23 @@ function Index() {
             </div>
           </div>
           <div className="cat-grid">
-            <Link className="cat-tile tilt rv" to="/shop">
-              <div className="frame" data-label=""></div>
-              <span className="label">
-                <span>Luxury Lamps</span>
-              </span>
-            </Link>
-            <Link className="cat-tile tilt rv d1" to="/shop">
-              <div className="frame" data-label=""></div>
-              <span className="label">
-                <span>Clay Decor</span>
-              </span>
-            </Link>
-            <Link className="cat-tile tilt rv d2" to="/shop">
-              <div className="frame" data-label=""></div>
-              <span className="label">
-                <span>Cement Sculptures</span>
-              </span>
-            </Link>
-            <Link className="cat-tile tilt rv" to="/shop">
-              <div className="frame" data-label=""></div>
-              <span className="label">
-                <span>Wooden Objects</span>
-              </span>
-            </Link>
-            <Link className="cat-tile tilt rv d1" to="/shop">
-              <div className="frame" data-label=""></div>
-              <span className="label">
-                <span>Premium Gifts</span>
-              </span>
-            </Link>
-            <Link className="cat-tile tilt rv d2" to="/shop">
-              <div className="frame" data-label=""></div>
-              <span className="label">
-                <span>Limited Collectibles</span>
-              </span>
-            </Link>
+            {shopCategories.slice(0, 6).map((cat, i) => (
+              <Link
+                key={cat.id}
+                className={`cat-tile tilt rv${i % 3 === 1 ? " d1" : i % 3 === 2 ? " d2" : ""}`}
+                to="/shop/$category"
+                params={{ category: cat.slug }}
+              >
+                {cat.image_url ? (
+                  <img src={cat.image_url} alt={cat.name} loading="lazy" />
+                ) : (
+                  <div className="frame" data-label=""></div>
+                )}
+                <span className="label">
+                  <span>{cat.name}</span>
+                </span>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
