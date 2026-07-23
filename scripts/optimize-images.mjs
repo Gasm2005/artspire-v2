@@ -16,12 +16,13 @@ const RASTER = /\.(png|jpe?g)$/i;
 const WEBP_QUALITY = 80;
 
 // Skip social-share images — OG/Twitter crawlers need PNG/JPG, not WebP.
-const EXCLUDE = new Set(["og-image.png"]);
+const EXCLUDE = new Set(["og-image.jpg", "og-image.png"]);
 
 // Assets displayed much smaller than their intrinsic size — cap width at 2x
 // the CSS display width (retina). Everything else converts at native size.
 const MAX_WIDTHS = {
   "artspire-logo.png": 500, // displayed ~249px wide
+  "hero-lamp.jpg": 700, // hero frame displays ~300px wide; 700px covers 2x retina
 };
 
 async function walk(dir) {

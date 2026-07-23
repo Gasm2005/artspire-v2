@@ -84,7 +84,19 @@ function Index() {
             </div>
           </div>
           <div className="hero-art">
-            <div className="frame tilt" data-label="Signature lamp — hero photo"></div>
+            <div className="frame tilt has-photo" data-label="Signature lamp — hero photo">
+              <picture>
+                <source srcSet="/hero-lamp.webp" type="image/webp" />
+                <img
+                  src="/hero-lamp.jpg"
+                  alt="Handcrafted branch lamp — driftwood branches bound in rope, glowing warm against a plaster wall"
+                  loading="eager"
+                  fetchPriority="high"
+                  width={1000}
+                  height={1500}
+                />
+              </picture>
+            </div>
             <div className="frame tilt" data-label="Clay vessel"></div>
             <div className="frame tilt" data-label="Cement sculpture"></div>
           </div>

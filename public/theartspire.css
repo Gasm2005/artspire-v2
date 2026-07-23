@@ -207,6 +207,23 @@
   pointer-events: none;
   z-index: 1;
 }
+/* Frames holding a real photo: drop the placeholder label + dashed border,
+   and make the image fill the frame. */
+.tas .frame.has-photo::before,
+.tas .frame.has-photo::after {
+  display: none;
+}
+.tas .frame > picture {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+}
+.tas .frame > picture img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
 .tas .frame::after {
   content: "\25C8  " attr(data-label);
   position: absolute;
