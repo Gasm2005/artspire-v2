@@ -248,7 +248,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         { type: "application/ld+json", children: JSON.stringify(localBusinessSchema) },
         { type: "application/ld+json", children: JSON.stringify(personSchema) },
         { type: "application/ld+json", children: JSON.stringify(websiteSchema) },
-        { src: "https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js" },
+        {
+          src: "https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js",
+          defer: true,
+        },
       ],
       links: [
         { rel: "stylesheet", href: appCss },
