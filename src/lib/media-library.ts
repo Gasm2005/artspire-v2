@@ -208,6 +208,36 @@ export type UploadMediaResult = {
   publicUrl: string;
 };
 
+// Photo formats worth compressing. SVG/GIF (animated) are left untouched.
+const COMPRESSIBLE_TYPES = ["image/jpeg", "image/png", "image/webp"];
+
+/**
+ * Compresses + resizes a raster image to WebP in the browser before upload,
+ * so admin-uploaded photos aren't served at 300–400KB+. Caps the longest edge
+ * at 1600px (covers 2x retina for any display on the site) and targets
+ * ~300KB. Falls back to the original file if compression isn't applicable or
+ * fails, so an upload is never blocked.
+ */
+async function compressImageForUpload(file: File): Promise<File> {
+  if (!COMPRESSIBLE_TYPES.includes(file.type)) return file;
+  try {
+    // Dynamic import keeps this browser-only lib out of the SSR bundle.
+    const { default: imageCompression } = await import("browser-image-compression");
+    const compressed = await imageCompression(file, {
+      maxWidthOrHeight: 1600,
+      maxSizeMB: 0.35,
+      initialQuality: 0.8,
+      useWebWorker: true,
+      fileType: "image/webp",
+    });
+    const base = file.name.replace(/\.[^.]+$/, "");
+    return new File([compressed], `${base}.webp`, { type: "image/webp" });
+  } catch (err) {
+    console.warn("[media] image compression failed — uploading original:", err);
+    return file;
+  }
+}
+
 export async function uploadMediaFile(
   file: File,
   opts?: {
@@ -218,14 +248,16 @@ export async function uploadMediaFile(
   },
 ): Promise<UploadMediaResult> {
   const folder = opts?.folder ?? "uncategorized";
-  const fileExt = file.name.split(".").pop() || "jpg";
+  const originalName = file.name;
+  // Optimize before upload (WebP + resized); no-op for non-raster or on failure.
+  const upload = await compressImageForUpload(file);
   const timestamp = Date.now();
-  const path = `${folder}/${timestamp}-${file.name.replace(/[^a-zA-Z0-9.-]/g, "_")}`;
+  const path = `${folder}/${timestamp}-${upload.name.replace(/[^a-zA-Z0-9.-]/g, "_")}`;
 
   // Upload to storage
   const { data: uploadData, error: uploadError } = await supabase.storage
     .from("media-library")
-    .upload(path, file, { upsert: false });
+    .upload(path, upload, { upsert: false });
 
   if (uploadError) throw uploadError;
 
@@ -238,12 +270,12 @@ export async function uploadMediaFile(
 
   // Create media_library record
   const insert: MediaItemInsert = {
-    filename: file.name,
-    original_name: file.name,
+    filename: upload.name,
+    original_name: originalName,
     storage_path: uploadData.path,
     public_url: publicUrl,
-    file_size: file.size,
-    mime_type: file.type,
+    file_size: upload.size,
+    mime_type: upload.type,
     alt_text: opts?.altText ?? null,
     title: opts?.title ?? null,
     tags: opts?.tags ?? null,
