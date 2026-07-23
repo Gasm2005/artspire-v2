@@ -396,6 +396,22 @@
   color: var(--forest);
   letter-spacing: -0.01em;
   margin: 26px 0 26px;
+  /* Entrance that never hides the text (opacity stays 1) so it paints on the
+     first frame — keeps LCP fast while still feeling premium. */
+  animation: hero-rise 0.7s cubic-bezier(0.7, 0, 0.2, 1) both;
+}
+@keyframes hero-rise {
+  from {
+    transform: translateY(16px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tas .hero h1 {
+    animation: none;
+  }
 }
 .tas .hero h1 em {
   font-style: italic;

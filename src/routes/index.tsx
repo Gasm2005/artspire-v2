@@ -44,7 +44,10 @@ function Index() {
         <div className="wrap hero-grid">
           <div>
             <span className="eyebrow rv">Handcrafted · Limited Editions</span>
-            <h1 className="reveal-words">
+            {/* LCP element — intentionally NOT reveal-words: the JS word-split
+                animation clipped the H1 until hydration, delaying LCP to ~3.4s.
+                A CSS-only rise (below) keeps it painted from first frame. */}
+            <h1 className="hero-title">
               Objects made to be <em>lived with,</em> and left behind.
             </h1>
             <p className="rv d2">
