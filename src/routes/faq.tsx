@@ -10,6 +10,22 @@ export const Route = createFileRoute("/faq")({
         content: "Shipping, returns, care, and how commissions work at The Artspire.",
       },
     ],
+    // FAQPage structured data — lets Google show FAQ rich results and helps
+    // answer engines (SearchGPT, Perplexity, AI Overviews) extract Q&A.
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: FAQS.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+          })),
+        }),
+      },
+    ],
   }),
   component: FaqPage,
 });
