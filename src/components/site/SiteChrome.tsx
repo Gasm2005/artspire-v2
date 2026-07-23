@@ -388,8 +388,11 @@ export function SiteChrome({ children }: { children: ReactNode }) {
   useSiteMotion();
   return (
     <div className="tas">
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
       <SiteHeader />
-      {children}
+      <main id="main-content">{children}</main>
       <SiteFooter />
       <div className="totop" id="totop">
         <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.8">

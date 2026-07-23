@@ -15,6 +15,9 @@
   --forest-2: #33322c;
   --gold: #a9884e;
   --gold-soft: #c6a566;
+  /* Darker gold for text on light (cream/white) backgrounds — meets WCAG AA
+     4.5:1. Use this for gold TEXT; keep --gold for accents/backgrounds. */
+  --gold-ink: #7a5f33;
   --charcoal: #1a1917;
   --stone: #847f77;
   --line: #e0dacd;
@@ -40,8 +43,31 @@
   font-size: 11px;
   letter-spacing: 0.34em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--gold-ink);
   font-weight: 600;
+}
+
+/* Accessibility: skip-to-content link, visually hidden until keyboard-focused */
+.tas .skip-link {
+  position: absolute;
+  left: 8px;
+  top: -60px;
+  z-index: 200;
+  background: var(--forest);
+  color: var(--cream);
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: top 0.2s ease;
+}
+.tas .skip-link:focus {
+  top: 8px;
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+#main-content {
+  scroll-margin-top: 90px;
 }
 
 .tas .btn {
@@ -370,7 +396,7 @@
 }
 .tas .hero h1 em {
   font-style: italic;
-  color: var(--gold);
+  color: var(--gold-ink);
   font-weight: 500;
 }
 .tas .hero p {
