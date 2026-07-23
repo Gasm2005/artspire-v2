@@ -23,6 +23,8 @@ const EXCLUDE = new Set(["og-image.jpg", "og-image.png"]);
 const MAX_WIDTHS = {
   "artspire-logo.png": 500, // displayed ~249px wide
   "hero-lamp.jpg": 700, // hero frame displays ~300px wide; 700px covers 2x retina
+  "hero-clay.jpg": 700,
+  "hero-cement.jpg": 700,
 };
 
 async function walk(dir) {

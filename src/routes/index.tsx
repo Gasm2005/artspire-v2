@@ -97,8 +97,30 @@ function Index() {
                 />
               </picture>
             </div>
-            <div className="frame tilt" data-label="Clay vessel"></div>
-            <div className="frame tilt" data-label="Cement sculpture"></div>
+            <div className="frame tilt has-photo" data-label="Clay vessel">
+              <picture>
+                <source srcSet="/hero-clay.webp" type="image/webp" />
+                <img
+                  src="/hero-clay.jpg"
+                  alt="Handmade clay vessel"
+                  loading="eager"
+                  width={640}
+                  height={600}
+                />
+              </picture>
+            </div>
+            <div className="frame tilt has-photo" data-label="Cement sculpture">
+              <picture>
+                <source srcSet="/hero-cement.webp" type="image/webp" />
+                <img
+                  src="/hero-cement.jpg"
+                  alt="Hand-cast cement sculpture"
+                  loading="eager"
+                  width={640}
+                  height={480}
+                />
+              </picture>
+            </div>
           </div>
         </div>
         <div className="floating">
