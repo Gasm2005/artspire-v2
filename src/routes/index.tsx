@@ -1,25 +1,29 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { getCategories, type CategoryWithVisuals } from "../lib/categories";
 import { getShopCategories, type ShopCategory } from "../lib/shop-categories";
+import { getHomepageProducts, type ProductWithCategory } from "../lib/products";
 import { getWebsiteContent, getPageSEO, type WebsiteContent } from "../lib/website-content";
 import { getArtworks, type ArtworkWithCategory } from "../lib/artworks";
 import { SiteChrome } from "@/components/site/SiteChrome";
 
 export const Route = createFileRoute("/")({
   loader: async () => {
-    const [categories, content, seo, homepageArtworks, shopCategories] = await Promise.all([
-      getCategories().catch(() => []),
-      getWebsiteContent({ page: "homepage", activeOnly: true }).catch(() => []),
-      getPageSEO("homepage").catch(() => ({ title: null, description: null, ogImage: null })),
-      getArtworks({ status: "published", limit: 6, orderBy: "display_order" }).catch(() => []),
-      getShopCategories({ activeOnly: true }).catch(() => []),
-    ]);
+    const [categories, content, seo, homepageArtworks, shopCategories, homepageProducts] =
+      await Promise.all([
+        getCategories().catch(() => []),
+        getWebsiteContent({ page: "homepage", activeOnly: true }).catch(() => []),
+        getPageSEO("homepage").catch(() => ({ title: null, description: null, ogImage: null })),
+        getArtworks({ status: "published", limit: 6, orderBy: "display_order" }).catch(() => []),
+        getShopCategories({ activeOnly: true }).catch(() => []),
+        getHomepageProducts(4).catch(() => []),
+      ]);
     return {
       categories: categories as CategoryWithVisuals[],
       content: content as WebsiteContent[],
       seo,
       homepageArtworks: homepageArtworks as ArtworkWithCategory[],
       shopCategories: shopCategories as ShopCategory[],
+      homepageProducts: homepageProducts as ProductWithCategory[],
     };
   },
   head: ({ loaderData }) => {
@@ -41,7 +45,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const { shopCategories } = Route.useLoaderData();
+  const { shopCategories, homepageProducts } = Route.useLoaderData();
   return (
     <SiteChrome>
       <section className="hero">
@@ -141,44 +145,27 @@ function Index() {
             </Link>
           </div>
           <div className="prod-grid">
-            <Link className="card rv" to="/shop">
-              <div className="imgwrap tilt">
-                <span className="tag">1 of 1</span>
-                <div className="frame" data-label="Product photo"></div>
-                <div className="quick">Quick view</div>
-              </div>
-              <div className="cat">Luxury Lamps</div>
-              <h3>Handcrafted Metallic Lamp</h3>
-              <div className="price">₹4,999</div>
-            </Link>
-            <Link className="card rv d1" to="/shop">
-              <div className="imgwrap tilt">
-                <span className="tag">New</span>
-                <div className="frame" data-label="Product photo"></div>
-                <div className="quick">Quick view</div>
-              </div>
-              <div className="cat">Clay Decor</div>
-              <h3>Hand-thrown Vessel</h3>
-              <div className="price">₹2,400</div>
-            </Link>
-            <Link className="card rv d2" to="/shop">
-              <div className="imgwrap tilt">
-                <div className="frame" data-label="Product photo"></div>
-                <div className="quick">Quick view</div>
-              </div>
-              <div className="cat">Cement Sculptures</div>
-              <h3>Monolith Object</h3>
-              <div className="price">₹3,200</div>
-            </Link>
-            <Link className="card rv d3" to="/shop">
-              <div className="imgwrap tilt">
-                <div className="frame" data-label="Product photo"></div>
-                <div className="quick">Quick view</div>
-              </div>
-              <div className="cat">Wooden Objects</div>
-              <h3>Carved Bowl Set</h3>
-              <div className="price">₹1,850</div>
-            </Link>
+            {homepageProducts.map((p, i) => (
+              <Link
+                key={p.id}
+                className={`card rv${i % 4 === 1 ? " d1" : i % 4 === 2 ? " d2" : i % 4 === 3 ? " d3" : ""}`}
+                to="/shop/product/$slug"
+                params={{ slug: p.slug }}
+              >
+                <div className="imgwrap tilt">
+                  {p.is_one_of_a_kind && <span className="tag">1 of 1</span>}
+                  {p.image_url ? (
+                    <img src={p.image_url} alt={p.title} loading="lazy" />
+                  ) : (
+                    <div className="frame" data-label="Product photo"></div>
+                  )}
+                  <div className="quick">Quick view</div>
+                </div>
+                {p.categories?.name && <div className="cat">{p.categories.name}</div>}
+                <h3>{p.title}</h3>
+                <div className="price">₹{p.price.toLocaleString("en-IN")}</div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
