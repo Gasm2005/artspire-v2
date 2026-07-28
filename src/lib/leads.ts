@@ -31,6 +31,7 @@ export interface Lead {
   source_detail: string | null;
   status: LeadStatus;
   notes: string | null;
+  photo_urls: string[] | null;
   created_at: string;
   updated_at: string;
 }
@@ -42,7 +43,9 @@ export async function getAllLeads(opts?: { status?: LeadStatus; limit?: number }
 
   const { data, error } = await query;
   if (error) throw error;
-  return (data ?? []) as Lead[];
+  // `unknown` bridge: photo_urls (Task 0C) isn't in the generated Row type
+  // until types are regenerated after its additive migration.
+  return (data ?? []) as unknown as Lead[];
 }
 
 export async function updateLeadStatus(leadId: string, status: LeadStatus): Promise<void> {

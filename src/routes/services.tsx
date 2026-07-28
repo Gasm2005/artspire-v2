@@ -3,6 +3,12 @@ import { useState, type FormEvent } from "react";
 import { waLink } from "../lib/whatsapp";
 import { submitContactLead } from "@/lib/leads.server";
 import { getCategories, type CategoryWithVisuals } from "@/lib/categories";
+import {
+  uploadCommissionPhotos,
+  validatePhotos,
+  MAX_PHOTOS,
+  type PhotoUploadProgress,
+} from "@/lib/commission-photos";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
 
@@ -51,19 +57,53 @@ function ServicesPage() {
   const { categories } = Route.useLoaderData();
   const imageBySlug = new Map(categories.map((c) => [c.slug, c.image_url ?? null]));
   const [form, setForm] = useState({ name: "", phone: "", email: "", idea: "" });
+  const [photos, setPhotos] = useState<File[]>([]);
+  const [photoProgress, setPhotoProgress] = useState<PhotoUploadProgress[]>([]);
+  const [photoError, setPhotoError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
+  const onPickPhotos = (fileList: FileList | null) => {
+    const files = Array.from(fileList ?? []).slice(0, MAX_PHOTOS);
+    setPhotos(files);
+    setPhotoProgress([]);
+    setPhotoError(files.length ? validatePhotos(files) : null);
+  };
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (submitting) return;
+    const photoErr = photos.length ? validatePhotos(photos) : null;
+    if (photoErr) {
+      setPhotoError(photoErr);
+      return;
+    }
     setSubmitting(true);
     try {
+      // Upload reference photos first (if any); the form still submits with none.
+      let photoUrls: string[] = [];
+      if (photos.length) {
+        const res = await uploadCommissionPhotos(photos, (p) =>
+          setPhotoProgress((prev) => {
+            const next = [...prev];
+            next[p.index] = p;
+            return next;
+          }),
+        );
+        photoUrls = res.paths;
+      }
       await submitContactLead({
-        data: { name: form.name, phone: form.phone, email: form.email, requirement: form.idea },
+        data: {
+          name: form.name,
+          phone: form.phone,
+          email: form.email,
+          requirement: form.idea,
+          photoUrls,
+        },
       });
     } catch (err) {
       console.error("Failed to save lead:", err);
     }
+    // NOTE: WhatsApp redirect + success/error handling are rewritten in Task 0D.
     window.location.href = waLink(
       `Hi Himangi, I'd like to commission a piece. I'm ${form.name} (${form.phone}). ${form.idea}`,
     );
@@ -223,6 +263,41 @@ function ServicesPage() {
                 onChange={(e) => setForm({ ...form, idea: e.target.value })}
                 placeholder="Tell us about the person, memory, or occasion…"
               />
+            </div>
+            <div className="field">
+              <label>Reference photos (optional)</label>
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={(e) => onPickPhotos(e.target.files)}
+              />
+              <small
+                style={{ display: "block", color: "var(--stone)", fontSize: 11, marginTop: 4 }}
+              >
+                Up to {MAX_PHOTOS} photos — a clear photo helps Himangi quote accurately. Kept
+                private.
+              </small>
+              {photos.length > 0 && (
+                <ul style={{ listStyle: "none", padding: 0, margin: "8px 0 0", fontSize: 12 }}>
+                  {photos.map((f, i) => {
+                    const st = photoProgress[i]?.status;
+                    return (
+                      <li key={i} style={{ color: "var(--stone)", padding: "2px 0" }}>
+                        {f.name.length > 30 ? f.name.slice(0, 27) + "…" : f.name}
+                        {st === "uploading" && " · uploading…"}
+                        {st === "done" && " · ✓ uploaded"}
+                        {st === "error" && (
+                          <span style={{ color: "#b91c1c" }}> · failed — will retry on resend</span>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+              {photoError && (
+                <p style={{ color: "#b91c1c", fontSize: 12, marginTop: 4 }}>{photoError}</p>
+              )}
             </div>
             <button className="btn btn-gold btn-block" type="submit" disabled={submitting}>
               <span>{submitting ? "Sending…" : "Request a Commission"}</span>

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { getAllLeads, updateLeadStatus, type Lead, type LeadStatus } from "@/lib/leads";
+import { getCommissionPhotoUrls } from "@/lib/leads.server";
 import { Loader2, Users, Search, MessageCircle, Mail } from "lucide-react";
 import { toast } from "@/lib/toast";
 
@@ -62,6 +63,7 @@ function formatDate(iso: string): string {
 
 function LeadsPage() {
   const [leads, setLeads] = useState<Lead[]>([]);
+  const [leadPhotos, setLeadPhotos] = useState<Record<string, string[]>>({});
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"all" | LeadStatus>("all");
   const [query, setQuery] = useState("");
@@ -72,6 +74,20 @@ function LeadsPage() {
     try {
       const data = await getAllLeads({ limit: 500 });
       setLeads(data);
+      // Sign reference-photo paths fresh on every load (they never expire this
+      // way — see Task 0C). Only for leads that actually have photos.
+      const withPhotos = data.filter((l) => l.photo_urls && l.photo_urls.length > 0);
+      const entries = await Promise.all(
+        withPhotos.map(async (l) => {
+          try {
+            const { urls } = await getCommissionPhotoUrls({ data: { paths: l.photo_urls! } });
+            return [l.id, urls.filter((u): u is string => !!u)] as const;
+          } catch {
+            return [l.id, [] as string[]] as const;
+          }
+        }),
+      );
+      setLeadPhotos(Object.fromEntries(entries));
     } catch (err) {
       console.error("Load leads error:", err);
       toast.error("Failed to load leads.");
@@ -231,6 +247,25 @@ function LeadsPage() {
                       <p className="font-body text-[12px] text-stone whitespace-pre-wrap break-words">
                         {lead.requirement || <span className="text-stone/40">—</span>}
                       </p>
+                      {lead.photo_urls && lead.photo_urls.length > 0 && (
+                        <div className="mt-2 flex flex-wrap gap-1.5">
+                          {(leadPhotos[lead.id] ?? []).map((u, i) => (
+                            <a key={i} href={u} target="_blank" rel="noreferrer" title="Open photo">
+                              <img
+                                src={u}
+                                alt={`Reference photo ${i + 1}`}
+                                className="w-11 h-11 object-cover rounded-md border border-border"
+                              />
+                            </a>
+                          ))}
+                          {(leadPhotos[lead.id]?.length ?? 0) === 0 && (
+                            <span className="font-body text-[11px] text-stone/50">
+                              📎 {lead.photo_urls.length} photo
+                              {lead.photo_urls.length === 1 ? "" : "s"}
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </td>
                     <td className="px-4 py-3 align-top">
                       <span className="font-body text-[12px] text-stone capitalize">
