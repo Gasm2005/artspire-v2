@@ -5,7 +5,12 @@
 //     error logger plugins, and sandbox detection (port/host/strictPort).
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 import { resolve } from "path";
+
+// Source-map upload only runs when the build has a Sentry auth token (Vercel
+// build env). Locally / without it, no maps are generated or uploaded.
+const sentryEnabled = !!process.env.SENTRY_AUTH_TOKEN;
 
 export default defineConfig({
   nitro: {
@@ -26,6 +31,21 @@ export default defineConfig({
     server: { entry: "server" },
   },
   vite: {
+    // Generate source maps only when we're going to upload them to Sentry,
+    // so production JS maps aren't served publicly by default.
+    build: { sourcemap: sentryEnabled },
+    plugins: sentryEnabled
+      ? [
+          sentryVitePlugin({
+            org: process.env.SENTRY_ORG,
+            project: process.env.SENTRY_PROJECT,
+            authToken: process.env.SENTRY_AUTH_TOKEN,
+            telemetry: false,
+            // Upload maps to Sentry, then delete them so they aren't public.
+            sourcemaps: { filesToDeleteAfterUpload: ["**/*.map"] },
+          }),
+        ]
+      : [],
     // Force Vite to bundle tslib into the SSR output instead of externalizing it.
     // This prevents the empty _libs/tslib.mjs chunk from being created.
     ssr: {

@@ -14,6 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { TopLoader } from "@/components/TopLoader";
 import { Toaster } from "@/components/ui/sonner";
 import { SITE_URL, OG_IMAGE, BRAND } from "@/lib/site";
+import { initSentryClient } from "@/lib/sentry-client";
 
 function NotFoundComponent() {
   return (
@@ -310,6 +311,10 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  useEffect(() => {
+    initSentryClient();
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
