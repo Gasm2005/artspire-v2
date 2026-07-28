@@ -10,7 +10,9 @@ import type { Order, OrderItem } from "./orders";
 // an already-paid order.
 
 const OWNER_EMAIL = "Ajju_pandey@outlook.com";
-const FROM_EMAIL = "Artspire <orders@artspire.in>"; // update once domain is verified in Resend
+// [NEEDS CONFIRMATION: theartspire.com must be verified as a sending domain in
+// Resend before these emails will deliver — until then Resend rejects them.]
+const FROM_EMAIL = "The Artspire <orders@theartspire.com>";
 
 function getResendClient(): Resend | null {
   const apiKey = process.env.RESEND_API_KEY;

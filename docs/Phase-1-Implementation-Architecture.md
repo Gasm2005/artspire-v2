@@ -979,7 +979,7 @@ INSERT INTO website_content (content_key, page, section, field_name, value_text,
 INSERT INTO website_content (content_key, page, section, field_name, value_text, field_type) VALUES
   ('contact.phone.primary', 'contact', 'contact_info', 'phone', '+91 98765 43210', 'text'),
   ('contact.whatsapp.number', 'contact', 'contact_info', 'whatsapp', '+91 98765 43210', 'text'),
-  ('contact.email.primary', 'contact', 'contact_info', 'email', 'hello@artspire.in', 'text'),
+  ('contact.email.primary', 'contact', 'contact_info', 'email', 'hello@theartspire.com', 'text'),
   ('contact.address.full', 'contact', 'contact_info', 'address', 'Mumbai, Maharashtra, India', 'textarea');
 ```
 

@@ -1,5 +1,5 @@
 // ─── SITE CONFIG (single source of truth for URLs / social) ─────
-// Audit finding: the canonical domain was hardcoded as "https://artspire.in"
+// Audit finding: the canonical domain was hardcoded to the retired .in domain
 // in __root.tsx, artwork/product routes, robots.txt and post-build.mjs,
 // and the OG image pointed at a file that didn't exist. That breaks
 // canonical URLs, schema.org @ids, and every social share card the

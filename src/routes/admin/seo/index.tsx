@@ -22,6 +22,11 @@ import {
 } from "@/lib/website-content";
 import { getArtworks, type ArtworkWithCategory } from "@/lib/artworks";
 import { getCategories } from "@/lib/categories";
+import { SITE_URL } from "@/lib/site";
+
+// Hostname shown in the Google-preview mock, derived from the single source of
+// truth so the admin never displays a retired/stale domain.
+const SITE_HOST = SITE_URL.replace(/^https?:\/\//, "");
 
 export const Route = createFileRoute("/admin/seo/")({
   component: SEOPage,
@@ -69,7 +74,7 @@ function GooglePreview({
   description: string;
   url: string;
 }) {
-  const siteUrl = "artspire.in";
+  const siteUrl = SITE_HOST;
   return (
     <div className="bg-white rounded-xl border border-border p-4 font-body">
       <p className="text-[11px] text-stone/50 mb-2 uppercase tracking-wider font-semibold">
@@ -208,7 +213,7 @@ function SEOFieldEditor({
             type="text"
             value={og}
             onChange={(e) => setOg(e.target.value)}
-            placeholder="https://artspire.in/og-image.jpg (1200×630px)"
+            placeholder="https://theartspire.com/og-image.jpg (1200×630px)"
             className={inputClass}
           />
           <p className="font-body text-[10px] text-stone/50 mt-1">
@@ -530,7 +535,7 @@ function SEOPage() {
               label="Default OG Image URL"
               hint="Shown when any page is shared on social media (1200×630px)"
               contentKey="seo.global.og_image"
-              placeholder="https://artspire.in/og-default.jpg"
+              placeholder="https://theartspire.com/og-default.jpg"
               cv={cv}
               save={saveContent}
             />
@@ -557,8 +562,8 @@ function SEOPage() {
               📍 Already done automatically
             </p>
             <ul className="font-body text-[12px] text-amber-700 space-y-1 list-disc list-inside">
-              <li>sitemap.xml generated at every deploy → artspire.in/sitemap.xml</li>
-              <li>robots.txt live → artspire.in/robots.txt</li>
+              <li>sitemap.xml generated at every deploy → theartspire.com/sitemap.xml</li>
+              <li>robots.txt live → theartspire.com/robots.txt</li>
               <li>JSON-LD structured data on all artwork pages</li>
               <li>Breadcrumb schema on artwork pages</li>
               <li>Open Graph tags on artwork pages</li>
@@ -609,7 +614,7 @@ function SEOPage() {
             </div>
             <p className="font-body text-[11px] text-stone/50 mt-3">
               Sitemap URL to submit:{" "}
-              <span className="font-semibold text-forest">https://artspire.in/sitemap.xml</span>
+              <span className="font-semibold text-forest">https://theartspire.com/sitemap.xml</span>
             </p>
           </div>
         </div>

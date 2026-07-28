@@ -65,7 +65,7 @@ function ContactContentPage() {
           key: "contact.info.email",
           label: "Email Address",
           type: "text" as const,
-          placeholder: "hello@artspire.in",
+          placeholder: "hello@theartspire.com",
         },
         {
           key: "contact.info.address",

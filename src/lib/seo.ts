@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { SITE_URL } from "@/lib/site";
 import type { Database } from "@/integrations/supabase/types";
 
 export type SEOMetadata = Database["public"]["Tables"]["seo_metadata"]["Row"];
@@ -121,7 +122,11 @@ export function buildBreadcrumbStructuredData(
   };
 }
 
+// Single source of truth (src/lib/site.ts → VITE_SITE_URL). This previously
+// returned window.location.origin on the client and fell back to the RETIRED
+// .in domain on the server — so client-rendered schema.org/canonical
+// data pointed at vercel.app or localhost instead of the real domain, and the
+// two environments disagreed. Never derive the canonical host from the browser.
 function getSiteUrl(): string {
-  if (typeof window !== "undefined") return window.location.origin;
-  return import.meta.env.VITE_SITE_URL || "https://artspire.in";
+  return SITE_URL;
 }
