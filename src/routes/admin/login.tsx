@@ -86,7 +86,7 @@ function AdminLoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full h-[44px] px-4 rounded-xl border border-border bg-white font-body text-[14px] text-forest focus:outline-none focus:border-gold transition-colors"
-              placeholder="admin@artspire.in"
+              placeholder="admin@theartspire.com"
             />
           </div>
 
