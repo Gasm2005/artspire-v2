@@ -46,6 +46,10 @@ export const submitContactLead = createServerFn({ method: "POST" })
       requirement?: string;
       photoUrls?: string[];
       idempotencyKey?: string;
+      categoryId?: string;
+      budgetRange?: string;
+      size?: string;
+      neededBy?: string;
     }) => data,
   )
   .handler(async ({ data }): Promise<{ leadNumber: string; duplicate: boolean }> => {
@@ -83,8 +87,14 @@ export const submitContactLead = createServerFn({ method: "POST" })
       requirement: data.requirement?.trim() || null,
       source: "website-form",
       status: "new",
+      ...(data.categoryId ? { category_id: data.categoryId } : {}),
+      ...(data.budgetRange?.trim() ? { budget_range: data.budgetRange.trim() } : {}),
       ...(data.photoUrls?.length ? { photo_urls: data.photoUrls } : {}),
       ...(key ? { idempotency_key: key } : {}),
+      // size / needed_by are new columns (0E migration); added conditionally so
+      // submits work before the migration and cast below covers the types gap.
+      ...(data.size?.trim() ? { size: data.size.trim() } : {}),
+      ...(data.neededBy ? { needed_by: data.neededBy } : {}),
     };
 
     const { error: insertError } = await admin.from("leads").insert(insert as LeadInsert);

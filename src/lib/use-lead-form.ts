@@ -15,7 +15,16 @@ import { reportError } from "./sentry-client";
 // landed.
 
 export type LeadSubmitStatus = "idle" | "submitting" | "success" | "error";
-export type LeadPayload = { name: string; phone: string; email?: string; requirement?: string };
+export type LeadPayload = {
+  name: string;
+  phone: string;
+  email?: string;
+  requirement?: string;
+  categoryId?: string;
+  budgetRange?: string;
+  size?: string;
+  neededBy?: string;
+};
 
 export function useLeadForm(opts?: { withPhotos?: boolean }) {
   // Stable per form instance: doubles as the idempotency key AND the photo
@@ -83,6 +92,10 @@ export function useLeadForm(opts?: { withPhotos?: boolean }) {
           phone: payload.phone,
           email: payload.email,
           requirement: payload.requirement,
+          categoryId: payload.categoryId,
+          budgetRange: payload.budgetRange,
+          size: payload.size,
+          neededBy: payload.neededBy,
           photoUrls,
           idempotencyKey: formId,
         },

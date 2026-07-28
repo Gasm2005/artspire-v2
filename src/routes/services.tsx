@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, useRef, type FormEvent } from "react";
 import { waLink } from "../lib/whatsapp";
 import { getCategories, type CategoryWithVisuals } from "@/lib/categories";
 import { MAX_PHOTOS } from "@/lib/commission-photos";
@@ -7,7 +7,13 @@ import { useLeadForm } from "@/lib/use-lead-form";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
 
+const BUDGET_OPTIONS = ["Under ₹1,000", "₹1,000–2,500", "₹2,500–5,000", "₹5,000+", "Not sure yet"];
+
 export const Route = createFileRoute("/services")({
+  // ?service=<category-slug> pre-selects a service when arriving from a card.
+  validateSearch: (search: Record<string, unknown>): { service?: string } => ({
+    service: typeof search.service === "string" ? search.service : undefined,
+  }),
   loader: async () => {
     // Service-card images are managed from /admin/categories (the `categories`
     // table). Each service maps to a category slug below.
@@ -50,21 +56,74 @@ const SERVICES = [
 
 function ServicesPage() {
   const { categories } = Route.useLoaderData();
+  const { service: serviceParam } = Route.useSearch();
   const imageBySlug = new Map(categories.map((c) => [c.slug, c.image_url ?? null]));
-  const [form, setForm] = useState({ name: "", phone: "", email: "", idea: "" });
+  const slugToCategoryId = new Map(categories.map((c) => [c.slug, c.id]));
+  const formRef = useRef<HTMLElement>(null);
+
+  // Graceful pre-selection: only honour the param if it's a REAL service slug;
+  // direct navigation or a bad param leaves the selector empty (user picks).
+  const paramIsValid = !!serviceParam && SERVICES.some((s) => s.categorySlug === serviceParam);
+  const [serviceSlug, setServiceSlug] = useState(paramIsValid ? serviceParam! : "");
+  const [serviceErr, setServiceErr] = useState<string | null>(null);
+  const [form, setForm] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    idea: "",
+    budget: "",
+    size: "",
+    neededBy: "",
+  });
   const lead = useLeadForm({ withPhotos: true });
+
+  // Arriving from a card while already on /services updates the param without a
+  // remount — sync the selector and scroll the form into view.
+  useEffect(() => {
+    if (serviceParam && SERVICES.some((s) => s.categorySlug === serviceParam)) {
+      setServiceSlug(serviceParam);
+      formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [serviceParam]);
+
+  const selectedService = SERVICES.find((s) => s.categorySlug === serviceSlug);
+
+  // Soft (non-blocking) warning if the needed-by date is sooner than the
+  // service's advertised turnaround — Himangi may still expedite.
+  const timelineWarning = (() => {
+    if (!selectedService || !form.neededBy) return null;
+    const nums = (selectedService.days.match(/\d+/g) ?? []).map(Number);
+    const typical = nums.length ? Math.max(...nums) : 0;
+    const daysUntil = Math.ceil((new Date(form.neededBy).getTime() - Date.now()) / 86_400_000);
+    if (typical && daysUntil >= 0 && daysUntil < typical) {
+      return `This is usually a ${selectedService.days} piece and your date is ${daysUntil} day${daysUntil === 1 ? "" : "s"} away. Mention it's urgent — Himangi will confirm if it can be expedited.`;
+    }
+    return null;
+  })();
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
+    if (!serviceSlug) {
+      setServiceErr("Please choose a service.");
+      return;
+    }
+    setServiceErr(null);
+    // Resolve to the category row that the service cards use. If it can't be
+    // resolved (data mismatch), send undefined — never a wrong/null id.
+    const categoryId = slugToCategoryId.get(serviceSlug);
     lead.submit({
       name: form.name,
       phone: form.phone,
       email: form.email,
       requirement: form.idea,
+      categoryId,
+      budgetRange: form.budget,
+      size: form.size,
+      neededBy: form.neededBy,
     });
   };
 
-  const waMessage = `Hi Himangi, I'd like to commission a piece. I'm ${form.name || "(name)"} (${form.phone || "(phone)"}). ${form.idea}`;
+  const waMessage = `Hi Himangi, I'd like to commission a piece${selectedService ? ` (${selectedService.title})` : ""}. I'm ${form.name || "(name)"} (${form.phone || "(phone)"}).${form.neededBy ? ` Needed by ${form.neededBy}.` : ""} ${form.idea}`;
 
   return (
     <SiteChrome>
@@ -139,7 +198,8 @@ function ServicesPage() {
             {SERVICES.map((s, i) => (
               <Link
                 key={s.title}
-                to="/pricing"
+                to="/services"
+                search={{ service: s.categorySlug }}
                 className={"card rv" + (i % 3 === 1 ? " d1" : i % 3 === 2 ? " d2" : "")}
               >
                 <div className="imgwrap tilt">
@@ -149,7 +209,7 @@ function ServicesPage() {
                     loading="lazy"
                     fallbackLabel="Example"
                   />
-                  <div className="quick">View pricing</div>
+                  <div className="quick">Start this commission</div>
                 </div>
                 <div className="cat">{s.days}</div>
                 <h3>{s.title}</h3>
@@ -160,7 +220,7 @@ function ServicesPage() {
         </div>
       </section>
 
-      <section className="exclusive">
+      <section className="exclusive" ref={formRef}>
         <div className="exc-border"></div>
         <div className="wrap exc-grid">
           <div>
@@ -262,7 +322,79 @@ function ServicesPage() {
                 />
               </div>
               <div className="field">
-                <label htmlFor="cm-idea">What would you like made?</label>
+                <label htmlFor="cm-service">Service *</label>
+                <select
+                  id="cm-service"
+                  value={serviceSlug}
+                  onChange={(e) => {
+                    setServiceSlug(e.target.value);
+                    setServiceErr(null);
+                  }}
+                >
+                  <option value="">Choose a service…</option>
+                  {SERVICES.map((s) => (
+                    <option key={s.categorySlug} value={s.categorySlug}>
+                      {s.title} — from {s.from}
+                    </option>
+                  ))}
+                </select>
+                {serviceErr && (
+                  <p style={{ color: "#b91c1c", fontSize: 12, marginTop: 4 }}>{serviceErr}</p>
+                )}
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                <div className="field">
+                  <label htmlFor="cm-budget">Budget</label>
+                  <select
+                    id="cm-budget"
+                    value={form.budget}
+                    onChange={(e) => setForm({ ...form, budget: e.target.value })}
+                  >
+                    <option value="">Optional…</option>
+                    {BUDGET_OPTIONS.map((b) => (
+                      <option key={b} value={b}>
+                        {b}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="field">
+                  <label htmlFor="cm-size">Approx. size</label>
+                  <input
+                    id="cm-size"
+                    type="text"
+                    value={form.size}
+                    onChange={(e) => setForm({ ...form, size: e.target.value })}
+                    placeholder="e.g. A4, 12×16 in"
+                  />
+                </div>
+              </div>
+              <div className="field">
+                <label htmlFor="cm-needed">Needed by</label>
+                <input
+                  id="cm-needed"
+                  type="date"
+                  value={form.neededBy}
+                  onChange={(e) => setForm({ ...form, neededBy: e.target.value })}
+                />
+                {timelineWarning && (
+                  <p
+                    style={{
+                      color: "#9a6a00",
+                      background: "#fffbeb",
+                      border: "1px solid #fde68a",
+                      borderRadius: 8,
+                      padding: "8px 10px",
+                      fontSize: 12,
+                      marginTop: 6,
+                    }}
+                  >
+                    {timelineWarning}
+                  </p>
+                )}
+              </div>
+              <div className="field">
+                <label htmlFor="cm-idea">Anything else? (optional)</label>
                 <textarea
                   id="cm-idea"
                   rows={4}

@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { getAllLeads, updateLeadStatus, type Lead, type LeadStatus } from "@/lib/leads";
 import { getCommissionPhotoUrls } from "@/lib/leads.server";
+import { getCategories } from "@/lib/categories";
 import { Loader2, Users, Search, MessageCircle, Mail } from "lucide-react";
 import { toast } from "@/lib/toast";
 
@@ -64,6 +65,7 @@ function formatDate(iso: string): string {
 function LeadsPage() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [leadPhotos, setLeadPhotos] = useState<Record<string, string[]>>({});
+  const [catNames, setCatNames] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"all" | LeadStatus>("all");
   const [query, setQuery] = useState("");
@@ -72,8 +74,12 @@ function LeadsPage() {
   async function load() {
     setLoading(true);
     try {
-      const data = await getAllLeads({ limit: 500 });
+      const [data, cats] = await Promise.all([
+        getAllLeads({ limit: 500 }),
+        getCategories().catch(() => []),
+      ]);
       setLeads(data);
+      setCatNames(Object.fromEntries(cats.map((c) => [c.id, c.name])));
       // Sign reference-photo paths fresh on every load (they never expire this
       // way — see Task 0C). Only for leads that actually have photos.
       const withPhotos = data.filter((l) => l.photo_urls && l.photo_urls.length > 0);
@@ -247,6 +253,33 @@ function LeadsPage() {
                       <p className="font-body text-[12px] text-stone whitespace-pre-wrap break-words">
                         {lead.requirement || <span className="text-stone/40">—</span>}
                       </p>
+                      {(lead.category_id || lead.budget_range || lead.size || lead.needed_by) && (
+                        <ul className="mt-1.5 space-y-0.5 font-body text-[11px] text-stone">
+                          {lead.category_id && (
+                            <li>
+                              <span className="font-semibold text-forest">Service:</span>{" "}
+                              {catNames[lead.category_id] ?? "—"}
+                            </li>
+                          )}
+                          {lead.budget_range && (
+                            <li>
+                              <span className="font-semibold text-forest">Budget:</span>{" "}
+                              {lead.budget_range}
+                            </li>
+                          )}
+                          {lead.size && (
+                            <li>
+                              <span className="font-semibold text-forest">Size:</span> {lead.size}
+                            </li>
+                          )}
+                          {lead.needed_by && (
+                            <li>
+                              <span className="font-semibold text-forest">Needed by:</span>{" "}
+                              {formatDate(lead.needed_by)}
+                            </li>
+                          )}
+                        </ul>
+                      )}
                       {lead.photo_urls && lead.photo_urls.length > 0 && (
                         <div className="mt-2 flex flex-wrap gap-1.5">
                           {(leadPhotos[lead.id] ?? []).map((u, i) => (

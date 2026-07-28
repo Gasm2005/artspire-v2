@@ -27,6 +27,9 @@ export interface Lead {
   location: string | null;
   requirement: string | null;
   budget_range: string | null;
+  category_id: string | null;
+  size: string | null;
+  needed_by: string | null;
   source: string | null;
   source_detail: string | null;
   status: LeadStatus;
