@@ -62,7 +62,7 @@ function Index() {
               Each piece is shaped by hand, one at a time — clay, cement, wood and light, with no
               promise it will ever be made again.
             </p>
-            <div className="hero-cta rv d3">
+            <div className="hero-cta rv">
               <Link className="btn btn-solid" to="/shop">
                 <span>Explore the Collection</span>
               </Link>
@@ -235,7 +235,7 @@ function Index() {
                 <b>03</b> Crafted by one pair of hands, start to finish
               </li>
             </ul>
-            <Link className="btn btn-gold rv d4" to="/services">
+            <Link className="btn btn-gold rv" to="/services">
               <span>Request a Commission</span>
             </Link>
           </div>
@@ -262,7 +262,7 @@ function Index() {
               I keep the numbers small on purpose. It's the only way each piece gets the attention
               it deserves.
             </p>
-            <Link className="btn-ghost rv d3" to="/about">
+            <Link className="btn-ghost rv" to="/about">
               Read my story <span className="arw">→</span>
             </Link>
             <div className="sign rv d3">— Himangi Pandey</div>
@@ -345,7 +345,7 @@ function Index() {
           <p className="rv d2">
             Join the list for new drops, restocks, and the occasional peek inside the studio.
           </p>
-          <form className="rv d3" onSubmit={(e) => e.preventDefault()}>
+          <form className="rv" onSubmit={(e) => e.preventDefault()}>
             <input type="email" placeholder="Your email address" />
             <button className="btn btn-solid" type="submit">
               <span>Subscribe</span>

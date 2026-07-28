@@ -276,10 +276,28 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   errorComponent: ErrorComponent,
 });
 
+// Runs synchronously in <head> BEFORE first paint. Swaps html.no-js → html.js
+// so the reveal animation's hidden initial state applies without any flash of
+// visible-then-hidden content. The safety timeout is a last-resort guarantee:
+// if the app never marks itself revealed (hydration/observer total failure),
+// it removes `js` so nothing stays permanently invisible — and it WARNS loudly,
+// because a silent safety net just hides a second bug (this is how the original
+// invisible-content bug survived so long).
+// TODO(Task 4 — Sentry): forward this warning to Sentry via a queued global
+// (e.g. window.__artspireRevealFailed = true) so lost reveals are actually
+// observable in production, not just in the console.
+const REVEAL_BOOTSTRAP =
+  "(function(){var d=document.documentElement;d.className=d.className.replace('no-js','js');" +
+  "setTimeout(function(){if(!window.__artspireRevealed){" +
+  "window.__artspireRevealFailed=true;" +
+  "console.warn('[reveal] safety net fired: app never signalled reveal (hydration/observer failure) — forcing all content visible. Investigate.');" +
+  "d.className=d.className.replace('js','no-js');}},1500);})();";
+
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en-IN">
+    <html lang="en-IN" className="no-js">
       <head>
+        <script dangerouslySetInnerHTML={{ __html: REVEAL_BOOTSTRAP }} />
         <HeadContent />
       </head>
       <body>

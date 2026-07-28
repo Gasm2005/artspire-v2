@@ -158,7 +158,7 @@ function ServicesPage() {
               </li>
             </ul>
           </div>
-          <form className="card-box rv d2" onSubmit={onSubmit}>
+          <form className="card-box rv" onSubmit={onSubmit}>
             <div className="field">
               <label>Your name</label>
               <input

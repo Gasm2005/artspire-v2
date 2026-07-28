@@ -8,6 +8,9 @@ import { getCartCount, getOrCreateSessionId } from "@/lib/cart";
 export function useSiteMotion() {
   useEffect(() => {
     const cleanups: Array<() => void> = [];
+    // Signal the reveal-bootstrap safety net (see __root) that hydration ran,
+    // so it won't force-reveal everything after its timeout.
+    (window as unknown as { __artspireRevealed?: boolean }).__artspireRevealed = true;
     const hdr = document.getElementById("hdr");
     const totop = document.getElementById("totop");
     const onScroll = () => {
@@ -26,7 +29,9 @@ export function useSiteMotion() {
             io.unobserve(e.target);
           }
         }),
-      { threshold: 0.15 },
+      // threshold 0 = reveal as soon as any part enters the viewport (forgiving,
+      // so fast scrolls / tall elements never get stuck hidden).
+      { threshold: 0 },
     );
     document
       .querySelectorAll(".tas .rv,.tas .clip,.tas .reveal-words")
@@ -184,7 +189,11 @@ export function useSiteMotion() {
 
     if (totop) totop.onclick = () => window.scrollTo({ top: 0, behavior: "smooth" });
     return () => cleanups.forEach((fn) => fn());
-  });
+    // Run once per mount (i.e. once per page). Previously there was no dependency
+    // array, so this re-ran on every render — tearing down and recreating the
+    // observers and Lenis, which could restart a delayed opacity transition so
+    // it never settled and left content stuck at opacity 0.
+  }, []);
 }
 
 export function SiteHeader() {
