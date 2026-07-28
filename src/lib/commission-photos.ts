@@ -56,30 +56,34 @@ async function compress(file: File): Promise<File> {
 }
 
 /**
- * Uploads each photo and returns the storage paths of the ones that succeeded.
- * Reports per-file progress via the optional callback. Never throws for a
- * single failed file — the caller decides what to do with partial results.
+ * Uploads photos to a STABLE folder (tied to the form's instance id) and
+ * returns an index→path map of the ones that succeeded. `skipIndices` are
+ * photos already uploaded on a previous attempt, so a retry after a partial
+ * failure never re-uploads what already landed. Never throws for a single
+ * failed file — the caller merges results and decides what to do.
  */
 export async function uploadCommissionPhotos(
   files: File[],
+  folder: string,
+  skipIndices: Set<number>,
   onProgress?: (p: PhotoUploadProgress) => void,
-): Promise<{ paths: string[]; failed: number }> {
-  const folder = `commission/${crypto.randomUUID()}`;
-  const paths: string[] = [];
+): Promise<{ paths: Record<number, string>; failed: number }> {
+  const paths: Record<number, string> = {};
   let failed = 0;
 
   for (let i = 0; i < files.length; i++) {
+    if (skipIndices.has(i)) continue; // already uploaded on a previous attempt
     const file = files[i];
     onProgress?.({ index: i, name: file.name, status: "uploading" });
     try {
       const compressed = await compress(file);
       const path = `${folder}/${i}.webp`;
       const { error } = await supabase.storage.from(BUCKET).upload(path, compressed, {
-        upsert: false,
+        upsert: true, // safe to overwrite on a retry of a failed file
         contentType: "image/webp",
       });
       if (error) throw error;
-      paths.push(path);
+      paths[i] = path;
       onProgress?.({ index: i, name: file.name, status: "done" });
     } catch (err) {
       failed++;

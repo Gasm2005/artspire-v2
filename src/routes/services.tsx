@@ -1,14 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import { waLink } from "../lib/whatsapp";
-import { submitContactLead } from "@/lib/leads.server";
 import { getCategories, type CategoryWithVisuals } from "@/lib/categories";
-import {
-  uploadCommissionPhotos,
-  validatePhotos,
-  MAX_PHOTOS,
-  type PhotoUploadProgress,
-} from "@/lib/commission-photos";
+import { MAX_PHOTOS } from "@/lib/commission-photos";
+import { useLeadForm } from "@/lib/use-lead-form";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
 
@@ -57,57 +52,19 @@ function ServicesPage() {
   const { categories } = Route.useLoaderData();
   const imageBySlug = new Map(categories.map((c) => [c.slug, c.image_url ?? null]));
   const [form, setForm] = useState({ name: "", phone: "", email: "", idea: "" });
-  const [photos, setPhotos] = useState<File[]>([]);
-  const [photoProgress, setPhotoProgress] = useState<PhotoUploadProgress[]>([]);
-  const [photoError, setPhotoError] = useState<string | null>(null);
-  const [submitting, setSubmitting] = useState(false);
+  const lead = useLeadForm({ withPhotos: true });
 
-  const onPickPhotos = (fileList: FileList | null) => {
-    const files = Array.from(fileList ?? []).slice(0, MAX_PHOTOS);
-    setPhotos(files);
-    setPhotoProgress([]);
-    setPhotoError(files.length ? validatePhotos(files) : null);
-  };
-
-  const onSubmit = async (e: FormEvent) => {
+  const onSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (submitting) return;
-    const photoErr = photos.length ? validatePhotos(photos) : null;
-    if (photoErr) {
-      setPhotoError(photoErr);
-      return;
-    }
-    setSubmitting(true);
-    try {
-      // Upload reference photos first (if any); the form still submits with none.
-      let photoUrls: string[] = [];
-      if (photos.length) {
-        const res = await uploadCommissionPhotos(photos, (p) =>
-          setPhotoProgress((prev) => {
-            const next = [...prev];
-            next[p.index] = p;
-            return next;
-          }),
-        );
-        photoUrls = res.paths;
-      }
-      await submitContactLead({
-        data: {
-          name: form.name,
-          phone: form.phone,
-          email: form.email,
-          requirement: form.idea,
-          photoUrls,
-        },
-      });
-    } catch (err) {
-      console.error("Failed to save lead:", err);
-    }
-    // NOTE: WhatsApp redirect + success/error handling are rewritten in Task 0D.
-    window.location.href = waLink(
-      `Hi Himangi, I'd like to commission a piece. I'm ${form.name} (${form.phone}). ${form.idea}`,
-    );
+    lead.submit({
+      name: form.name,
+      phone: form.phone,
+      email: form.email,
+      requirement: form.idea,
+    });
   };
+
+  const waMessage = `Hi Himangi, I'd like to commission a piece. I'm ${form.name || "(name)"} (${form.phone || "(phone)"}). ${form.idea}`;
 
   return (
     <SiteChrome>
@@ -225,84 +182,156 @@ function ServicesPage() {
               </li>
             </ul>
           </div>
-          <form className="card-box rv" onSubmit={onSubmit}>
-            <div className="field">
-              <label>Your name</label>
-              <input
-                type="text"
-                required
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
-                placeholder="Full name"
-              />
-            </div>
-            <div className="field">
-              <label>Phone / WhatsApp</label>
-              <input
-                type="tel"
-                required
-                value={form.phone}
-                onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                placeholder="+91"
-              />
-            </div>
-            <div className="field">
-              <label>Email</label>
-              <input
-                type="email"
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                placeholder="name@email.com"
-              />
-            </div>
-            <div className="field">
-              <label>What would you like made?</label>
-              <textarea
-                rows={4}
-                value={form.idea}
-                onChange={(e) => setForm({ ...form, idea: e.target.value })}
-                placeholder="Tell us about the person, memory, or occasion…"
-              />
-            </div>
-            <div className="field">
-              <label>Reference photos (optional)</label>
-              <input
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={(e) => onPickPhotos(e.target.files)}
-              />
-              <small
-                style={{ display: "block", color: "var(--stone)", fontSize: 11, marginTop: 4 }}
+          {lead.status === "success" ? (
+            <div className="card-box rv" role="status" aria-live="polite">
+              <h3
+                className="serif"
+                style={{ fontSize: 26, color: "var(--forest)", fontWeight: 500, marginBottom: 8 }}
               >
-                Up to {MAX_PHOTOS} photos — a clear photo helps Himangi quote accurately. Kept
-                private.
-              </small>
-              {photos.length > 0 && (
-                <ul style={{ listStyle: "none", padding: 0, margin: "8px 0 0", fontSize: 12 }}>
-                  {photos.map((f, i) => {
-                    const st = photoProgress[i]?.status;
-                    return (
-                      <li key={i} style={{ color: "var(--stone)", padding: "2px 0" }}>
-                        {f.name.length > 30 ? f.name.slice(0, 27) + "…" : f.name}
-                        {st === "uploading" && " · uploading…"}
-                        {st === "done" && " · ✓ uploaded"}
-                        {st === "error" && (
-                          <span style={{ color: "#b91c1c" }}> · failed — will retry on resend</span>
-                        )}
-                      </li>
-                    );
-                  })}
-                </ul>
-              )}
-              {photoError && (
-                <p style={{ color: "#b91c1c", fontSize: 12, marginTop: 4 }}>{photoError}</p>
-              )}
+                Thank you{form.name ? `, ${form.name.split(" ")[0]}` : ""} — your enquiry is in.
+              </h3>
+              <p style={{ color: "var(--stone)", lineHeight: 1.7 }}>
+                Reference <b style={{ color: "var(--forest)" }}>{lead.leadNumber}</b>. Himangi will
+                personally reply, usually within a day.
+                {lead.attachedCount > 0 &&
+                  ` ${lead.attachedCount} photo${lead.attachedCount === 1 ? "" : "s"} attached.`}
+              </p>
+              <a
+                className="btn btn-gold btn-block"
+                href={waLink(waMessage)}
+                target="_blank"
+                rel="noreferrer"
+                style={{ marginTop: 18 }}
+              >
+                <span>Continue on WhatsApp (optional)</span>
+              </a>
             </div>
-            <button className="btn btn-gold btn-block" type="submit" disabled={submitting}>
-              <span>{submitting ? "Sending…" : "Request a Commission"}</span>
-            </button>
-          </form>
+          ) : (
+            <form className="card-box rv" onSubmit={onSubmit} noValidate>
+              {lead.status === "error" && lead.errorMsg && (
+                <div
+                  role="alert"
+                  style={{
+                    background: "#fef2f2",
+                    border: "1px solid #fecaca",
+                    color: "#b91c1c",
+                    borderRadius: 10,
+                    padding: "10px 14px",
+                    fontSize: 13,
+                    marginBottom: 16,
+                  }}
+                >
+                  {lead.errorMsg}
+                </div>
+              )}
+              <div className="field">
+                <label htmlFor="cm-name">Your name</label>
+                <input
+                  id="cm-name"
+                  type="text"
+                  required
+                  autoComplete="name"
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  placeholder="Full name"
+                />
+              </div>
+              <div className="field">
+                <label htmlFor="cm-phone">Phone / WhatsApp</label>
+                <input
+                  id="cm-phone"
+                  type="tel"
+                  required
+                  inputMode="tel"
+                  autoComplete="tel"
+                  value={form.phone}
+                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                  placeholder="+91"
+                />
+              </div>
+              <div className="field">
+                <label htmlFor="cm-email">Email</label>
+                <input
+                  id="cm-email"
+                  type="email"
+                  inputMode="email"
+                  autoComplete="email"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  placeholder="name@email.com"
+                />
+              </div>
+              <div className="field">
+                <label htmlFor="cm-idea">What would you like made?</label>
+                <textarea
+                  id="cm-idea"
+                  rows={4}
+                  value={form.idea}
+                  onChange={(e) => setForm({ ...form, idea: e.target.value })}
+                  placeholder="Tell us about the person, memory, or occasion…"
+                />
+              </div>
+              <div className="field">
+                <label htmlFor="cm-photos">Reference photos (optional)</label>
+                <input
+                  id="cm-photos"
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={(e) => lead.onPickPhotos(e.target.files)}
+                />
+                <small
+                  style={{ display: "block", color: "var(--stone)", fontSize: 11, marginTop: 4 }}
+                >
+                  Up to {MAX_PHOTOS} photos — a clear photo helps Himangi quote accurately. Kept
+                  private.
+                </small>
+                {lead.photos.length > 0 && (
+                  <ul style={{ listStyle: "none", padding: 0, margin: "8px 0 0", fontSize: 12 }}>
+                    {lead.photos.map((f, i) => {
+                      const st = lead.photoProgress[i]?.status;
+                      return (
+                        <li key={i} style={{ color: "var(--stone)", padding: "2px 0" }}>
+                          {f.name.length > 30 ? f.name.slice(0, 27) + "…" : f.name}
+                          {st === "uploading" && " · uploading…"}
+                          {st === "done" && " · ✓ uploaded"}
+                          {st === "error" && (
+                            <span style={{ color: "#b91c1c" }}> · failed — will retry</span>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
+                {lead.photoError && (
+                  <p style={{ color: "#b91c1c", fontSize: 12, marginTop: 4 }}>{lead.photoError}</p>
+                )}
+              </div>
+              <button
+                className="btn btn-gold btn-block"
+                type="submit"
+                disabled={lead.status === "submitting"}
+              >
+                <span>{lead.status === "submitting" ? "Sending…" : "Request a Commission"}</span>
+              </button>
+              {lead.status === "error" && (
+                <a
+                  href={waLink(waMessage)}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{
+                    display: "block",
+                    textAlign: "center",
+                    marginTop: 10,
+                    fontSize: 13,
+                    color: "var(--gold-ink)",
+                  }}
+                >
+                  Or send it on WhatsApp instead →
+                </a>
+              )}
+            </form>
+          )}
         </div>
       </section>
     </SiteChrome>

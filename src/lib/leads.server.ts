@@ -45,24 +45,38 @@ export const submitContactLead = createServerFn({ method: "POST" })
       email?: string;
       requirement?: string;
       photoUrls?: string[];
+      idempotencyKey?: string;
     }) => data,
   )
-  .handler(async ({ data }) => {
+  .handler(async ({ data }): Promise<{ leadNumber: string; duplicate: boolean }> => {
     if (!data.name.trim() || !data.phone.trim()) {
       throw new Error("Name and phone are required.");
     }
 
     const admin = getSupabaseAdmin();
+    const key = data.idempotencyKey?.trim() || null;
+
+    // Idempotency: if this form instance already created a lead (e.g. a retry
+    // after a lost response), return the existing one instead of duplicating.
+    if (key) {
+      const { data: existing } = await admin
+        .from("leads")
+        .select("lead_number")
+        // cast: idempotency_key isn't in the generated Row type until regenerated post-migration
+        .eq("idempotency_key" as "lead_number", key)
+        .maybeSingle();
+      if (existing?.lead_number) return { leadNumber: existing.lead_number, duplicate: true };
+    }
 
     const { data: leadNumberData, error: numberError } = await admin.rpc("generate_lead_number");
     if (numberError) throw numberError;
+    const leadNumber = leadNumberData as string;
 
-    // photo_urls (storage PATHS in the private reference-images bucket) is only
-    // included when photos exist, so photo-less submits keep working even before
-    // the additive migration is applied. Cast because the generated types won't
-    // include the new column until they're regenerated post-migration.
+    // photo_urls / idempotency_key are added conditionally so photo-less submits
+    // keep working even before the additive migrations are applied. Cast because
+    // the generated types won't include the new columns until regenerated.
     const insert = {
-      lead_number: leadNumberData as string,
+      lead_number: leadNumber,
       name: data.name.trim(),
       phone: data.phone.trim(),
       email: data.email?.trim() || null,
@@ -70,13 +84,27 @@ export const submitContactLead = createServerFn({ method: "POST" })
       source: "website-form",
       status: "new",
       ...(data.photoUrls?.length ? { photo_urls: data.photoUrls } : {}),
+      ...(key ? { idempotency_key: key } : {}),
     };
 
     const { error: insertError } = await admin.from("leads").insert(insert as LeadInsert);
 
-    if (insertError) throw insertError;
+    if (insertError) {
+      // Unique-violation on the idempotency key = a concurrent request won the
+      // race; return that lead rather than surfacing an error / duplicating.
+      if (key && (insertError as { code?: string }).code === "23505") {
+        const { data: raced } = await admin
+          .from("leads")
+          .select("lead_number")
+          // cast: idempotency_key isn't in the generated Row type until regenerated post-migration
+          .eq("idempotency_key" as "lead_number", key)
+          .maybeSingle();
+        if (raced?.lead_number) return { leadNumber: raced.lead_number, duplicate: true };
+      }
+      throw insertError;
+    }
 
-    return { leadNumber: leadNumberData as string };
+    return { leadNumber, duplicate: false };
   });
 
 // Admin-only. Re-signs stored reference-image PATHS into short-lived URLs on
