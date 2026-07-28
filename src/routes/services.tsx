@@ -2,9 +2,17 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import { waLink } from "../lib/whatsapp";
 import { submitContactLead } from "@/lib/leads.server";
+import { getCategories, type CategoryWithVisuals } from "@/lib/categories";
 import { SiteChrome } from "@/components/site/SiteChrome";
+import { ImageWithFallback } from "@/components/ImageWithFallback";
 
 export const Route = createFileRoute("/services")({
+  loader: async () => {
+    // Service-card images are managed from /admin/categories (the `categories`
+    // table). Each service maps to a category slug below.
+    const categories = await getCategories().catch(() => []);
+    return { categories: categories as CategoryWithVisuals[] };
+  },
   head: () => ({
     meta: [
       { title: "Commissions | The Artspire" },
@@ -18,16 +26,30 @@ export const Route = createFileRoute("/services")({
   component: ServicesPage,
 });
 
+// `categorySlug` links each service to an admin-managed row in the `categories`
+// table so its image can be changed from the admin panel (no hardcoded paths).
 const SERVICES = [
-  { title: "Pencil Sketches", days: "5–7 days", from: "₹999" },
-  { title: "Colour Portraits", days: "7–10 days", from: "₹1,999" },
-  { title: "Custom Paintings", days: "10–14 days", from: "₹2,999" },
-  { title: "Mirror Art", days: "7–12 days", from: "₹2,499" },
-  { title: "Clay Art", days: "7–10 days", from: "₹1,799" },
-  { title: "Personalised Gifts", days: "5–10 days", from: "₹899" },
+  { title: "Pencil Sketches", days: "5–7 days", from: "₹999", categorySlug: "pencil-sketches" },
+  {
+    title: "Colour Portraits",
+    days: "7–10 days",
+    from: "₹1,999",
+    categorySlug: "colour-portraits",
+  },
+  { title: "Custom Paintings", days: "10–14 days", from: "₹2,999", categorySlug: "paintings" },
+  { title: "Mirror Art", days: "7–12 days", from: "₹2,499", categorySlug: "mirror-art" },
+  { title: "Clay Art", days: "7–10 days", from: "₹1,799", categorySlug: "clay-art" },
+  {
+    title: "Personalised Gifts",
+    days: "5–10 days",
+    from: "₹899",
+    categorySlug: "personalized-gifts",
+  },
 ];
 
 function ServicesPage() {
+  const { categories } = Route.useLoaderData();
+  const imageBySlug = new Map(categories.map((c) => [c.slug, c.image_url ?? null]));
   const [form, setForm] = useState({ name: "", phone: "", email: "", idea: "" });
   const [submitting, setSubmitting] = useState(false);
 
@@ -124,7 +146,12 @@ function ServicesPage() {
                 className={"card rv" + (i % 3 === 1 ? " d1" : i % 3 === 2 ? " d2" : "")}
               >
                 <div className="imgwrap tilt">
-                  <div className="frame" data-label="Example"></div>
+                  <ImageWithFallback
+                    src={imageBySlug.get(s.categorySlug)}
+                    alt={`${s.title} — handmade by The Artspire`}
+                    loading="lazy"
+                    fallbackLabel="Example"
+                  />
                   <div className="quick">View pricing</div>
                 </div>
                 <div className="cat">{s.days}</div>
