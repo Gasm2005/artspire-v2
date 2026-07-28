@@ -39,6 +39,14 @@ export function validatePhotos(files: File[]): string | null {
   return null;
 }
 
+/** True when a storage upload failed only because the object is already there. */
+export function isAlreadyExists(error: unknown): boolean {
+  const e = error as { statusCode?: string | number; status?: number; message?: string } | null;
+  if (!e) return false;
+  if (String(e.statusCode) === "409" || e.status === 409) return true;
+  return /already exists|duplicate/i.test(e.message ?? "");
+}
+
 async function compress(file: File): Promise<File> {
   try {
     const { default: imageCompression } = await import("browser-image-compression");
@@ -78,11 +86,20 @@ export async function uploadCommissionPhotos(
     try {
       const compressed = await compress(file);
       const path = `${folder}/${i}.webp`;
+      // upsert:false — anon has INSERT but no UPDATE policy on this bucket, so
+      // upsert (which needs UPDATE) is denied. Not needed anyway: paths are
+      // unique (uuid folder + index) and retries skip already-uploaded files,
+      // so a re-uploaded file never pre-exists.
       const { error } = await supabase.storage.from(BUCKET).upload(path, compressed, {
-        upsert: true, // safe to overwrite on a retry of a failed file
+        upsert: false,
         contentType: "image/webp",
       });
-      if (error) throw error;
+      // "Already exists" is SUCCESS, not failure. The path is inside this form
+      // instance's own UUID folder, so an object there was written by us — it
+      // means a previous attempt's upload actually landed but its response was
+      // lost. Without this, such a photo could never be attached (retrying it
+      // would 409 forever) even though the bytes are safely in storage.
+      if (error && !isAlreadyExists(error)) throw error;
       paths[i] = path;
       onProgress?.({ index: i, name: file.name, status: "done" });
     } catch (err) {

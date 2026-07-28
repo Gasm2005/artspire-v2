@@ -296,7 +296,7 @@ const REVEAL_BOOTSTRAP =
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en-IN" className="no-js">
+    <html lang="en-IN" className="no-js" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: REVEAL_BOOTSTRAP }} />
         <HeadContent />

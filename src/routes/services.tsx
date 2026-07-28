@@ -3,11 +3,10 @@ import { useState, useEffect, useRef, type FormEvent } from "react";
 import { waLink } from "../lib/whatsapp";
 import { getCategories, type CategoryWithVisuals } from "@/lib/categories";
 import { MAX_PHOTOS } from "@/lib/commission-photos";
+import { BUDGET_OPTIONS } from "@/lib/lead-validation";
 import { useLeadForm } from "@/lib/use-lead-form";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
-
-const BUDGET_OPTIONS = ["Under ₹1,000", "₹1,000–2,500", "₹2,500–5,000", "₹5,000+", "Not sure yet"];
 
 export const Route = createFileRoute("/services")({
   // ?service=<category-slug> pre-selects a service when arriving from a card.
@@ -306,7 +305,7 @@ function ServicesPage() {
                   autoComplete="tel"
                   value={form.phone}
                   onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                  placeholder="+91"
+                  placeholder="10-digit mobile (or +country code)"
                 />
               </div>
               <div className="field">
@@ -352,8 +351,8 @@ function ServicesPage() {
                   >
                     <option value="">Optional…</option>
                     {BUDGET_OPTIONS.map((b) => (
-                      <option key={b} value={b}>
-                        {b}
+                      <option key={b.value} value={b.value}>
+                        {b.label}
                       </option>
                     ))}
                   </select>

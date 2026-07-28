@@ -114,7 +114,7 @@ function ContactPage() {
                   autoComplete="tel"
                   value={form.phone}
                   onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                  placeholder="+91"
+                  placeholder="10-digit mobile (or +country code)"
                 />
               </div>
               <div className="field">

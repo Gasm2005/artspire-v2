@@ -7,6 +7,7 @@ import {
   type PhotoUploadProgress,
 } from "./commission-photos";
 import { reportError } from "./sentry-client";
+import { validateLeadPayload } from "./lead-validation";
 
 // Shared submit logic for the commission (/services) and contact (/contact)
 // forms. Task 0D: NEVER navigate away — success shows an in-page confirmation
@@ -50,8 +51,14 @@ export function useLeadForm(opts?: { withPhotos?: boolean }) {
 
   async function submit(payload: LeadPayload) {
     if (status === "submitting") return;
-    if (!payload.name.trim() || !payload.phone.trim()) {
-      setErrorMsg("Please enter your name and phone number.");
+    const validationErr = validateLeadPayload({
+      name: payload.name,
+      phone: payload.phone,
+      email: payload.email,
+      budgetRange: payload.budgetRange,
+    });
+    if (validationErr) {
+      setErrorMsg(validationErr);
       setStatus("error");
       return;
     }
