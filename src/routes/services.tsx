@@ -5,6 +5,7 @@ import { getCategories, type CategoryWithVisuals } from "@/lib/categories";
 import { MAX_PHOTOS } from "@/lib/commission-photos";
 import { BUDGET_OPTIONS } from "@/lib/lead-validation";
 import { useLeadForm } from "@/lib/use-lead-form";
+import { smoothScrollToElement } from "@/lib/smooth-scroll";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
 
@@ -81,16 +82,9 @@ function ServicesPage() {
   // (and on one-column mobile the form sits below the section's heading/intro,
   // so the customer landed on copy instead of the fields).
   function scrollToForm() {
-    // rAF so this runs after the render triggered by the click/param change.
-    requestAnimationFrame(() => {
-      const target = document.getElementById("commission-form") ?? formRef.current;
-      if (!target) return;
-      const HEADER_OFFSET = 88; // fixed header height + breathing room
-      window.scrollTo({
-        top: target.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET,
-        behavior: "smooth",
-      });
-    });
+    // Goes through Lenis when present — a native window.scrollTo is overridden
+    // by Lenis's RAF loop and silently does nothing. See lib/smooth-scroll.ts.
+    smoothScrollToElement(document.getElementById("commission-form") ?? formRef.current);
   }
 
   // Handles arriving with ?service=… (direct URL, or a card tap that CHANGES the
@@ -102,6 +96,14 @@ function ServicesPage() {
     setServiceSlug(serviceParam);
     scrollToForm();
   }, [serviceParam]);
+
+  // On success the (taller) form is replaced by the confirmation card, which can
+  // leave the confirmation — and the lead number — outside the viewport, so the
+  // customer just sees the form vanish. Bring it into view.
+  useEffect(() => {
+    if (lead.status === "success") scrollToForm();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lead.status]);
 
   const selectedService = SERVICES.find((s) => s.categorySlug === serviceSlug);
 
@@ -266,8 +268,11 @@ function ServicesPage() {
               </li>
             </ul>
           </div>
+          {/* Success card intentionally has no `rv`: the confirmation (with the
+              lead number) must appear INSTANTLY, never waiting on a
+              scroll-reveal it can't receive. */}
           {lead.status === "success" ? (
-            <div className="card-box rv" id="commission-form" role="status" aria-live="polite">
+            <div className="card-box" id="commission-form" role="status" aria-live="polite">
               <h3
                 className="serif"
                 style={{ fontSize: 26, color: "var(--forest)", fontWeight: 500, marginBottom: 8 }}

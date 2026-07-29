@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import { waLink } from "../lib/whatsapp";
 import { useLeadForm } from "@/lib/use-lead-form";
+import { smoothScrollToId } from "@/lib/smooth-scroll";
 import { SiteChrome } from "@/components/site/SiteChrome";
 
 export const Route = createFileRoute("/contact")({
@@ -32,6 +33,12 @@ function ContactPage() {
     });
   };
 
+  // The confirmation replaces the taller form, which can leave it (and the lead
+  // number) outside the viewport — bring it into view. See services.tsx.
+  useEffect(() => {
+    if (lead.status === "success") smoothScrollToId("contact-form-result");
+  }, [lead.status]);
+
   const waMessage = `Hi Himangi, I'm ${form.name || "(name)"} (${form.phone || "(phone)"}). Email: ${form.email}. ${form.idea}`;
 
   return (
@@ -52,8 +59,10 @@ function ContactPage() {
           className="wrap exc-grid"
           style={{ gridTemplateColumns: "1fr 1fr", gap: 56, alignItems: "start" }}
         >
+          {/* Success card intentionally has no `rv`: it must appear instantly,
+              never waiting on a scroll-reveal it can't receive. */}
           {lead.status === "success" ? (
-            <div className="card-box rv" role="status" aria-live="polite">
+            <div className="card-box" id="contact-form-result" role="status" aria-live="polite">
               <h3
                 className="serif"
                 style={{ fontSize: 26, color: "var(--forest)", fontWeight: 500, marginBottom: 8 }}

@@ -42,10 +42,34 @@ export function useSiteMotion() {
       // so fast scrolls / tall elements never get stuck hidden).
       { threshold: 0 },
     );
-    document
-      .querySelectorAll(".tas .rv,.tas .clip,.tas .reveal-words")
-      .forEach((el) => io.observe(el));
-    cleanups.push(() => io.disconnect());
+    const REVEAL_SELECTOR = ".rv,.clip,.reveal-words";
+    const observeIfNeeded = (el: Element) => {
+      if (!(el as HTMLElement).dataset.rv) io.observe(el);
+    };
+    document.querySelectorAll(`.tas .rv,.tas .clip,.tas .reveal-words`).forEach(observeIfNeeded);
+
+    // Elements rendered AFTER mount (a submit confirmation, a lazily-loaded
+    // grid, an expanded panel) were never observed by the initial pass, so under
+    // html.js they'd sit at opacity 0 forever — exactly how the commission
+    // success message (with the lead number) went invisible. Watch for new
+    // nodes and observe them too, so no dynamically added content can be
+    // permanently hidden.
+    const mo = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        m.addedNodes.forEach((node) => {
+          if (node.nodeType !== 1) return;
+          const el = node as HTMLElement;
+          if (el.matches?.(REVEAL_SELECTOR)) observeIfNeeded(el);
+          el.querySelectorAll?.(REVEAL_SELECTOR).forEach(observeIfNeeded);
+        });
+      }
+    });
+    mo.observe(document.body, { childList: true, subtree: true });
+
+    cleanups.push(() => {
+      mo.disconnect();
+      io.disconnect();
+    });
 
     const cio = new IntersectionObserver(
       (es) =>
@@ -109,6 +133,12 @@ export function useSiteMotion() {
         duration: 1.15,
         easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       });
+      // Expose the instance so programmatic scrolling can go THROUGH Lenis.
+      // Lenis's RAF loop continuously writes the scroll position, so a native
+      // window.scrollTo() gets overridden and silently does nothing — that's why
+      // scrolling to the commission form/confirmation didn't work.
+      // See src/lib/smooth-scroll.ts.
+      (window as unknown as { __artspireLenis?: unknown }).__artspireLenis = lenis;
       const raf = (t: number) => {
         if (lenis) lenis.raf(t);
         requestAnimationFrame(raf);
@@ -116,6 +146,7 @@ export function useSiteMotion() {
       requestAnimationFrame(raf);
       cleanups.push(() => {
         if (lenis) lenis.destroy();
+        delete (window as unknown as { __artspireLenis?: unknown }).__artspireLenis;
       });
     }
 
