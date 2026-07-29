@@ -7,6 +7,7 @@ import {
   validateLeadPayload,
   validatePhone,
 } from "./lead-validation";
+import { isAlreadyExists } from "./commission-photos";
 
 // Regression guard for the class of bug that silently broke every commission
 // enquiry: the UI sent a value the leads CHECK constraint rejected, so every
@@ -36,6 +37,37 @@ describe("lead budget_range matches the DB CHECK constraint", () => {
     expect(
       validateLeadPayload({ name: "A", phone: "9876500011", budgetRange: "₹2,500–5,000" }),
     ).toMatch(/not an allowed value/);
+  });
+});
+
+describe("photo retry: an already-uploaded path must not fail the retry", () => {
+  // VERIFIED against real Supabase storage with the anon key: re-uploading to an
+  // existing path with upsert:false returns EXACTLY this. Note status is 400
+  // while statusCode is "409" — a predicate that only checked `status === 409`
+  // would wrongly treat this as a failure and the photo (already safely in
+  // storage) could never be attached to the lead.
+  const REAL_SUPABASE_DUPLICATE_ERROR = {
+    name: "StorageApiError",
+    message: "The resource already exists",
+    status: 400,
+    statusCode: "409",
+  };
+
+  it("recognises the real 'already exists' error Supabase returns", () => {
+    expect(isAlreadyExists(REAL_SUPABASE_DUPLICATE_ERROR)).toBe(true);
+  });
+
+  it("still recognises it if only the message or only status 409 is present", () => {
+    expect(isAlreadyExists({ message: "The resource already exists" })).toBe(true);
+    expect(isAlreadyExists({ status: 409 })).toBe(true);
+    expect(isAlreadyExists({ statusCode: "409" })).toBe(true);
+  });
+
+  it("does NOT swallow genuine upload failures", () => {
+    expect(isAlreadyExists(null)).toBe(false);
+    expect(isAlreadyExists({ message: "new row violates row-level security policy" })).toBe(false);
+    expect(isAlreadyExists({ message: "Payload too large", status: 413 })).toBe(false);
+    expect(isAlreadyExists({ message: "Bad Request", status: 400 })).toBe(false);
   });
 });
 
