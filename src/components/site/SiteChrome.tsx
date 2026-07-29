@@ -25,6 +25,15 @@ export function useSiteMotion() {
       (es) =>
         es.forEach((e) => {
           if (e.isIntersecting) {
+            // Mark revealed with a DATA ATTRIBUTE, not a class. React owns
+            // className: when it re-renders an element (e.g. a soft navigation
+            // to /services?service=… changes a card's stagger class) it rewrites
+            // className from JSX and silently strips an imperatively-added "in",
+            // sending an already-revealed element back to opacity 0 — and the
+            // observer has already unobserved it, so it stays invisible forever.
+            // React never touches data-rv (it isn't in the JSX), so the reveal
+            // is genuinely one-way. The class is still set for any legacy CSS.
+            (e.target as HTMLElement).dataset.rv = "in";
             e.target.classList.add("in");
             io.unobserve(e.target);
           }

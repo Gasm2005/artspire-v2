@@ -377,7 +377,12 @@ html.js .tas .rv {
     opacity 1s cubic-bezier(0.2, 0.6, 0.2, 1),
     transform 1s cubic-bezier(0.2, 0.6, 0.2, 1);
 }
-html.js .tas .rv.in {
+/* [data-rv="in"] is the authoritative revealed marker: React rewrites className
+   on re-render and would strip an imperatively-added .in (sending an already
+   revealed element back to opacity 0 — permanently, since the observer has
+   unobserved it). React never manages data-rv, so this survives re-renders. */
+html.js .tas .rv.in,
+html.js .tas .rv[data-rv="in"] {
   opacity: 1;
   transform: none;
 }
@@ -406,14 +411,17 @@ html.js .tas .clip.d1 {
 html.js .tas .clip.d2 {
   transition-delay: 0.24s;
 }
-html.js .tas .clip.in {
+html.js .tas .clip.in,
+html.js .tas .clip[data-rv="in"] {
   clip-path: inset(0 0 0 0);
 }
 @media (prefers-reduced-motion: reduce) {
   html.js .tas .rv,
   html.js .tas .rv.in,
+  html.js .tas .rv[data-rv="in"],
   html.js .tas .clip,
-  html.js .tas .clip.in {
+  html.js .tas .clip.in,
+  html.js .tas .clip[data-rv="in"] {
     opacity: 1 !important;
     transform: none !important;
     clip-path: none !important;
@@ -1108,7 +1116,8 @@ html.js .tas .word > span {
   transform: translateY(110%);
   transition: transform 0.85s cubic-bezier(0.7, 0, 0.2, 1);
 }
-html.js .tas .reveal-words.in .word > span {
+html.js .tas .reveal-words.in .word > span,
+html.js .tas .reveal-words[data-rv="in"] .word > span {
   transform: translateY(0);
 }
 @media (prefers-reduced-motion: reduce) {
