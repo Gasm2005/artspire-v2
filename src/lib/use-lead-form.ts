@@ -26,6 +26,9 @@ export type LeadPayload = {
   budgetRange?: string;
   size?: string;
   neededBy?: string;
+  /** Human-readable service name, for analytics only — never sent to the DB
+   *  (the DB stores category_id). A UUID in GA4 reports is unreadable. */
+  serviceLabel?: string;
 };
 
 export function useLeadForm(opts?: { withPhotos?: boolean }) {
@@ -115,7 +118,7 @@ export function useLeadForm(opts?: { withPhotos?: boolean }) {
       // Not fired for a deduped retry, so one enquiry counts once.
       if (!res.duplicate) {
         trackCommissionEnquiry({
-          service: payload.categoryId,
+          service: payload.serviceLabel ?? payload.categoryId,
           budgetRange: payload.budgetRange,
           hasPhotos: photoUrls.length > 0,
           leadNumber: res.leadNumber,

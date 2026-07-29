@@ -139,6 +139,7 @@ function ServicesPage() {
       budgetRange: form.budget,
       size: form.size,
       neededBy: form.neededBy,
+      serviceLabel: selectedService?.title, // analytics only (readable in GA4)
     });
   };
 
