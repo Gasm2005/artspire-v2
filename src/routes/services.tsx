@@ -79,10 +79,19 @@ function ServicesPage() {
   // Arriving from a card while already on /services updates the param without a
   // remount — sync the selector and scroll the form into view.
   useEffect(() => {
-    if (serviceParam && SERVICES.some((s) => s.categorySlug === serviceParam)) {
-      setServiceSlug(serviceParam);
-      formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+    if (!serviceParam || !SERVICES.some((s) => s.categorySlug === serviceParam)) return;
+    setServiceSlug(serviceParam);
+    // Scroll to the FORM CARD itself, not the section — scrolling the section to
+    // the viewport top left the form's first fields tucked under the fixed
+    // header (and on one-column mobile the form sits below the section's
+    // heading/intro, so the customer landed on copy instead of the fields).
+    const target = document.getElementById("commission-form") ?? formRef.current;
+    if (!target) return;
+    const HEADER_OFFSET = 88; // fixed header height + breathing room
+    window.scrollTo({
+      top: target.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET,
+      behavior: "smooth",
+    });
   }, [serviceParam]);
 
   const selectedService = SERVICES.find((s) => s.categorySlug === serviceSlug);
@@ -242,7 +251,7 @@ function ServicesPage() {
             </ul>
           </div>
           {lead.status === "success" ? (
-            <div className="card-box rv" role="status" aria-live="polite">
+            <div className="card-box rv" id="commission-form" role="status" aria-live="polite">
               <h3
                 className="serif"
                 style={{ fontSize: 26, color: "var(--forest)", fontWeight: 500, marginBottom: 8 }}
@@ -266,7 +275,7 @@ function ServicesPage() {
               </a>
             </div>
           ) : (
-            <form className="card-box rv" onSubmit={onSubmit} noValidate>
+            <form className="card-box rv" id="commission-form" onSubmit={onSubmit} noValidate>
               {lead.status === "error" && lead.errorMsg && (
                 <div
                   role="alert"
