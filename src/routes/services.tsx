@@ -76,22 +76,31 @@ function ServicesPage() {
   });
   const lead = useLeadForm({ withPhotos: true });
 
-  // Arriving from a card while already on /services updates the param without a
-  // remount — sync the selector and scroll the form into view.
+  // Scrolls to the FORM CARD itself, not the section — scrolling the section to
+  // the viewport top left the form's first fields tucked under the fixed header
+  // (and on one-column mobile the form sits below the section's heading/intro,
+  // so the customer landed on copy instead of the fields).
+  function scrollToForm() {
+    // rAF so this runs after the render triggered by the click/param change.
+    requestAnimationFrame(() => {
+      const target = document.getElementById("commission-form") ?? formRef.current;
+      if (!target) return;
+      const HEADER_OFFSET = 88; // fixed header height + breathing room
+      window.scrollTo({
+        top: target.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET,
+        behavior: "smooth",
+      });
+    });
+  }
+
+  // Handles arriving with ?service=… (direct URL, or a card tap that CHANGES the
+  // param). Tapping a card whose service is already selected is a no-op
+  // navigation, so this effect won't re-run — the card's own onClick covers that
+  // case (otherwise re-tapping an already-selected service silently did nothing).
   useEffect(() => {
     if (!serviceParam || !SERVICES.some((s) => s.categorySlug === serviceParam)) return;
     setServiceSlug(serviceParam);
-    // Scroll to the FORM CARD itself, not the section — scrolling the section to
-    // the viewport top left the form's first fields tucked under the fixed
-    // header (and on one-column mobile the form sits below the section's
-    // heading/intro, so the customer landed on copy instead of the fields).
-    const target = document.getElementById("commission-form") ?? formRef.current;
-    if (!target) return;
-    const HEADER_OFFSET = 88; // fixed header height + breathing room
-    window.scrollTo({
-      top: target.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET,
-      behavior: "smooth",
-    });
+    scrollToForm();
   }, [serviceParam]);
 
   const selectedService = SERVICES.find((s) => s.categorySlug === serviceSlug);
@@ -208,6 +217,13 @@ function ServicesPage() {
                 key={s.title}
                 to="/services"
                 search={{ service: s.categorySlug }}
+                // Always select + scroll on tap. Re-tapping the already-selected
+                // service is a no-op navigation, so the effect above wouldn't fire.
+                onClick={() => {
+                  setServiceSlug(s.categorySlug);
+                  setServiceErr(null);
+                  scrollToForm();
+                }}
                 className={"card rv" + (i % 3 === 1 ? " d1" : i % 3 === 2 ? " d2" : "")}
               >
                 <div className="imgwrap tilt">
