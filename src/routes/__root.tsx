@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useLocation,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -15,6 +16,9 @@ import { TopLoader } from "@/components/TopLoader";
 import { Toaster } from "@/components/ui/sonner";
 import { SITE_URL, OG_IMAGE, BRAND } from "@/lib/site";
 import { initSentryClient } from "@/lib/sentry-client";
+import { initAnalytics, trackPageView, isTrackablePath } from "@/lib/analytics";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 function NotFoundComponent() {
   return (
@@ -312,9 +316,21 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
+  const pathname = useLocation({ select: (l) => l.pathname });
+  const trackable = isTrackablePath(pathname);
+
   useEffect(() => {
     initSentryClient();
   }, []);
+
+  // Load tag managers once, and send a page_view on every client-side
+  // navigation (an SPA route change fires no browser page load, so GA4/GTM
+  // would otherwise only ever see the first page). Never on /admin.
+  useEffect(() => {
+    if (!trackable) return;
+    initAnalytics(pathname);
+    trackPageView(pathname);
+  }, [pathname, trackable]);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -328,6 +344,13 @@ function RootComponent() {
       <TopLoader />
       <Outlet />
       <Toaster />
+      {/* Vercel telemetry — omitted on /admin so operator activity isn't tracked. */}
+      {trackable && (
+        <>
+          <Analytics />
+          <SpeedInsights />
+        </>
+      )}
     </QueryClientProvider>
   );
 }

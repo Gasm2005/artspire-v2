@@ -8,6 +8,7 @@ import {
   getRazorpayKeyId,
 } from "@/lib/razorpay.server";
 import { toast } from "@/lib/toast";
+import { trackBeginCheckout, trackPurchase, type TrackedItem } from "@/lib/analytics";
 import { SiteChrome } from "@/components/site/SiteChrome";
 
 export const Route = createFileRoute("/checkout")({
@@ -143,9 +144,20 @@ function CheckoutPage() {
     return true;
   }
 
+  // GA4/Meta item shapes for the current cart (no-ops when unconfigured).
+  const trackedItems = (): TrackedItem[] =>
+    items.map((i) => ({
+      item_id: i.product_id,
+      item_name: i.product?.title ?? "Unknown product",
+      price: i.price_at_add,
+      quantity: i.quantity,
+      item_category: i.product?.categories?.name ?? undefined,
+    }));
+
   async function handlePayment() {
     if (!validateForm()) return;
     setSubmitting(true);
+    trackBeginCheckout(total, trackedItems());
 
     try {
       const order = await createPendingOrder({
@@ -212,6 +224,14 @@ function CheckoutPage() {
                 razorpayPaymentId: response.razorpay_payment_id,
                 razorpaySignature: response.razorpay_signature,
               },
+            });
+
+            // Fire purchase BEFORE clearing the cart (we need the line items).
+            trackPurchase({
+              transactionId: order.order_number,
+              value: total,
+              shipping: SHIPPING_COST,
+              items: trackedItems(),
             });
 
             await clearCart(getOrCreateSessionId());

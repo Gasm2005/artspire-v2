@@ -1,5 +1,5 @@
 import { createFileRoute, notFound, Link, useNavigate } from "@tanstack/react-router";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   getPublishedProductBySlug,
   getProductGalleryImages,
@@ -11,6 +11,7 @@ import { addToCart, getOrCreateSessionId } from "@/lib/cart";
 import { waLink } from "@/lib/whatsapp";
 import { toast } from "@/lib/toast";
 import { OG_IMAGE } from "@/lib/site";
+import { trackViewItem, trackAddToCart, type TrackedItem } from "@/lib/analytics";
 import { SiteChrome } from "@/components/site/SiteChrome";
 
 interface LoaderData {
@@ -87,10 +88,25 @@ function ProductPage() {
   ].filter((v, i, a) => v && a.indexOf(v) === i) as string[];
   const activeImg = images[idx] ?? images[0] ?? "";
 
+  // GA4/Meta item shape for this product (analytics no-ops when unconfigured).
+  const trackedItem = (qty = 1): TrackedItem => ({
+    item_id: product.id,
+    item_name: product.title,
+    price: product.price,
+    quantity: qty,
+    item_category: product.categories?.name ?? undefined,
+  });
+
+  useEffect(() => {
+    trackViewItem(trackedItem());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product.id]);
+
   async function handleAddToCart() {
     setAdding(true);
     try {
       await addToCart(getOrCreateSessionId(), product, quantity);
+      trackAddToCart(trackedItem(quantity));
       toast.success("Added to cart!", `${product.title} × ${quantity}`);
       window.dispatchEvent(new CustomEvent("artspire:cart-updated"));
     } catch (err) {
@@ -105,6 +121,7 @@ function ProductPage() {
     setAdding(true);
     try {
       await addToCart(getOrCreateSessionId(), product, quantity);
+      trackAddToCart(trackedItem(quantity));
       window.dispatchEvent(new CustomEvent("artspire:cart-updated"));
       navigate({ to: "/checkout" });
     } catch (err) {

@@ -8,6 +8,7 @@ import {
 } from "./commission-photos";
 import { reportError } from "./sentry-client";
 import { validateLeadPayload } from "./lead-validation";
+import { trackCommissionEnquiry } from "./analytics";
 
 // Shared submit logic for the commission (/services) and contact (/contact)
 // forms. Task 0D: NEVER navigate away — success shows an in-page confirmation
@@ -110,6 +111,16 @@ export function useLeadForm(opts?: { withPhotos?: boolean }) {
       setLeadNumber(res.leadNumber);
       setAttachedCount(photoUrls.length);
       setStatus("success");
+      // Custom conversion — the commission funnel is the highest-margin action.
+      // Not fired for a deduped retry, so one enquiry counts once.
+      if (!res.duplicate) {
+        trackCommissionEnquiry({
+          service: payload.categoryId,
+          budgetRange: payload.budgetRange,
+          hasPhotos: photoUrls.length > 0,
+          leadNumber: res.leadNumber,
+        });
+      }
     } catch (err) {
       reportError(err, { form: opts?.withPhotos ? "commission" : "contact" });
       setErrorMsg(
