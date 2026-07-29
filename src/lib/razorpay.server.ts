@@ -296,6 +296,17 @@ export const confirmPaymentAfterCheckout = createServerFn({ method: "POST" })
   });
 
 /**
+ * Whether online payment is usable at all — i.e. whether the Razorpay keys are
+ * configured on the server. Returns ONLY a boolean; no key material is exposed.
+ * The checkout page uses this to degrade honestly (offer a WhatsApp order)
+ * instead of failing with a generic "please try again" when payments aren't set
+ * up yet. Does not touch amount verification or signature checking.
+ */
+export const getPaymentAvailability = createServerFn({ method: "GET" }).handler(async () => ({
+  configured: !!(process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET),
+}));
+
+/**
  * Returns the public Razorpay Key ID for client-side checkout.js
  * initialization. Safe to expose — the key_id is meant to be public,
  * only key_secret must stay server-side.
