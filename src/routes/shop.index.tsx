@@ -5,6 +5,7 @@ import { getShopCategories, type ShopCategory } from "@/lib/shop-categories";
 import { getCollections, type Collection } from "@/lib/collections";
 import { getPageSEO } from "@/lib/website-content";
 import { SiteChrome } from "@/components/site/SiteChrome";
+import { ImageWithFallback } from "@/components/ImageWithFallback";
 
 const PAGE_SIZE = 12;
 
@@ -152,7 +153,12 @@ function ShopPage() {
                     )}
                     {product.image_url ? (
                       <div className="frame">
-                        <img src={product.image_url} alt={product.title} loading="lazy" />
+                        <ImageWithFallback
+                          src={product.image_url}
+                          alt={product.title}
+                          loading="lazy"
+                          fallbackLabel={product.title}
+                        />
                       </div>
                     ) : (
                       <div className="frame" data-label="Product photo"></div>

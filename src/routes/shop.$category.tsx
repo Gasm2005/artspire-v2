@@ -2,6 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { getProducts, type ProductWithCategory } from "@/lib/products";
 import { getShopCategoryBySlug } from "@/lib/shop-categories";
 import { SiteChrome } from "@/components/site/SiteChrome";
+import { ImageWithFallback } from "@/components/ImageWithFallback";
 
 export const Route = createFileRoute("/shop/$category")({
   loader: async ({ params }) => {
@@ -89,7 +90,12 @@ function CategoryPage() {
                     )}
                     {p.image_url ? (
                       <div className="frame">
-                        <img src={p.image_url} alt={p.title} loading="lazy" />
+                        <ImageWithFallback
+                          src={p.image_url}
+                          alt={p.title}
+                          loading="lazy"
+                          fallbackLabel={p.title}
+                        />
                       </div>
                     ) : (
                       <div className="frame" data-label="Product photo"></div>

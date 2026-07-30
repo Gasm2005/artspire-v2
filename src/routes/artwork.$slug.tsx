@@ -9,6 +9,7 @@ import {
 } from "@/lib";
 import { OG_IMAGE } from "@/lib/site";
 import { SiteChrome } from "@/components/site/SiteChrome";
+import { ImageWithFallback } from "@/components/ImageWithFallback";
 
 interface LoaderData {
   artwork: ArtworkWithCategory;
@@ -166,7 +167,12 @@ function ArtworkPage() {
                   <div className="imgwrap tilt">
                     {a.image_url ? (
                       <div className="frame">
-                        <img src={a.image_url} alt={a.title} loading="lazy" />
+                        <ImageWithFallback
+                          src={a.image_url}
+                          alt={a.title}
+                          loading="lazy"
+                          fallbackLabel={a.title}
+                        />
                       </div>
                     ) : (
                       <div className="frame" data-label="Commission photo"></div>

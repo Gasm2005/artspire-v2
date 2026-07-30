@@ -10,6 +10,7 @@ import {
 import { toast } from "@/lib/toast";
 import { SHIPPING_TBD_LABEL } from "@/lib/shipping";
 import { SiteChrome } from "@/components/site/SiteChrome";
+import { ImageWithFallback } from "@/components/ImageWithFallback";
 
 // Shipping is weight/size based and depends on the destination, so the cart no
 // longer asserts a number the customer hasn't earned yet — it says "Calculated
@@ -125,9 +126,11 @@ function CartPage() {
                 {items.map((item) => (
                   <div className="cart-line" key={item.id}>
                     <div className="frame thumb" data-label="">
-                      {item.product?.image_url ? (
-                        <img src={item.product.image_url} alt={item.product?.title ?? ""} />
-                      ) : null}
+                      <ImageWithFallback
+                        src={item.product?.image_url}
+                        alt={item.product?.title ?? "Item"}
+                        fallbackLabel={item.product?.title ?? "Artspire"}
+                      />
                     </div>
                     <div style={{ flex: 1 }}>
                       {item.product?.categories?.name && (
@@ -217,7 +220,7 @@ function CartPage() {
                   </span>
                 </div>
                 <div className="row total">
-                  <span>Subtotal</span>
+                  <span>Total (excl. shipping)</span>
                   <span>₹{total.toLocaleString("en-IN")}</span>
                 </div>
                 <Link className="btn btn-solid btn-block" to="/checkout" style={{ marginTop: 18 }}>

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { getArtworks, type ArtworkWithCategory, type ArtworkStatus } from "@/lib/artworks";
 import { getCategories, type CategoryWithVisuals } from "@/lib/categories";
 import { SiteChrome } from "@/components/site/SiteChrome";
+import { ImageWithFallback } from "@/components/ImageWithFallback";
 
 export const Route = createFileRoute("/portfolio")({
   head: () => ({
@@ -108,7 +109,12 @@ function PortfolioPage() {
                   <div className="imgwrap tilt">
                     {a.image_url ? (
                       <div className="frame">
-                        <img src={a.image_url} alt={a.title} loading="lazy" />
+                        <ImageWithFallback
+                          src={a.image_url}
+                          alt={a.title}
+                          loading="lazy"
+                          fallbackLabel={a.title}
+                        />
                       </div>
                     ) : (
                       <div className="frame" data-label="Commission photo"></div>

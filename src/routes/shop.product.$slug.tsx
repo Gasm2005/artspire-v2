@@ -13,6 +13,7 @@ import { toast } from "@/lib/toast";
 import { OG_IMAGE } from "@/lib/site";
 import { trackViewItem, trackAddToCart, type TrackedItem } from "@/lib/analytics";
 import { SiteChrome } from "@/components/site/SiteChrome";
+import { ImageWithFallback } from "@/components/ImageWithFallback";
 
 interface LoaderData {
   product: ProductWithCategory;
@@ -151,7 +152,12 @@ function ProductPage() {
                 onClick={() => setIdx(i)}
                 data-label={`View ${i + 1}`}
               >
-                <img src={src} alt={product.title} loading="lazy" />
+                <ImageWithFallback
+                  src={src}
+                  alt={product.title}
+                  loading="lazy"
+                  fallbackLabel={product.title}
+                />
               </div>
             ))}
           </div>
@@ -170,7 +176,12 @@ function ProductPage() {
               }
             }}
           >
-            {activeImg ? <img src={activeImg} alt={product.title} /> : null}
+            <ImageWithFallback
+              src={activeImg}
+              alt={product.title}
+              loading="eager"
+              fallbackLabel={product.title}
+            />
           </div>
           {images.length > 1 && (
             <div className="gdots">
@@ -305,8 +316,8 @@ function ProductPage() {
             <details>
               <summary>Shipping &amp; delivery</summary>
               <div className="body">
-                Insured shipping across India, dispatched in 3–5 business days. Shipping calculated at checkout.
-                Fragile pieces are hand-packed in protective, recyclable materials.
+                Insured shipping across India, dispatched in 3–5 business days. Shipping calculated
+                at checkout. Fragile pieces are hand-packed in protective, recyclable materials.
               </div>
             </details>
             <details>
@@ -378,7 +389,12 @@ function ProductPage() {
                   <div className="imgwrap tilt">
                     {p.image_url ? (
                       <div className="frame">
-                        <img src={p.image_url} alt={p.title} loading="lazy" />
+                        <ImageWithFallback
+                          src={p.image_url}
+                          alt={p.title}
+                          loading="lazy"
+                          fallbackLabel={p.title}
+                        />
                       </div>
                     ) : (
                       <div className="frame" data-label="Product photo"></div>

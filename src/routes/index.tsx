@@ -5,6 +5,7 @@ import { getHomepageProducts, type ProductWithCategory } from "../lib/products";
 import { getWebsiteContent, getPageSEO, type WebsiteContent } from "../lib/website-content";
 import { getArtworks, type ArtworkWithCategory } from "../lib/artworks";
 import { SiteChrome } from "@/components/site/SiteChrome";
+import { ImageWithFallback } from "@/components/ImageWithFallback";
 
 export const Route = createFileRoute("/")({
   loader: async () => {
@@ -155,7 +156,12 @@ function Index() {
                 <div className="imgwrap tilt">
                   {p.is_one_of_a_kind && <span className="tag">1 of 1</span>}
                   {p.image_url ? (
-                    <img src={p.image_url} alt={p.title} loading="lazy" />
+                    <ImageWithFallback
+                      src={p.image_url}
+                      alt={p.title}
+                      loading="lazy"
+                      fallbackLabel={p.title}
+                    />
                   ) : (
                     <div className="frame" data-label="Product photo"></div>
                   )}
@@ -199,7 +205,12 @@ function Index() {
                 params={{ category: cat.slug }}
               >
                 {cat.image_url ? (
-                  <img src={cat.image_url} alt={cat.name} loading="lazy" />
+                  <ImageWithFallback
+                    src={cat.image_url}
+                    alt={cat.name}
+                    loading="lazy"
+                    fallbackLabel={cat.name}
+                  />
                 ) : (
                   <div className="frame" data-label=""></div>
                 )}
