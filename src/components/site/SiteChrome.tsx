@@ -417,6 +417,23 @@ export function SiteFooter() {
                 </li>
               </ul>
             </div>
+            <div>
+              <h4>Policies</h4>
+              <ul>
+                <li>
+                  <Link to="/shipping-policy">Shipping</Link>
+                </li>
+                <li>
+                  <Link to="/refund-and-cancellation-policy">Refunds &amp; Cancellation</Link>
+                </li>
+                <li>
+                  <Link to="/terms-and-conditions">Terms &amp; Conditions</Link>
+                </li>
+                <li>
+                  <Link to="/privacy-policy">Privacy Policy</Link>
+                </li>
+              </ul>
+            </div>
           </div>
           <div className="foot-bottom">
             <span>© 2026 The Artspire Studio · Lucknow, India</span>
@@ -434,6 +451,10 @@ export function SiteFooter() {
             <Link to="/services">Commissions</Link>
             <Link to="/track-order">Track Order</Link>
             <Link to="/contact">Contact</Link>
+            <Link to="/shipping-policy">Shipping</Link>
+            <Link to="/refund-and-cancellation-policy">Refunds</Link>
+            <Link to="/terms-and-conditions">Terms</Link>
+            <Link to="/privacy-policy">Privacy</Link>
           </div>
           <div className="fm-copy">© 2026 The Artspire · Lucknow, India</div>
         </div>

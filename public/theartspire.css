@@ -2343,3 +2343,42 @@ html.js .tas .reveal-words[data-rv="in"] .word > span {
     display: none;
   }
 }
+
+/* ── Legal / policy pages (Task 5) ───────────────────────────── */
+.tas .legal-prose {
+  font-size: 14.5px;
+  line-height: 1.85;
+  color: #4a463f;
+}
+.tas .legal-prose h2 {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 23px;
+  font-weight: 500;
+  color: var(--forest);
+  margin: 34px 0 10px;
+}
+.tas .legal-prose p,
+.tas .legal-prose ul,
+.tas .legal-prose ol {
+  margin-bottom: 14px;
+}
+.tas .legal-prose ul,
+.tas .legal-prose ol {
+  padding-left: 22px;
+}
+.tas .legal-prose li {
+  margin-bottom: 7px;
+}
+.tas .legal-prose a {
+  color: var(--gold-ink);
+  text-decoration: underline;
+}
+.tas .legal-prose b {
+  color: var(--forest);
+}
+.tas .legal-prose code {
+  background: var(--cream-2);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 12.5px;
+}

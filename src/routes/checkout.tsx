@@ -1,4 +1,4 @@
-import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { createFileRoute, useRouter, Link } from "@tanstack/react-router";
 import { useState, useEffect, useCallback } from "react";
 import { getCartItems, getOrCreateSessionId, clearCart, type CartItem } from "@/lib/cart";
 import { createPendingOrder, markOrderPaymentFailed } from "@/lib/orders";
@@ -543,6 +543,37 @@ function CheckoutPage() {
                     </p>
                   </>
                 )}
+                {/* Policy links at the point of payment (Task 5). */}
+                <p
+                  style={{
+                    fontSize: 11,
+                    color: "var(--stone)",
+                    textAlign: "center",
+                    marginTop: 10,
+                    lineHeight: 1.7,
+                  }}
+                >
+                  By ordering you agree to our{" "}
+                  <Link to="/terms-and-conditions" style={{ textDecoration: "underline" }}>
+                    Terms
+                  </Link>
+                  ,{" "}
+                  <Link
+                    to="/refund-and-cancellation-policy"
+                    style={{ textDecoration: "underline" }}
+                  >
+                    Refund Policy
+                  </Link>
+                  ,{" "}
+                  <Link to="/shipping-policy" style={{ textDecoration: "underline" }}>
+                    Shipping Policy
+                  </Link>{" "}
+                  and{" "}
+                  <Link to="/privacy-policy" style={{ textDecoration: "underline" }}>
+                    Privacy Policy
+                  </Link>
+                  .
+                </p>
               </div>
             </div>
           )}

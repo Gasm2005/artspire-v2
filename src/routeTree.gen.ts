@@ -10,7 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TrackOrderRouteImport } from './routes/track-order'
+import { Route as TermsAndConditionsRouteImport } from './routes/terms-and-conditions'
+import { Route as ShippingPolicyRouteImport } from './routes/shipping-policy'
 import { Route as ServicesRouteImport } from './routes/services'
+import { Route as RefundAndCancellationPolicyRouteImport } from './routes/refund-and-cancellation-policy'
+import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PortfolioRouteImport } from './routes/portfolio'
 import { Route as FaqRouteImport } from './routes/faq'
@@ -63,9 +67,30 @@ const TrackOrderRoute = TrackOrderRouteImport.update({
   path: '/track-order',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TermsAndConditionsRoute = TermsAndConditionsRouteImport.update({
+  id: '/terms-and-conditions',
+  path: '/terms-and-conditions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShippingPolicyRoute = ShippingPolicyRouteImport.update({
+  id: '/shipping-policy',
+  path: '/shipping-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
   path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RefundAndCancellationPolicyRoute =
+  RefundAndCancellationPolicyRouteImport.update({
+    id: '/refund-and-cancellation-policy',
+    path: '/refund-and-cancellation-policy',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
+  id: '/privacy-policy',
+  path: '/privacy-policy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PricingRoute = PricingRouteImport.update({
@@ -317,7 +342,11 @@ export interface FileRoutesByFullPath {
   '/faq': typeof FaqRoute
   '/portfolio': typeof PortfolioRoute
   '/pricing': typeof PricingRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/refund-and-cancellation-policy': typeof RefundAndCancellationPolicyRoute
   '/services': typeof ServicesRoute
+  '/shipping-policy': typeof ShippingPolicyRoute
+  '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/track-order': typeof TrackOrderRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/reviews': typeof AdminReviewsRoute
@@ -366,7 +395,11 @@ export interface FileRoutesByTo {
   '/faq': typeof FaqRoute
   '/portfolio': typeof PortfolioRoute
   '/pricing': typeof PricingRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/refund-and-cancellation-policy': typeof RefundAndCancellationPolicyRoute
   '/services': typeof ServicesRoute
+  '/shipping-policy': typeof ShippingPolicyRoute
+  '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/track-order': typeof TrackOrderRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/reviews': typeof AdminReviewsRoute
@@ -417,7 +450,11 @@ export interface FileRoutesById {
   '/faq': typeof FaqRoute
   '/portfolio': typeof PortfolioRoute
   '/pricing': typeof PricingRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/refund-and-cancellation-policy': typeof RefundAndCancellationPolicyRoute
   '/services': typeof ServicesRoute
+  '/shipping-policy': typeof ShippingPolicyRoute
+  '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/track-order': typeof TrackOrderRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/reviews': typeof AdminReviewsRoute
@@ -469,7 +506,11 @@ export interface FileRouteTypes {
     | '/faq'
     | '/portfolio'
     | '/pricing'
+    | '/privacy-policy'
+    | '/refund-and-cancellation-policy'
     | '/services'
+    | '/shipping-policy'
+    | '/terms-and-conditions'
     | '/track-order'
     | '/admin/login'
     | '/admin/reviews'
@@ -518,7 +559,11 @@ export interface FileRouteTypes {
     | '/faq'
     | '/portfolio'
     | '/pricing'
+    | '/privacy-policy'
+    | '/refund-and-cancellation-policy'
     | '/services'
+    | '/shipping-policy'
+    | '/terms-and-conditions'
     | '/track-order'
     | '/admin/login'
     | '/admin/reviews'
@@ -568,7 +613,11 @@ export interface FileRouteTypes {
     | '/faq'
     | '/portfolio'
     | '/pricing'
+    | '/privacy-policy'
+    | '/refund-and-cancellation-policy'
     | '/services'
+    | '/shipping-policy'
+    | '/terms-and-conditions'
     | '/track-order'
     | '/admin/login'
     | '/admin/reviews'
@@ -619,7 +668,11 @@ export interface RootRouteChildren {
   FaqRoute: typeof FaqRoute
   PortfolioRoute: typeof PortfolioRoute
   PricingRoute: typeof PricingRoute
+  PrivacyPolicyRoute: typeof PrivacyPolicyRoute
+  RefundAndCancellationPolicyRoute: typeof RefundAndCancellationPolicyRoute
   ServicesRoute: typeof ServicesRoute
+  ShippingPolicyRoute: typeof ShippingPolicyRoute
+  TermsAndConditionsRoute: typeof TermsAndConditionsRoute
   TrackOrderRoute: typeof TrackOrderRoute
   ArtworkSlugRoute: typeof ArtworkSlugRoute
   BlogSlugRoute: typeof BlogSlugRoute
@@ -641,11 +694,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TrackOrderRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/terms-and-conditions': {
+      id: '/terms-and-conditions'
+      path: '/terms-and-conditions'
+      fullPath: '/terms-and-conditions'
+      preLoaderRoute: typeof TermsAndConditionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shipping-policy': {
+      id: '/shipping-policy'
+      path: '/shipping-policy'
+      fullPath: '/shipping-policy'
+      preLoaderRoute: typeof ShippingPolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/services': {
       id: '/services'
       path: '/services'
       fullPath: '/services'
       preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/refund-and-cancellation-policy': {
+      id: '/refund-and-cancellation-policy'
+      path: '/refund-and-cancellation-policy'
+      fullPath: '/refund-and-cancellation-policy'
+      preLoaderRoute: typeof RefundAndCancellationPolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy-policy': {
+      id: '/privacy-policy'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy'
+      preLoaderRoute: typeof PrivacyPolicyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/pricing': {
@@ -1049,7 +1130,11 @@ const rootRouteChildren: RootRouteChildren = {
   FaqRoute: FaqRoute,
   PortfolioRoute: PortfolioRoute,
   PricingRoute: PricingRoute,
+  PrivacyPolicyRoute: PrivacyPolicyRoute,
+  RefundAndCancellationPolicyRoute: RefundAndCancellationPolicyRoute,
   ServicesRoute: ServicesRoute,
+  ShippingPolicyRoute: ShippingPolicyRoute,
+  TermsAndConditionsRoute: TermsAndConditionsRoute,
   TrackOrderRoute: TrackOrderRoute,
   ArtworkSlugRoute: ArtworkSlugRoute,
   BlogSlugRoute: BlogSlugRoute,
