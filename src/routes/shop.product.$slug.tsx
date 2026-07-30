@@ -1,4 +1,4 @@
-import { createFileRoute, notFound, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, notFound, redirect, Link, useNavigate } from "@tanstack/react-router";
 import { useState, useRef, useEffect } from "react";
 import {
   getPublishedProductBySlug,
@@ -12,6 +12,7 @@ import { waLink } from "@/lib/whatsapp";
 import { toast } from "@/lib/toast";
 import { OG_IMAGE } from "@/lib/site";
 import { trackViewItem, trackAddToCart, type TrackedItem } from "@/lib/analytics";
+import { findRedirect } from "@/lib/redirects";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
 
@@ -25,7 +26,15 @@ interface LoaderData {
 export const Route = createFileRoute("/shop/product/$slug")({
   loader: async ({ params }): Promise<LoaderData> => {
     const product = await getPublishedProductBySlug(params.slug);
-    if (!product) throw notFound();
+    if (!product) {
+      // Slug no longer resolves — honour a recorded permanent redirect before
+      // 404ing, so renamed products (e.g. a corrected spelling in a slug) keep
+      // their existing links and indexed URLs working. Only runs on this miss
+      // path, so normal loads pay nothing.
+      const rule = await findRedirect(`/shop/product/${params.slug}`);
+      if (rule) throw redirect({ href: rule.toPath, statusCode: rule.statusCode });
+      throw notFound();
+    }
     const [gallery, related, reviews] = await Promise.all([
       getProductGalleryImages(product.id).catch(() => []),
       getRelatedProducts(product.id, product.category_id, 4).catch(() => []),
