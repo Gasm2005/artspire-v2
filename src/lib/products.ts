@@ -1,5 +1,12 @@
 import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
 import type { ShopCategory } from "./shop-categories";
+
+// Casts at the DB boundary: the Task 6 shipping columns (weight_grams, length_mm,
+// width_mm, height_mm, is_fragile) aren't in the generated types until they are
+// regenerated after the additive migration.
+type ProductsDbInsert = Database["public"]["Tables"]["products"]["Insert"];
+type ProductsDbUpdate = Database["public"]["Tables"]["products"]["Update"];
 
 // ─── TYPES ──────────────────────────────────────────────────
 // Manually typed since products table isn't in the auto-generated
@@ -24,6 +31,13 @@ export interface Product {
   materials_used: string | null;
   dimensions: string | null;
   weight: string | null;
+  // Structured shipping data (Task 6). The free-text fields above stay as
+  // customer-facing description; these drive the shipping calculation.
+  weight_grams: number | null;
+  length_mm: number | null;
+  width_mm: number | null;
+  height_mm: number | null;
+  is_fragile: boolean | null;
   care_instructions: string | null;
   commission_similar_enabled: boolean;
   main_image_id: string | null;
@@ -239,7 +253,11 @@ export async function ensureUniqueProductSlug(title: string, currentId?: string)
 // ─── CREATE ─────────────────────────────────────────────────
 
 export async function createProduct(values: ProductInsert): Promise<Product> {
-  const { data, error } = await supabase.from("products").insert(values).select().single();
+  const { data, error } = await supabase
+    .from("products")
+    .insert(values as ProductsDbInsert)
+    .select()
+    .single();
 
   if (error) throw error;
   return data as Product;
@@ -250,7 +268,7 @@ export async function createProduct(values: ProductInsert): Promise<Product> {
 export async function updateProduct(id: string, values: ProductUpdate): Promise<Product> {
   const { data, error } = await supabase
     .from("products")
-    .update({ ...values, updated_at: new Date().toISOString() })
+    .update({ ...values, updated_at: new Date().toISOString() } as ProductsDbUpdate)
     .eq("id", id)
     .select()
     .single();

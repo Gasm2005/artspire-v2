@@ -10,6 +10,7 @@ import {
 } from "@/lib/razorpay.server";
 import { waLink } from "@/lib/whatsapp";
 import { toast } from "@/lib/toast";
+import { calculateShippingInr, toShippableItem } from "@/lib/shipping";
 import { trackBeginCheckout, trackPurchase, type TrackedItem } from "@/lib/analytics";
 import { SiteChrome } from "@/components/site/SiteChrome";
 
@@ -19,8 +20,6 @@ export const Route = createFileRoute("/checkout")({
   }),
   component: CheckoutPage,
 });
-
-const SHIPPING_COST = 150; // flat rate; can be made dynamic later
 
 declare global {
   interface Window {
@@ -141,7 +140,12 @@ function CheckoutPage() {
   }, [form.postal_code]);
 
   const subtotal = items.reduce((sum, item) => sum + item.price_at_add * item.quantity, 0);
-  const total = subtotal + SHIPPING_COST;
+  // Weight/size based, from the single source of truth (src/lib/shipping.ts).
+  // The server re-computes this identically before charging.
+  const shippingCost = calculateShippingInr(
+    items.map((i) => toShippableItem(i.quantity, i.product)),
+  );
+  const total = subtotal + shippingCost;
 
   function validateForm(): boolean {
     if (!form.name.trim() || !form.email.trim() || !form.phone.trim()) {
@@ -178,7 +182,7 @@ function CheckoutPage() {
     return [
       "Hi Himangi, I'd like to place this order:",
       ...lines,
-      `Shipping: ₹${SHIPPING_COST.toLocaleString("en-IN")}`,
+      `Shipping: ₹${shippingCost.toLocaleString("en-IN")}`,
       `Total: ₹${total.toLocaleString("en-IN")}`,
       form.name ? `Name: ${form.name}` : "",
       form.phone ? `Phone: ${form.phone}` : "",
@@ -209,7 +213,7 @@ function CheckoutPage() {
         },
         giftMessage: form.giftMessage.trim() || undefined,
         cartItems: items,
-        shippingCost: SHIPPING_COST,
+        shippingCost,
       });
 
       sessionStorage.setItem(`artspire_order_phone_${order.id}`, form.phone.trim());
@@ -265,7 +269,7 @@ function CheckoutPage() {
             trackPurchase({
               transactionId: order.order_number,
               value: total,
-              shipping: SHIPPING_COST,
+              shipping: shippingCost,
               items: trackedItems(),
             });
 
@@ -479,7 +483,7 @@ function CheckoutPage() {
                 ))}
                 <div className="row">
                   <span>Shipping</span>
-                  <span>₹{SHIPPING_COST.toLocaleString("en-IN")}</span>
+                  <span>₹{shippingCost.toLocaleString("en-IN")}</span>
                 </div>
                 <div className="row total">
                   <span>Total</span>

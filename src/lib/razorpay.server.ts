@@ -5,6 +5,7 @@ import { getSupabaseAdmin } from "@/integrations/supabase/admin.server";
 import { sendOrderConfirmationEmails } from "./email.server";
 import type { Order, OrderItem } from "./orders";
 import { ACTIVE_CURRENCY, toSubunits, type CurrencyCode } from "./currency";
+import { calculateShippingInr, toShippableItem, type ShippableItem } from "./shipping";
 
 // Server-only Razorpay config. Never import this file's Razorpay
 // instance or key_secret into client code — the .server.ts suffix
@@ -23,10 +24,10 @@ function getRazorpayInstance() {
   return new Razorpay({ key_id: keyId, key_secret: keySecret });
 }
 
-// Flat shipping rate — server-authoritative. Must match the value shown on
-// the checkout page (src/routes/checkout.tsx SHIPPING_COST). Kept here so a
-// tampered client cannot alter what is actually charged.
-const SHIPPING_COST = 150;
+// Shipping is computed from src/lib/shipping.ts — the SINGLE source of truth,
+// shared with the cart and checkout page, so all three always agree. It is
+// recomputed here from live product weights/dimensions (never from anything the
+// client sent), so a tampered client cannot alter what is actually charged.
 
 /**
  * Creates a Razorpay Order for the given internal order.
@@ -59,18 +60,22 @@ export const createRazorpayOrder = createServerFn({ method: "POST" })
       []) as OrderItem[];
     if (items.length === 0) throw new Error("Order has no items.");
 
-    // Recompute the amount authoritatively from live product prices.
+    // Recompute the amount authoritatively from live product prices AND live
+    // weights/dimensions — never from client-supplied values.
     let subtotal = 0;
+    const shippable: ShippableItem[] = [];
     for (const item of items) {
       if (!item.product_id) throw new Error("Order item is missing a product reference.");
       const { data: product, error: prodErr } = await admin
         .from("products")
-        .select("price, status")
+        .select("*") // includes the Task 6 shipping columns (not yet in generated types)
         .eq("id", item.product_id)
         .single();
       if (prodErr || !product) throw new Error("A product in this order no longer exists.");
       if (product.status !== "published")
         throw new Error("A product in this order is not purchasable.");
+
+      shippable.push(toShippableItem(item.quantity, product));
 
       const lineTotal = product.price * item.quantity;
       subtotal += lineTotal;
@@ -84,11 +89,12 @@ export const createRazorpayOrder = createServerFn({ method: "POST" })
 
     // Discounts are forced to 0 until a validated coupon system exists — a
     // client-supplied discount_amount could otherwise zero out the total.
-    const total = subtotal + SHIPPING_COST;
+    const shippingCost = calculateShippingInr(shippable);
+    const total = subtotal + shippingCost;
 
     await admin
       .from("orders")
-      .update({ subtotal, shipping_cost: SHIPPING_COST, discount_amount: 0, total })
+      .update({ subtotal, shipping_cost: shippingCost, discount_amount: 0, total })
       .eq("id", order.id);
 
     const rzpOrder = await razorpay.orders.create({

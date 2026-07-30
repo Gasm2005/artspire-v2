@@ -270,9 +270,7 @@ export function SiteHeader() {
         <div className="wrap arow">
           <span>Handmade in India</span>
           <b>◆</b>
-          <span>Complimentary pan-India shipping</span>
-          <b>◆</b>
-          <span>Now shipping worldwide soon</span>
+          <span>Insured pan-India shipping · Calculated at checkout</span>
         </div>
       </div>
       <header id="hdr">

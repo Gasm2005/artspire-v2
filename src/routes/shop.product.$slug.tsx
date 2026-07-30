@@ -305,7 +305,7 @@ function ProductPage() {
             <details>
               <summary>Shipping &amp; delivery</summary>
               <div className="body">
-                Complimentary insured shipping across India, dispatched in 3–5 business days.
+                Insured shipping across India, dispatched in 3–5 business days. Shipping calculated at checkout.
                 Fragile pieces are hand-packed in protective, recyclable materials.
               </div>
             </details>

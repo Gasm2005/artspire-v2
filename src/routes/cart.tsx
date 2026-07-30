@@ -8,9 +8,12 @@ import {
   type CartItem,
 } from "@/lib/cart";
 import { toast } from "@/lib/toast";
+import { SHIPPING_TBD_LABEL } from "@/lib/shipping";
 import { SiteChrome } from "@/components/site/SiteChrome";
 
-const SHIPPING_COST = 150;
+// Shipping is weight/size based and depends on the destination, so the cart no
+// longer asserts a number the customer hasn't earned yet — it says "Calculated
+// at checkout". The single source of truth is src/lib/shipping.ts.
 
 export const Route = createFileRoute("/cart")({
   head: () => ({
@@ -72,7 +75,9 @@ function CartPage() {
   }
 
   const subtotal = items.reduce((sum, i) => sum + i.price_at_add * i.quantity, 0);
-  const total = items.length ? subtotal + SHIPPING_COST : 0;
+  // Shipping isn't known until checkout, so the cart shows the subtotal as the
+  // running figure rather than inventing a total.
+  const total = items.length ? subtotal : 0;
 
   return (
     <SiteChrome>
@@ -207,10 +212,12 @@ function CartPage() {
                 </div>
                 <div className="row">
                   <span>Shipping</span>
-                  <span>₹{SHIPPING_COST.toLocaleString("en-IN")}</span>
+                  <span style={{ fontSize: 12, color: "var(--stone-ink)" }}>
+                    {SHIPPING_TBD_LABEL}
+                  </span>
                 </div>
                 <div className="row total">
-                  <span>Total</span>
+                  <span>Subtotal</span>
                   <span>₹{total.toLocaleString("en-IN")}</span>
                 </div>
                 <Link className="btn btn-solid btn-block" to="/checkout" style={{ marginTop: 18 }}>

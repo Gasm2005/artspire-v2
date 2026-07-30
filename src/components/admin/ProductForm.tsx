@@ -50,6 +50,11 @@ export function ProductForm({ product, onSuccess }: ProductFormProps) {
     materials_used: product?.materials_used ?? "",
     dimensions: product?.dimensions ?? "",
     weight: product?.weight ?? "",
+    weight_grams: product?.weight_grams?.toString() ?? "",
+    length_mm: product?.length_mm?.toString() ?? "",
+    width_mm: product?.width_mm?.toString() ?? "",
+    height_mm: product?.height_mm?.toString() ?? "",
+    is_fragile: product?.is_fragile ?? false,
     care_instructions: product?.care_instructions ?? "",
     commission_similar_enabled: product?.commission_similar_enabled ?? true,
     sku: product?.sku ?? "",
@@ -149,6 +154,11 @@ export function ProductForm({ product, onSuccess }: ProductFormProps) {
         materials_used: form.materials_used.trim() || null,
         dimensions: form.dimensions.trim() || null,
         weight: form.weight.trim() || null,
+        weight_grams: form.weight_grams ? Number(form.weight_grams) : null,
+        length_mm: form.length_mm ? Number(form.length_mm) : null,
+        width_mm: form.width_mm ? Number(form.width_mm) : null,
+        height_mm: form.height_mm ? Number(form.height_mm) : null,
+        is_fragile: form.is_fragile,
         care_instructions: form.care_instructions.trim() || null,
         commission_similar_enabled: form.commission_similar_enabled,
         sku: form.sku.trim() || null,
@@ -476,6 +486,73 @@ export function ProductForm({ product, onSuccess }: ProductFormProps) {
               className={inputClass}
             />
           </div>
+        </div>
+
+        {/* Shipping data (Task 6). These NUMERIC fields drive the shipping
+            charge — the text fields above are only description. Leave blank and
+            a safe default weight is assumed (never ₹0 shipping). */}
+        <div className="rounded-xl border border-border bg-cream/40 p-4">
+          <p className="font-body text-[11px] font-bold text-stone uppercase tracking-wider mb-1">
+            Shipping — packed parcel
+          </p>
+          <p className="font-body text-[11px] text-stone/70 mb-3">
+            Used to calculate the shipping charge (greater of actual and volumetric weight). If left
+            blank we fall back to a safe default weight.
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div>
+              <label className={labelClass}>Weight (grams)</label>
+              <input
+                type="number"
+                min={0}
+                value={form.weight_grams}
+                onChange={(e) => updateField("weight_grams", e.target.value)}
+                placeholder="800"
+                className={inputClass}
+              />
+            </div>
+            <div>
+              <label className={labelClass}>Length (mm)</label>
+              <input
+                type="number"
+                min={0}
+                value={form.length_mm}
+                onChange={(e) => updateField("length_mm", e.target.value)}
+                placeholder="200"
+                className={inputClass}
+              />
+            </div>
+            <div>
+              <label className={labelClass}>Width (mm)</label>
+              <input
+                type="number"
+                min={0}
+                value={form.width_mm}
+                onChange={(e) => updateField("width_mm", e.target.value)}
+                placeholder="150"
+                className={inputClass}
+              />
+            </div>
+            <div>
+              <label className={labelClass}>Height (mm)</label>
+              <input
+                type="number"
+                min={0}
+                value={form.height_mm}
+                onChange={(e) => updateField("height_mm", e.target.value)}
+                placeholder="150"
+                className={inputClass}
+              />
+            </div>
+          </div>
+          <label className="mt-3 flex items-center gap-2 font-body text-[12px] text-forest">
+            <input
+              type="checkbox"
+              checked={form.is_fragile}
+              onChange={(e) => updateField("is_fragile", e.target.checked)}
+            />
+            Fragile (clay, cement, mirror, glass) — needs heavier protective packing
+          </label>
         </div>
         <div>
           <label className={labelClass}>Care Instructions</label>

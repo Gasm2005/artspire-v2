@@ -37,7 +37,7 @@ const FAQS: { q: string; a: string }[] = [
   },
   {
     q: "Do you ship across India? Internationally?",
-    a: "Yes — complimentary insured shipping across India, dispatched in 3–5 business days for ready-made pieces. International shipping is coming soon.",
+    a: "Yes — insured shipping across India, dispatched in 3–5 business days for ready-made pieces. Shipping is calculated at checkout from the weight and size of your piece. We do not ship internationally yet.",
   },
   {
     q: "How are fragile pieces packed?",
