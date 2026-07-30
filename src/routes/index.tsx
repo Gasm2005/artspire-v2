@@ -71,24 +71,30 @@ function Index() {
                 Or commission a bespoke piece <span className="arw">→</span>
               </Link>
             </div>
+            {/* Each counter renders its FINAL value in the HTML — the count-up is
+                only an enhancement. Previously they shipped as "0", so a slow
+                connection or a no-JS crawler read "0 Years of craft".
+                The old third stat ("% By hand") was removed rather than
+                corrected: an unverifiable percentage on a handmade brand says
+                nothing. "One artist, start to finish" is true and checkable. */}
             <div className="hero-meta rv d4">
               <div>
                 <div className="n" data-count="11" data-suffix="+">
-                  0
+                  11+
                 </div>
                 <div className="l">Years of craft</div>
               </div>
               <div>
-                <div className="n" data-count="1000" data-suffix="+">
-                  0
+                <div className="n" data-count="800" data-suffix="+">
+                  800+
                 </div>
                 <div className="l">Pieces made</div>
               </div>
               <div>
-                <div className="n" data-count="100" data-suffix="%">
-                  0
+                <div className="n" data-count="1" data-suffix="">
+                  1
                 </div>
-                <div className="l">By hand</div>
+                <div className="l">Artist, start to finish</div>
               </div>
             </div>
           </div>

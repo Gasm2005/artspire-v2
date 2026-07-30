@@ -71,10 +71,21 @@ export function useSiteMotion() {
       io.disconnect();
     });
 
+    // The markup already contains each counter's final value, so the count-up is
+    // purely decorative — skip it entirely for reduced-motion users rather than
+    // animating (and briefly showing 0) against their preference.
+    const prefersReducedMotion =
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
     const cio = new IntersectionObserver(
       (es) =>
         es.forEach((e) => {
           if (!e.isIntersecting) return;
+          if (prefersReducedMotion) {
+            cio.unobserve(e.target);
+            return;
+          }
           const el = e.target as HTMLElement;
           const end = +(el.dataset.count || "0");
           const suf = el.dataset.suffix || "";
