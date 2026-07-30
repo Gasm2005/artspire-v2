@@ -43,8 +43,34 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
   });
 }
 
+// Canonical-host redirect, OFF by default. Once theartspire.com is live in
+// Vercel, set VITE_ENFORCE_CANONICAL_HOST=true and every request arriving on
+// another host (artspire-v2.vercel.app, a preview URL, a bare .in) gets a 301 to
+// the same path on the canonical host — so duplicate content collapses onto one
+// domain. Left disabled until DNS resolves, otherwise the site would 301 to a
+// domain that doesn't answer yet.
+function canonicalHostRedirect(request: Request): Response | null {
+  if (process.env.VITE_ENFORCE_CANONICAL_HOST !== "true") return null;
+  const siteUrl = process.env.VITE_SITE_URL;
+  if (!siteUrl) return null;
+  try {
+    const canonical = new URL(siteUrl);
+    const incoming = new URL(request.url);
+    // Never redirect localhost — that would break local production previews.
+    if (incoming.hostname === "localhost" || incoming.hostname === "127.0.0.1") return null;
+    if (incoming.host === canonical.host) return null;
+    const target = new URL(incoming.pathname + incoming.search, canonical.origin);
+    return new Response(null, { status: 301, headers: { location: target.toString() } });
+  } catch {
+    return null; // a malformed env value must never break the request path
+  }
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
+    const hostRedirect = canonicalHostRedirect(request);
+    if (hostRedirect) return hostRedirect;
+
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);

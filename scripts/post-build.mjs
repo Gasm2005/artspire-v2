@@ -158,7 +158,15 @@ async function generateSitemap() {
     urlEntry(`${SITE_URL}/pricing`, null, "monthly", "0.7"),
     urlEntry(`${SITE_URL}/faq`, null, "monthly", "0.5"),
     urlEntry(`${SITE_URL}/contact`, null, "monthly", "0.5"),
+    urlEntry(`${SITE_URL}/track-order`, null, "yearly", "0.3"),
+    // Policy pages (Task 5) — required to be indexable.
+    urlEntry(`${SITE_URL}/privacy-policy`, null, "yearly", "0.3"),
+    urlEntry(`${SITE_URL}/terms-and-conditions`, null, "yearly", "0.3"),
+    urlEntry(`${SITE_URL}/refund-and-cancellation-policy`, null, "yearly", "0.3"),
+    urlEntry(`${SITE_URL}/shipping-policy`, null, "yearly", "0.3"),
   ];
+  // NOTE: /admin/*, /cart, /checkout and /order-confirmation/* are deliberately
+  // never emitted — they must not be indexed.
 
   let dynamicEntries = [];
 
@@ -178,16 +186,21 @@ async function generateSitemap() {
 
       if (artworksError) throw artworksError;
 
-      const { data: categories, error: categoriesError } = await supabase
-        .from("categories")
-        .select("slug, updated_at")
-        .is("deleted_at", null);
+      // Shop categories live at /shop/<slug>. The previous version emitted
+      // /categories/<slug>, a route that DOES NOT EXIST — publishing dead URLs
+      // to Google. Only categories that actually contain a published product are
+      // listed, matching the noindex-while-empty rule on the page itself.
+      const { data: shopCategories, error: categoriesError } = await supabase
+        .from("shop_categories")
+        .select("slug, updated_at, id")
+        .is("deleted_at", null)
+        .eq("is_active", true);
 
       if (categoriesError) throw categoriesError;
 
       const { data: products } = await supabase
         .from("products")
-        .select("slug, updated_at")
+        .select("slug, updated_at, category_id")
         .eq("status", "published");
 
       const { data: posts } = await supabase
@@ -204,9 +217,9 @@ async function generateSitemap() {
             "0.8",
           ),
         ),
-        ...(categories ?? []).map((c) =>
-          urlEntry(`${SITE_URL}/categories/${c.slug}`, c.updated_at, "weekly", "0.9"),
-        ),
+        ...(shopCategories ?? [])
+          .filter((c) => (products ?? []).some((p) => p.category_id === c.id))
+          .map((c) => urlEntry(`${SITE_URL}/shop/${c.slug}`, c.updated_at, "weekly", "0.9")),
         ...(products ?? []).map((p) =>
           urlEntry(`${SITE_URL}/shop/product/${p.slug}`, p.updated_at, "weekly", "0.9"),
         ),
@@ -216,7 +229,7 @@ async function generateSitemap() {
       ];
 
       console.log(
-        `[post-build] Sitemap: ${artworks?.length ?? 0} artworks, ${categories?.length ?? 0} categories, ${products?.length ?? 0} products, ${posts?.length ?? 0} posts`,
+        `[post-build] Sitemap: ${artworks?.length ?? 0} artworks, ${shopCategories?.length ?? 0} shop categories, ${products?.length ?? 0} products, ${posts?.length ?? 0} posts`,
       );
     } catch (err) {
       console.error("[post-build] Failed to fetch dynamic sitemap entries:", err.message);
@@ -237,6 +250,24 @@ async function generateSitemap() {
     mkdirSync(STATIC_DIR, { recursive: true });
   }
   writeFileSync(join(STATIC_DIR, "sitemap.xml"), xml);
+
+  // robots.txt is GENERATED so the Sitemap URL follows VITE_SITE_URL instead of
+  // being hardcoded (it previously pointed at the .com while the site ran on
+  // vercel.app). Also keeps checkout/cart/order pages out of the index.
+  const robots = [
+    "User-agent: *",
+    "Allow: /",
+    "Disallow: /admin",
+    "Disallow: /admin/",
+    "Disallow: /cart",
+    "Disallow: /checkout",
+    "Disallow: /order-confirmation/",
+    "",
+    `Sitemap: ${SITE_URL}/sitemap.xml`,
+    "",
+  ].join("\n");
+  writeFileSync(join(STATIC_DIR, "robots.txt"), robots);
+  console.log(`[post-build] Wrote robots.txt (sitemap: ${SITE_URL}/sitemap.xml)`);
   console.log(
     `[post-build] Wrote sitemap.xml with ${staticEntries.length + dynamicEntries.length} URLs`,
   );

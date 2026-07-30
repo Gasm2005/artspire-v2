@@ -18,7 +18,11 @@ export const Route = createFileRoute("/shop/$category")({
   },
   head: ({ loaderData }) => {
     if (!loaderData) return {};
-    const { category } = loaderData;
+    const { category, products } = loaderData;
+    // An empty category page is a thin/soft-404 page in Google's eyes, so it is
+    // noindex WHILE it has no products — and flips back to indexable by itself
+    // the moment one is published into it. No manual step, no stale noindex.
+    const isEmpty = products.length === 0;
     return {
       meta: [
         { title: `${category.name} | The Artspire Shop` },
@@ -27,6 +31,10 @@ export const Route = createFileRoute("/shop/$category")({
           content:
             category.short_summary ??
             `Handmade ${category.name.toLowerCase()} — ready to ship. Made by Himangi Pandey.`,
+        },
+        {
+          name: "robots",
+          content: isEmpty ? "noindex, follow" : "index, follow",
         },
       ],
     };

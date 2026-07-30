@@ -237,7 +237,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         },
         { property: "og:type", content: "website" },
         { property: "og:image", content: OG_IMAGE },
-        { property: "og:url", content: siteUrl },
+        // NOTE: og:url is NOT set here. A single site-wide value would claim
+        // every page is the homepage. It is rendered per-page in RootComponent
+        // alongside the canonical link (see CanonicalTags).
         { name: "theme-color", content: "#3E4D3A" },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:site", content: BRAND.twitterHandle },
@@ -313,6 +315,28 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+/**
+ * Self-referencing canonical + per-page og:url, both built from the SINGLE
+ * source of truth (SITE_URL ← VITE_SITE_URL). React 19 hoists <link>/<meta>
+ * rendered anywhere in the tree into <head>, so this works for SSR and for
+ * client-side navigation without touching every route's head().
+ *
+ * Query strings are deliberately dropped: /services and /services?service=x are
+ * the same page, so they must not compete as separate URLs in the index.
+ */
+function CanonicalTags() {
+  const pathname = useLocation({ select: (l) => l.pathname });
+  // Normalise: strip a trailing slash (except the root) so one page = one URL.
+  const path = pathname !== "/" ? pathname.replace(/\/+$/, "") : "/";
+  const url = `${SITE_URL}${path === "/" ? "" : path}`;
+  return (
+    <>
+      <link rel="canonical" href={url} />
+      <meta property="og:url" content={url} />
+    </>
+  );
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
@@ -341,6 +365,7 @@ function RootComponent() {
       >
         Skip to main content
       </a>
+      <CanonicalTags />
       <TopLoader />
       <Outlet />
       <Toaster />
