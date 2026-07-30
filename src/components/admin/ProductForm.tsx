@@ -45,6 +45,8 @@ export function ProductForm({ product, onSuccess }: ProductFormProps) {
     description: product?.description ?? "",
     price: product?.price?.toString() ?? "",
     compare_at_price: product?.compare_at_price?.toString() ?? "",
+    // Not persisted — an explicit affirmation that the compare-at price is real.
+    compare_at_confirmed: !!product?.compare_at_price,
     inventory_count: product?.inventory_count?.toString() ?? "1",
     is_one_of_a_kind: product?.is_one_of_a_kind ?? true,
     materials_used: product?.materials_used ?? "",
@@ -125,6 +127,26 @@ export function ProductForm({ product, onSuccess }: ProductFormProps) {
     if (!form.price || parseFloat(form.price) < 0) {
       toast.error("Please enter a valid price.");
       return;
+    }
+    // A compare-at price may only be set when the piece genuinely sold at it,
+    // and it must actually be higher than the current price to mean anything.
+    if (form.compare_at_price.trim() !== "") {
+      const compareAt = parseFloat(form.compare_at_price);
+      const price = parseFloat(form.price);
+      if (!Number.isFinite(compareAt) || compareAt <= price) {
+        toast.error(
+          "Compare-at price must be higher than the selling price.",
+          "Otherwise it shows no saving. Leave it blank if there was no earlier price.",
+        );
+        return;
+      }
+      if (!form.compare_at_confirmed) {
+        toast.error(
+          "Confirm the compare-at price is genuine.",
+          "Tick the confirmation, or clear the field. Showing a price the piece never sold at is misleading advertising.",
+        );
+        return;
+      }
     }
 
     setSaving(true);
@@ -415,6 +437,24 @@ export function ProductForm({ product, onSuccess }: ProductFormProps) {
               placeholder="3999"
               className={inputClass}
             />
+            {/* A struck-through price the product never actually sold at is a
+                dark pattern under CCPA guidance, so it can't be set casually. */}
+            {form.compare_at_price.trim() !== "" && (
+              <div className="mt-2 rounded-lg border border-amber-200 bg-amber-50 p-2.5">
+                <label className="flex items-start gap-2 font-body text-[11.5px] text-amber-800 leading-relaxed">
+                  <input
+                    type="checkbox"
+                    className="mt-0.5"
+                    checked={form.compare_at_confirmed}
+                    onChange={(e) => updateField("compare_at_confirmed", e.target.checked)}
+                  />
+                  <span>
+                    I confirm this piece was genuinely offered for sale at ₹{form.compare_at_price}{" "}
+                    previously. Showing a price it never sold at is misleading advertising.
+                  </span>
+                </label>
+              </div>
+            )}
           </div>
         </div>
         <div className="grid grid-cols-2 gap-4">

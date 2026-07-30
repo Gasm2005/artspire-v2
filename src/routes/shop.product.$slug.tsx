@@ -216,18 +216,23 @@ function ProductPage() {
             </div>
           )}
 
+          {/* Derived from the REAL inventory count, never from static copy. The
+              old version checked is_one_of_a_kind first and asserted "Only 1 in
+              stock" regardless of how many were actually in stock, and claimed
+              the piece "won't be remade" — which contradicted descriptions
+              offering further pieces. */}
           {soldOut ? (
             <div className="scarcity">
               <span className="dotg"></span> Sold out — join the waitlist
             </div>
-          ) : product.is_one_of_a_kind ? (
+          ) : product.inventory_count === 1 ? (
             <div className="scarcity">
-              <span className="dotg"></span> Only 1 in stock — each piece is one of a kind
+              <span className="dotg"></span> Only 1 in stock
+              {product.is_one_of_a_kind ? " — one of a kind" : ""}
             </div>
           ) : lowStock ? (
             <div className="scarcity">
-              <span className="dotg"></span> Only {product.inventory_count} left — this one won't be
-              remade
+              <span className="dotg"></span> Only {product.inventory_count} left in stock
             </div>
           ) : null}
 
