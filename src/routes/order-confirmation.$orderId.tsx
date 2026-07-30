@@ -19,6 +19,10 @@ function OrderConfirmationPage() {
   const [phoneInput, setPhoneInput] = useState("");
   const [verifying, setVerifying] = useState(false);
   const [notFoundOrMismatch, setNotFoundOrMismatch] = useState(false);
+  // A lookup that THREW is a different situation from a phone that didn't
+  // match, and must not be reported as "no such order". Collapsing the two is
+  // what let a server-side crash masquerade as a wrong phone number.
+  const [lookupFailed, setLookupFailed] = useState(false);
 
   async function attemptLoad(phone: string) {
     try {
@@ -27,6 +31,7 @@ function OrderConfirmationPage() {
         setOrder(result);
         setNeedsPhone(false);
         setNotFoundOrMismatch(false);
+        setLookupFailed(false);
       } else {
         setNeedsPhone(true);
         setNotFoundOrMismatch(true);
@@ -34,7 +39,7 @@ function OrderConfirmationPage() {
     } catch (err) {
       console.error(err);
       setNeedsPhone(true);
-      setNotFoundOrMismatch(true);
+      setLookupFailed(true);
     } finally {
       setLoading(false);
       setVerifying(false);
@@ -55,6 +60,7 @@ function OrderConfirmationPage() {
     if (!phoneInput.trim()) return;
     setVerifying(true);
     setNotFoundOrMismatch(false);
+    setLookupFailed(false);
     attemptLoad(phoneInput.trim());
   }
 
@@ -100,6 +106,12 @@ function OrderConfirmationPage() {
               {notFoundOrMismatch && (
                 <p style={{ color: "#A32D2D", fontSize: 13, marginBottom: 12 }}>
                   We couldn't find an order matching that phone number.
+                </p>
+              )}
+              {lookupFailed && (
+                <p style={{ color: "#A32D2D", fontSize: 13, marginBottom: 12 }}>
+                  Something went wrong on our side — this isn't your phone number. Your order is
+                  safe. Please try again, or contact us on WhatsApp and we'll pull it up for you.
                 </p>
               )}
               <button

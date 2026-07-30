@@ -37,6 +37,10 @@ function TrackOrderPage() {
   const [loading, setLoading] = useState(false);
   const [order, setOrder] = useState<OrderWithItems | null>(null);
   const [searched, setSearched] = useState(false);
+  // Distinguished from "no match" on purpose — telling a customer their details
+  // are wrong when the lookup actually crashed sends them chasing a
+  // non-existent problem, and hides the outage from us.
+  const [lookupFailed, setLookupFailed] = useState(false);
 
   async function handleSearch() {
     if (!orderNumber.trim() || !phone.trim()) {
@@ -45,6 +49,7 @@ function TrackOrderPage() {
     }
     setLoading(true);
     setSearched(true);
+    setLookupFailed(false);
     try {
       const result = await getOrderByNumberVerified({
         data: { orderNumber: orderNumber.trim().toUpperCase(), phone: phone.trim() },
@@ -53,6 +58,7 @@ function TrackOrderPage() {
     } catch (err) {
       console.error(err);
       setOrder(null);
+      setLookupFailed(true);
     } finally {
       setLoading(false);
     }
@@ -108,7 +114,9 @@ function TrackOrderPage() {
           {searched && !loading && !order && (
             <div className="card-box" style={{ marginTop: 28, textAlign: "center" }}>
               <p style={{ color: "var(--stone)" }}>
-                No order found. Double-check your order number and phone number.
+                {lookupFailed
+                  ? "Something went wrong on our side — your details may well be correct. Please try again in a moment, or message us on WhatsApp and we'll look it up for you."
+                  : "No order found. Double-check your order number and phone number."}
               </p>
             </div>
           )}

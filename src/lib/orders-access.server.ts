@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
 import { getSupabaseAdmin } from "@/integrations/supabase/admin.server";
+import { isWithinRateLimit, type RateLimitRpcClient } from "./rate-limit";
 import type { OrderWithItems } from "./orders";
 
 // ─── VERIFIED PUBLIC ORDER ACCESS ──────────────────────────────
@@ -43,6 +44,10 @@ function getClientIp(): string {
  * survive across Vercel lambdas). Fails OPEN if the RPC errors (e.g. the
  * migration hasn't been applied yet) so a limiter outage never blocks
  * legitimate customers; fails CLOSED only on an explicit over-limit.
+ *
+ * The RPC call lives in ./rate-limit so it can be unit tested — an earlier
+ * version detached `admin.rpc` from the client, which threw on every call and
+ * silently took BOTH order-lookup paths offline.
  */
 async function enforceRateLimit(
   admin: SupabaseAdmin,
@@ -50,18 +55,14 @@ async function enforceRateLimit(
   max: number,
   windowSeconds: number,
 ): Promise<void> {
-  const rpc = admin.rpc as unknown as (
-    fn: string,
-    args: Record<string, unknown>,
-  ) => Promise<{ data: boolean | null; error: unknown }>;
+  const allowed = await isWithinRateLimit(
+    admin as unknown as RateLimitRpcClient,
+    `${scope}:${getClientIp()}`,
+    max,
+    windowSeconds,
+  );
 
-  const { data: allowed, error } = await rpc("check_rate_limit", {
-    p_key: `${scope}:${getClientIp()}`,
-    p_max: max,
-    p_window_seconds: windowSeconds,
-  });
-
-  if (!error && allowed === false) {
+  if (!allowed) {
     throw new Error("Too many attempts. Please wait a few minutes and try again.");
   }
 }
