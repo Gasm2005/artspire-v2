@@ -33,3 +33,20 @@ export function captureServerError(error: unknown): void {
     // Sentry must never break the request path.
   }
 }
+
+/**
+ * Capture AND flush. On Vercel the serverless function can freeze immediately
+ * after responding, discarding Sentry's buffered events — so an error would be
+ * "captured" and still never arrive. Awaiting a bounded flush makes delivery
+ * actually happen. Never throws, and never waits longer than the timeout.
+ */
+export async function captureServerErrorAndFlush(error: unknown, timeoutMs = 2000): Promise<void> {
+  if (!dsn()) return;
+  try {
+    initSentryServer();
+    Sentry.captureException(error);
+    await Sentry.flush(timeoutMs);
+  } catch {
+    // Delivery is best-effort; it must never break the request path.
+  }
+}

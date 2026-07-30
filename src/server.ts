@@ -2,7 +2,7 @@ import "./lib/error-capture";
 
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
-import { initSentryServer, captureServerError } from "./lib/sentry.server";
+import { initSentryServer, captureServerErrorAndFlush } from "./lib/sentry.server";
 
 // No-op unless VITE_SENTRY_DSN is set.
 initSentryServer();
@@ -36,7 +36,7 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
 
   const swallowed = consumeLastCapturedError() ?? new Error(`h3 swallowed SSR error: ${body}`);
   console.error(swallowed);
-  captureServerError(swallowed);
+  await captureServerErrorAndFlush(swallowed);
   return new Response(renderErrorPage(), {
     status: 500,
     headers: { "content-type": "text/html; charset=utf-8" },
@@ -77,7 +77,7 @@ export default {
       return await normalizeCatastrophicSsrResponse(response);
     } catch (error) {
       console.error(error);
-      captureServerError(error);
+      await captureServerErrorAndFlush(error);
       return new Response(renderErrorPage(), {
         status: 500,
         headers: { "content-type": "text/html; charset=utf-8" },
