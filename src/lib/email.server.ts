@@ -9,10 +9,13 @@ import type { Order, OrderItem } from "./orders";
 // rather than blocking checkout — a missing email should never fail
 // an already-paid order.
 
-const OWNER_EMAIL = "Ajju_pandey@outlook.com";
-// [NEEDS CONFIRMATION: theartspire.com must be verified as a sending domain in
-// Resend before these emails will deliver — until then Resend rejects them.]
-const FROM_EMAIL = "The Artspire <orders@theartspire.com>";
+// Both are env-overridable so sending can be tested before the real domain is
+// verified in Resend. Resend REJECTS a From address on an unverified domain, so
+// until theartspire.com is verified, set RESEND_FROM_EMAIL to Resend's sandbox
+// sender: onboarding@resend.dev (which can only deliver to the address that owns
+// the Resend account).
+const OWNER_EMAIL = process.env.ORDER_NOTIFY_EMAIL || "Ajju_pandey@outlook.com";
+const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || "The Artspire <orders@theartspire.com>";
 
 function getResendClient(): Resend | null {
   const apiKey = process.env.RESEND_API_KEY;
@@ -84,20 +87,40 @@ export const sendOrderConfirmationEmails = createServerFn({ method: "POST" })
     if (!resend) return { sent: false, reason: "not_configured" };
 
     try {
-      await resend.emails.send({
+      // IMPORTANT: resend.emails.send() does NOT throw on an API error — it
+      // resolves with { data, error }. Without checking that, a rejected send
+      // (most commonly "the domain is not verified") fell straight past the
+      // catch below and this returned { sent: true } while nothing was
+      // delivered. Inspect both results explicitly.
+      const customer = await resend.emails.send({
         from: FROM_EMAIL,
         to: data.order.email,
         subject: `Order confirmed — ${data.order.order_number}`,
         html: customerEmailHtml(data.order, data.items),
       });
 
-      await resend.emails.send({
+      const owner = await resend.emails.send({
         from: FROM_EMAIL,
         to: OWNER_EMAIL,
         subject: `🎨 New order — ${data.order.order_number} (₹${data.order.total.toLocaleString("en-IN")})`,
         html: ownerEmailHtml(data.order, data.items),
       });
 
+      const failures = [
+        customer.error ? `customer: ${customer.error.message}` : null,
+        owner.error ? `owner: ${owner.error.message}` : null,
+      ].filter(Boolean);
+
+      if (failures.length) {
+        // Surfaced in Vercel logs and Sentry so a silent delivery failure is
+        // visible instead of looking like success.
+        console.error(`[email] Resend rejected send — from=${FROM_EMAIL}:`, failures.join(" | "));
+        return { sent: false, reason: "rejected", detail: failures.join(" | ") };
+      }
+
+      console.log(
+        `[email] Order confirmation sent for ${data.order.order_number} (customer id=${customer.data?.id ?? "?"}, owner id=${owner.data?.id ?? "?"})`,
+      );
       return { sent: true };
     } catch (err) {
       // Never let email failure break the checkout flow — the order is

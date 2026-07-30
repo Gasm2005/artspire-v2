@@ -6,7 +6,6 @@ import {
   createRazorpayOrder,
   confirmPaymentAfterCheckout,
   getRazorpayKeyId,
-  getPaymentAvailability,
 } from "@/lib/razorpay.server";
 import { waLink } from "@/lib/whatsapp";
 import { toast } from "@/lib/toast";
@@ -46,15 +45,6 @@ function CheckoutPage() {
   const [items, setItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  // null = still checking. false = Razorpay isn't configured yet, so we offer an
-  // honest WhatsApp order path instead of a checkout that can only fail.
-  const [paymentConfigured, setPaymentConfigured] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    getPaymentAvailability()
-      .then((r) => setPaymentConfigured(r.configured))
-      .catch(() => setPaymentConfigured(false));
-  }, []);
 
   const [form, setForm] = useState({
     name: "",
@@ -168,30 +158,6 @@ function CheckoutPage() {
       quantity: i.quantity,
       item_category: i.product?.categories?.name ?? undefined,
     }));
-
-  // Everything Himangi needs to confirm the order manually while online payment
-  // is being set up.
-  function whatsappOrderMessage(): string {
-    const lines = items.map(
-      (i) =>
-        `• ${i.product?.title ?? "Item"} × ${i.quantity} — ₹${(i.price_at_add * i.quantity).toLocaleString("en-IN")}`,
-    );
-    const addr = [form.line1, form.line2, form.city, form.state, form.postal_code, form.country]
-      .filter(Boolean)
-      .join(", ");
-    return [
-      "Hi Himangi, I'd like to place this order:",
-      ...lines,
-      `Shipping: ₹${shippingCost.toLocaleString("en-IN")}`,
-      `Total: ₹${total.toLocaleString("en-IN")}`,
-      form.name ? `Name: ${form.name}` : "",
-      form.phone ? `Phone: ${form.phone}` : "",
-      addr ? `Address: ${addr}` : "",
-      form.giftMessage ? `Gift note: ${form.giftMessage}` : "",
-    ]
-      .filter(Boolean)
-      .join("\n");
-  }
 
   async function handlePayment() {
     if (!validateForm()) return;
@@ -489,51 +455,15 @@ function CheckoutPage() {
                   <span>Total</span>
                   <span>₹{total.toLocaleString("en-IN")}</span>
                 </div>
-                {paymentConfigured === false ? (
-                  // Razorpay isn't set up yet. Rather than a checkout that can
-                  // only fail, be honest and keep the order placeable.
-                  <>
-                    <div
-                      style={{
-                        marginTop: 18,
-                        background: "#fffbeb",
-                        border: "1px solid #fde68a",
-                        color: "#8a6a00",
-                        borderRadius: 10,
-                        padding: "10px 12px",
-                        fontSize: 12.5,
-                        lineHeight: 1.6,
-                      }}
-                    >
-                      Online payment is being activated. Send your order on WhatsApp and Himangi
-                      will confirm it personally — with payment details and a delivery date.
-                    </div>
-                    <a
-                      className="btn btn-gold btn-block"
-                      style={{ marginTop: 12 }}
-                      href={waLink(whatsappOrderMessage())}
-                      target="_blank"
-                      rel="noreferrer"
-                      onClick={() => trackBeginCheckout(total, trackedItems())}
-                    >
-                      <span>Place order on WhatsApp</span>
-                    </a>
-                  </>
-                ) : (
+                {
                   <>
                     <button
                       className="btn btn-solid btn-block"
                       style={{ marginTop: 18 }}
-                      disabled={submitting || paymentConfigured === null}
+                      disabled={submitting}
                       onClick={handlePayment}
                     >
-                      <span>
-                        {paymentConfigured === null
-                          ? "Loading…"
-                          : submitting
-                            ? "Processing…"
-                            : "Pay Securely"}
-                      </span>
+                      <span>{submitting ? "Processing…" : "Pay Securely"}</span>
                     </button>
                     <p
                       style={{
@@ -546,7 +476,7 @@ function CheckoutPage() {
                       Secured by Razorpay · UPI, Cards, Netbanking
                     </p>
                   </>
-                )}
+                }
                 {/* Policy links at the point of payment (Task 5). */}
                 <p
                   style={{
