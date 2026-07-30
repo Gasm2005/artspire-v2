@@ -10,6 +10,7 @@ import {
 import { waLink } from "@/lib/whatsapp";
 import { toast } from "@/lib/toast";
 import { calculateShippingInr, toShippableItem } from "@/lib/shipping";
+import { validateEmail, validatePhone } from "@/lib/lead-validation";
 import { trackBeginCheckout, trackPurchase, type TrackedItem } from "@/lib/analytics";
 import { SiteChrome } from "@/components/site/SiteChrome";
 
@@ -140,6 +141,23 @@ function CheckoutPage() {
   function validateForm(): boolean {
     if (!form.name.trim() || !form.email.trim() || !form.phone.trim()) {
       toast.error("Please fill in your contact details.");
+      return false;
+    }
+    // FORMAT, not just presence. Until this existed, checkout accepted any
+    // string: an 11-digit phone (one stray keystroke) was stored on the order,
+    // and because the order-lookup gate matches against the stored number, the
+    // customer could pay and then never open their own order again — nobody
+    // knows the mistyped number, so it is unrecoverable by design. A typo must
+    // be caught here, before the payment, not discovered after it.
+    // Shared with the commission/contact forms so the rules can't drift.
+    const phoneErr = validatePhone(form.phone);
+    if (phoneErr) {
+      toast.error(phoneErr);
+      return false;
+    }
+    const emailErr = validateEmail(form.email);
+    if (emailErr) {
+      toast.error(emailErr);
       return false;
     }
     if (!form.line1.trim() || !form.city.trim() || !form.state.trim() || !form.postal_code.trim()) {

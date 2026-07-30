@@ -82,6 +82,16 @@ describe("phone validation", () => {
     expect(validatePhone("987650001123")).not.toBeNull();
   });
 
+  it("rejects the 11-digit typo that locked a paid order out of its own page", () => {
+    // Real incident: this exact value reached orders.phone via checkout, which
+    // validated presence but not format. The order-lookup gate compares against
+    // the stored number, so ART-20260730-0008 became permanently unopenable —
+    // the correct number (7408690994) can never match it, and the typo is not
+    // something anyone knows to type. Checkout now runs this validator.
+    expect(validatePhone("74086909947")).not.toBeNull();
+    expect(validatePhone("7408690994")).toBeNull();
+  });
+
   it("rejects too-short numbers and empty input", () => {
     expect(validatePhone("98765")).not.toBeNull();
     expect(validatePhone("")).not.toBeNull();

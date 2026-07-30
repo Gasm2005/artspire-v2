@@ -1,6 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { Database, Json } from "@/integrations/supabase/types";
 import type { CartItem } from "./cart";
+import { validateEmail, validatePhone } from "./lead-validation";
 
 type OrdersUpdate = Database["public"]["Tables"]["orders"]["Update"];
 
@@ -82,6 +83,21 @@ export async function createPendingOrder(params: {
   discountAmount?: number;
   couponCode?: string;
 }): Promise<Order> {
+  // Every order-creation path funnels through here, so the contact-detail guard
+  // lives here rather than in one page's form handler. This is data integrity,
+  // not a security boundary (this runs client-side against the anon key —
+  // amounts are re-verified server-side before any charge).
+  //
+  // It matters because orders.phone is what the order-lookup gate compares
+  // against: a mistyped number means the customer pays and can then never open
+  // their own order, and nobody can recover it because nobody knows the typo.
+  const phoneError = validatePhone(params.phone);
+  if (phoneError) throw new Error(phoneError);
+  if (!params.email?.trim())
+    throw new Error("An email address is required for order confirmation.");
+  const emailError = validateEmail(params.email);
+  if (emailError) throw new Error(emailError);
+
   const subtotal = params.cartItems.reduce(
     (sum, item) => sum + item.price_at_add * item.quantity,
     0,
