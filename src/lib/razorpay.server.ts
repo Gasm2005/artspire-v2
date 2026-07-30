@@ -24,6 +24,16 @@ function getRazorpayInstance() {
   return new Razorpay({ key_id: keyId, key_secret: keySecret });
 }
 
+// NOTE ON ERROR REPORTING IN THIS FILE:
+// Do NOT import ./sentry.server here, statically or dynamically. This module is
+// reachable from the client graph (checkout.tsx imports the server functions
+// below), and @sentry/node does `import { subscribe } from
+// 'node:diagnostics_channel'` — a NAMED import from a node builtin, which
+// Rollup cannot stub for the browser, so the client build fails outright.
+// (node:crypto below survives only because it is a default import, which Vite
+// can replace with a stub and tree-shake.) Failures here are logged loudly;
+// escalating them to Sentry has to happen from a server-only module.
+
 // Shipping is computed from src/lib/shipping.ts — the SINGLE source of truth,
 // shared with the cart and checkout page, so all three always agree. It is
 // recomputed here from live product weights/dimensions (never from anything the
@@ -209,11 +219,37 @@ async function applyConfirmedPayment(params: {
         ),
     );
 
-    sendOrderConfirmationEmails({
-      data: { order: updatedOrder as unknown as Order, items: items as OrderItem[] },
-    }).catch((err) =>
-      console.error("[razorpay] Order confirmed but confirmation email failed:", err),
-    );
+    // AWAITED on purpose. This used to be fire-and-forget, which cannot work on
+    // Vercel: the serverless function freezes as soon as it responds, so a
+    // still-pending send is discarded mid-flight and the customer silently
+    // never gets their confirmation. Same failure mode that made Sentry need an
+    // explicit flush.
+    //
+    // The result is INSPECTED too. sendOrderConfirmationEmails does not throw
+    // on failure — it returns { sent: false, reason }. Ignoring that meant a
+    // missing RESEND_API_KEY, or a send Resend rejected outright, produced
+    // nothing but a console line nobody reads. A confirmed order whose
+    // confirmation never went out is worth an alert.
+    //
+    // It still must never break the flow: the order is paid and saved, so
+    // every failure here is reported and swallowed, never rethrown.
+    try {
+      const emailResult = await sendOrderConfirmationEmails({
+        order: updatedOrder as unknown as Order,
+        items: items as OrderItem[],
+      });
+      if (!emailResult?.sent) {
+        const reason =
+          (emailResult as { reason?: string; detail?: string } | undefined)?.detail ??
+          (emailResult as { reason?: string } | undefined)?.reason ??
+          "unknown";
+        console.error(
+          `[razorpay] Order ${updatedOrder.order_number} confirmed but NO confirmation email was sent — ${reason}`,
+        );
+      }
+    } catch (err) {
+      console.error("[razorpay] Order confirmed but confirmation email threw:", err);
+    }
   }
 
   return { order: updatedOrder as unknown as Order, alreadyConfirmed: false };
