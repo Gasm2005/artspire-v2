@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getProducts, type ProductWithCategory } from "@/lib/products";
 import { getShopCategories, type ShopCategory } from "@/lib/shop-categories";
 import { getCollections, type Collection } from "@/lib/collections";
@@ -48,10 +48,24 @@ function ShopPage() {
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [sortBy, setSortBy] = useState<"newest" | "price_low" | "price_high">("newest");
 
+  // Lets any page deep-link a search, e.g. /shop?q=lamp from the homepage.
+  // Read in an effect so SSR is unaffected.
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search).get("q");
+    if (q) setSearchQuery(q);
+  }, []);
+
+  const needle = searchQuery.trim().toLowerCase();
   const filtered = products
     .filter((p) => {
       const matchCategory = activeCategory === "all" || p.categories?.slug === activeCategory;
-      const matchSearch = !searchQuery || p.title.toLowerCase().includes(searchQuery.toLowerCase());
+      // Match the description and category name too, not just the title — a
+      // shopper searching "lamp" should find a piece called "Luxe Glow" that is
+      // a lamp. Title-only matching made search feel broken.
+      const haystack = [p.title, p.description ?? "", p.categories?.name ?? ""]
+        .join(" ")
+        .toLowerCase();
+      const matchSearch = !needle || haystack.includes(needle);
       return matchCategory && matchSearch;
     })
     .sort((a, b) => {
@@ -76,45 +90,58 @@ function ShopPage() {
         </div>
       </div>
 
+      {/* Search comes FIRST, before the category chips. It used to sit on the
+          right of the toolbar styled like the sort dropdown, so the page opened
+          by asking "which category?" — a shopper who knows what they want had to
+          scan filters before finding a way to just type it. Filters are for
+          browsing; search is for intent, and intent goes first. */}
       <div className="toolbar">
-        <div className="wrap row">
-          <div className="chips">
-            <button
-              className={activeCategory === "all" ? "chip active" : "chip"}
-              onClick={() => setActiveCategory("all")}
-            >
-              All Pieces
-            </button>
-            {categories.map((cat) => (
-              <button
-                key={cat.id}
-                className={activeCategory === cat.slug ? "chip active" : "chip"}
-                onClick={() => setActiveCategory(cat.slug)}
-              >
-                {cat.name}
-              </button>
-            ))}
-          </div>
-          <div className="tools-right">
-            <span className="count">
-              {filtered.length} {filtered.length === 1 ? "piece" : "pieces"}
-            </span>
+        <div className="wrap shop-find">
+          <div className="shop-search">
+            <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.7" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" />
+              <path d="m20 20-3.5-3.5" />
+            </svg>
             <input
-              className="sort"
-              style={{ minWidth: 160 }}
-              placeholder="Search pieces…"
+              type="search"
+              aria-label="Search pieces"
+              placeholder="Search pieces — lamp, mirror, resin…"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <select
-              className="sort"
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as "newest" | "price_low" | "price_high")}
-            >
-              <option value="newest">Sort: Featured</option>
-              <option value="price_low">Price: low to high</option>
-              <option value="price_high">Price: high to low</option>
-            </select>
+          </div>
+          <div className="row">
+            <div className="chips">
+              <button
+                className={activeCategory === "all" ? "chip active" : "chip"}
+                onClick={() => setActiveCategory("all")}
+              >
+                All Pieces
+              </button>
+              {categories.map((cat) => (
+                <button
+                  key={cat.id}
+                  className={activeCategory === cat.slug ? "chip active" : "chip"}
+                  onClick={() => setActiveCategory(cat.slug)}
+                >
+                  {cat.name}
+                </button>
+              ))}
+            </div>
+            <div className="tools-right">
+              <span className="count">
+                {filtered.length} {filtered.length === 1 ? "piece" : "pieces"}
+              </span>
+              <select
+                className="sort"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as "newest" | "price_low" | "price_high")}
+              >
+                <option value="newest">Sort: Featured</option>
+                <option value="price_low">Price: low to high</option>
+                <option value="price_high">Price: high to low</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>

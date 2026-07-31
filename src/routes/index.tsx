@@ -151,6 +151,26 @@ function Index() {
               Shop all pieces →
             </Link>
           </div>
+          {/* The homepage had no way to look for a piece — a visitor who missed
+              the nav had nowhere to go. Submits to /shop?q=…, which the shop
+              page picks up. A plain form so it works before hydration too. */}
+          <form className="home-search rv" action="/shop" method="get" role="search">
+            <div className="shop-search">
+              <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.7" aria-hidden="true">
+                <circle cx="11" cy="11" r="7" />
+                <path d="m20 20-3.5-3.5" />
+              </svg>
+              <input
+                type="search"
+                name="q"
+                aria-label="Search pieces"
+                placeholder="Looking for something? Try “lamp”…"
+              />
+            </div>
+            <button className="btn btn-solid" type="submit">
+              <span>Search</span>
+            </button>
+          </form>
           <div className="prod-grid">
             {homepageProducts.map((p, i) => (
               <Link

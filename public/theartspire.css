@@ -342,20 +342,67 @@
 .tas .cart-dot {
   position: relative;
 }
+/* The count badge was gold on a cream header — the same family as everything
+   else in the palette, so it read as decoration and shoppers could not tell
+   anything had been added. A cart count is the one place the site has to
+   interrupt: red, slightly larger, with a cream ring so it separates from the
+   icon underneath. */
 .tas .cart-dot b {
   position: absolute;
-  top: -7px;
-  right: -9px;
-  background: var(--gold);
+  top: -8px;
+  right: -10px;
+  background: #c62828;
   color: #fff;
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 700;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 999px;
   display: grid;
   place-items: center;
   font-family: "Inter";
+  box-shadow: 0 0 0 2px var(--cream);
+  line-height: 1;
+}
+
+/* Fires once when the count goes UP (SiteHeader adds .bump for 600ms), so the
+   eye is pulled to the cart at the moment of adding — otherwise the number
+   changes silently in a corner the shopper is not looking at. */
+.tas .cart-dot.bump b {
+  animation: cart-pop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.tas .cart-dot.bump svg {
+  animation: cart-nudge 0.55s ease;
+}
+@keyframes cart-pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.6);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes cart-nudge {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-4px);
+  }
+  65% {
+    transform: translateY(1px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tas .cart-dot.bump b,
+  .tas .cart-dot.bump svg {
+    animation: none;
+  }
 }
 
 /* ── Reveal-on-scroll — SAFE BY DESIGN ─────────────────────────────
@@ -1238,6 +1285,69 @@ html.js .tas .reveal-words[data-rv="in"] .word > span {
   justify-content: space-between;
   gap: 16px;
   flex-wrap: wrap;
+}
+
+/* Search sits above the category chips and is deliberately the widest control
+   on the toolbar. Previously it was a 160px box beside the sort dropdown, so it
+   read as a secondary filter and shoppers browsed categories instead of just
+   typing what they came for. */
+.tas .shop-find {
+  display: grid;
+  gap: 14px;
+}
+.tas .shop-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.tas .shop-search svg {
+  position: absolute;
+  left: 14px;
+  width: 18px;
+  height: 18px;
+  stroke: var(--stone-ink);
+  pointer-events: none;
+}
+.tas .shop-search input {
+  width: 100%;
+  padding: 13px 16px 13px 42px;
+  font: inherit;
+  font-size: 15px;
+  color: var(--forest);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  outline: none;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+  /* Safari renders type="search" with its own chrome and a fixed height. */
+  -webkit-appearance: none;
+  appearance: none;
+}
+.tas .shop-search input::placeholder {
+  color: var(--stone-ink);
+}
+.tas .shop-search input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(169, 136, 78, 0.16);
+}
+
+/* Homepage entry point into search — the homepage had no way to look for a
+   piece at all, so a visitor who did not spot the nav had nowhere to go. */
+.tas .home-search {
+  display: flex;
+  gap: 10px;
+  max-width: 520px;
+  margin: 0 auto 28px;
+}
+.tas .home-search .shop-search {
+  flex: 1;
+}
+@media (max-width: 640px) {
+  .tas .home-search {
+    flex-direction: column;
+  }
 }
 .tas .chips {
   display: flex;

@@ -160,8 +160,31 @@ export async function getFeaturedProducts(limit = 6) {
   return getProducts({ featured: true, status: "published", limit, orderBy: "display_order" });
 }
 
+/**
+ * Products for the homepage's "New & noteworthy" section.
+ *
+ * Falls back to the newest published products when nothing is explicitly
+ * flagged with show_on_homepage. Without the fallback the section rendered
+ * EMPTY whenever the flag happened to be off — which is exactly what happened:
+ * the only published piece had show_on_homepage = false, so a visitor landing
+ * on the homepage saw no product at all and had no way to reach the shop
+ * except guessing at the nav. An empty storefront is never the right answer to
+ * "an admin didn't tick a box".
+ *
+ * The flag still wins when it is used, so curation keeps working.
+ */
 export async function getHomepageProducts(limit = 6) {
-  return getProducts({ homepage: true, status: "published", limit, orderBy: "display_order" });
+  const curated = await getProducts({
+    homepage: true,
+    status: "published",
+    limit,
+    orderBy: "display_order",
+  });
+  if (curated.length > 0) return curated;
+
+  // ascending:false — "New & noteworthy" means newest first; getProducts
+  // defaults to ascending, which would surface the oldest piece.
+  return getProducts({ status: "published", limit, orderBy: "created_at", ascending: false });
 }
 
 export async function getRelatedProducts(productId: string, categoryId: string | null, limit = 4) {

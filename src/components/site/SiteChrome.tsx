@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { getCartCount, getOrCreateSessionId } from "@/lib/cart";
 
 // Shared "The Artspire" premium chrome (charcoal design system, scoped under .tas)
@@ -250,6 +250,19 @@ export function useSiteMotion() {
 export function SiteHeader() {
   const [count, setCount] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
+  // Pulses the badge when the count RISES. Purely additive feedback: the count
+  // itself already updated correctly, but it changed silently in a corner the
+  // shopper isn't looking at, so "did that work?" had no answer.
+  const [bump, setBump] = useState(false);
+  const prevCount = useRef(0);
+  useEffect(() => {
+    const rose = count > prevCount.current;
+    prevCount.current = count;
+    if (!rose) return;
+    setBump(true);
+    const t = setTimeout(() => setBump(false), 600);
+    return () => clearTimeout(t);
+  }, [count]);
   useEffect(() => {
     let alive = true;
     const refresh = () => {
@@ -307,7 +320,11 @@ export function SiteHeader() {
             <Link to="/contact">Contact</Link>
           </div>
           <div className="navicons">
-            <Link to="/cart" className="cart-dot" aria-label="Cart">
+            <Link
+              to="/cart"
+              className={"cart-dot" + (bump ? " bump" : "")}
+              aria-label={count > 0 ? `Cart — ${count} item${count === 1 ? "" : "s"}` : "Cart"}
+            >
               <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.6">
                 <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
                 <path d="M3 6h18" />
